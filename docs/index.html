@@ -12,12 +12,34 @@
 <link rel="stylesheet" href="https://junhyeopsong.github.io/time-machine-ui/v1/base.css">
 <style>
 /* shared look: time-machine-ui v1 · below: this product only */
+/* timeline marks for events: dots for single dates, bars for ranges; dashed = disputed claim; striped = disputed part */
+.evrow button.rng { transform: none; width: auto; height: 6px; top: 1px; border-radius: 3px; }
+.evrow button.rng:hover { transform: scaleY(1.5); }
+.evrow button.contested { background: transparent; box-shadow: inset 0 0 0 1.2px var(--k); }
+.evrow button.claim { background: repeating-linear-gradient(135deg, var(--k) 0 2px, transparent 2px 4px); opacity: .8; }
+.evrow button.cur { box-shadow: 0 0 0 1.5px #fff; }
+.pop .dsp { font-size: 11.5px; line-height: 1.5; color: #ffcf8a; }
+.pop .dsp b { font-weight: 600; margin-right: 4px; }
+.pop .src { margin: 0; padding: 0 0 0 14px; font-size: 11px; line-height: 1.5; color: var(--ink-3); }
+.pop .src a { color: var(--ink-2); }
+.pop .badge { font-size: 9.5px; padding: 1px 6px; border-radius: 999px; border: 0.5px solid #ffcf8a; color: #ffcf8a; margin-left: 6px; letter-spacing: 0; }
 .proto { white-space: nowrap; flex: none; font-size: 9.5px; padding: 1px 6px; border-radius: 999px; border: 0.5px solid var(--accent); color: var(--accent); letter-spacing: .02em; text-transform: none; }
 </style>
 </head>
 <body>
 <div id="stage"></div>
 <div id="loading" data-i18n="loading">지형 데이터를 불러오는 중…</div>
+<div id="pins" data-i18n-aria="pins" aria-label="지도 위 사건"></div>
+<div class="glass pop" id="pop" role="dialog" aria-live="polite" hidden>
+  <button class="x" id="popX" data-i18n-aria="close" aria-label="닫기">×</button>
+  <div class="pk" id="popKind"></div>
+  <h2 id="popTitle"></h2>
+  <div class="pa" id="popAge"></div>
+  <p id="popText"></p>
+  <div class="dsp" id="popDsp" hidden></div>
+  <ol class="src" id="popSrc"></ol>
+  <div class="acts"><button class="go" id="popGo" data-i18n="goHere">이 시점으로 이동</button></div>
+</div>
 
 <div class="hud">
   <div class="glass era" id="era" aria-live="polite">
@@ -38,6 +60,7 @@
           <button role="radio" data-s="log" aria-checked="false" data-i18n="log">로그</button>
         </div>
       </div>
+      <label class="item"><span><span data-i18n="contested">논쟁 중인 연대도 보기</span><small data-i18n="contestedSub">끄면 널리 인정된 연대만</small></span><span class="sw"><input type="checkbox" role="switch" id="contestedOn" checked><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="spin">자동 회전</span><span class="sw"><input type="checkbox" role="switch" id="spin" checked><span class="tr"></span></span></label>
     </div>
     <div class="legend" id="legend"></div>
@@ -79,6 +102,7 @@
       <input type="range" id="t" data-i18n-aria="slider" aria-label="시간 선택: 왼쪽이 과거, 오른쪽이 현재">
     </div>
     <div class="ticks" id="ticks"></div>
+    <div class="evrow" id="evrow" data-i18n-aria="events" aria-label="사건"></div>
   </section>
 </div>
 
@@ -101,6 +125,8 @@ const I18N = {
       seaMid: '해수면이 지금보다 {m} m 낮습니다. 대륙붕 일부가 육지로 드러났습니다.', seaNear: '해수면이 지금과 비슷합니다.',
       seaHigh: '해수면이 지금보다 {m} m 높습니다. 간빙기의 따뜻한 시기입니다.', ice: '빙기', warm: '간빙기',
       deep: '-6000 m', seaLvl: '해수면', high: '+5500 m',
+      pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
+      disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
       foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–430 ka, 오늘을 0 m로 맞춤. 지형: ETOPO1 (NOAA, 0.25°로 줄임). 빙상과 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
   en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', lang: 'Language', scale: 'Timeline scale',
       linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
@@ -112,6 +138,8 @@ const I18N = {
       seaMid: 'Sea level is {m} m lower than today. Parts of the continental shelves are dry land.', seaNear: 'Sea level is close to today’s.',
       seaHigh: 'Sea level is {m} m higher than today, in a warm interglacial.', ice: 'glacial', warm: 'interglacial',
       deep: '-6000 m', seaLvl: 'sea level', high: '+5500 m',
+      pins: 'Events on the map', close: 'Close', goHere: 'Go to this time', events: 'Events', contested: 'Show disputed dates too', contestedSub: 'Off: widely accepted dates only',
+      disputed: 'disputed', about: 'about {a}', atLeast: 'at least {a}', range: 'about {a} – {b}', sources: 'Sources',
       foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–430 ka, shifted so today = 0 m. Relief: ETOPO1 (NOAA), reduced to 0.25°. Prototype: ice sheets and crustal rebound are not shown yet.' } },
 };
 const STAGES = [   // ICS colours
@@ -233,6 +261,7 @@ const tl = TMUI.timeline({
   track: $('track'), strata: $('strata'), tip: $('tltip'), ticks: $('ticks'), slider, scale: SCALES[scaleKind], getAge: () => age,
   bands: () => STAGES.map(s => ({ from: s.from, to: s.to, color: s.color, name: stageName(s), range: s.range })),
   tickList: () => TICKS[scaleKind].map(a => ({ age: a, now: a === 0, label: a === 0 ? t('present') : `-${a}k` })),
+  onRebuild: () => { if (typeof buildEvRow === 'function' && EV) { buildEvRow(); markCurrent(); } },
 });
 slider.addEventListener('input', () => { stop(); setAge(tl.scale.slider.age(+slider.value), true); });
 function stageAt(a) { return STAGES.find(s => a <= s.from && a >= s.to) || STAGES[0]; }
@@ -243,8 +272,10 @@ function updateUI() {
   $('seaVal').textContent = t('seaM', { m: (m > 0 ? '+' : m < 0 ? '−' : '') + Math.abs(m) });
   $('eraEyebrow').textContent = t('eyebrow', { p: stageName(s), r: s.range });
   $('eraChip').style.background = s.color;
-  $('eraName').textContent = fmtAgo(age) + ' · ' + t(sea < -20 ? 'ice' : 'warm');
-  $('eraText').textContent = sea < -60 ? t('seaLow', { m: -m }) : sea < -15 ? t('seaMid', { m: -m }) : sea > 2 ? t('seaHigh', { m }) : t('seaNear');
+  const ce = typeof currentEvent === 'function' ? currentEvent() : null;
+  $('eraName').textContent = ce ? ce[LANG][0] : fmtAgo(age) + ' · ' + t(sea < -20 ? 'ice' : 'warm');
+  if (EV) markCurrent();
+  $('eraText').textContent = ce ? ce[LANG][1] : sea < -60 ? t('seaLow', { m: -m }) : sea < -15 ? t('seaMid', { m: -m }) : sea > 2 ? t('seaHigh', { m }) : t('seaNear');
 }
 function setAge(a, fromSlider) {
   age = Math.max(0, Math.min(AGE_MAX, a));
@@ -291,6 +322,7 @@ function applyLang() {
   document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
   document.querySelectorAll('[data-i18n-title]').forEach(el => el.title = t(el.dataset.i18nTitle));
   $('foot').textContent = t('foot'); renderLegend(); tl.rebuild(); updateUI(); setPlayIcon(playing);
+  if (EV) { buildPins(); if (popIdx !== null) openPop(popIdx); }
 }
 (() => {
   const sel = $('lang');
@@ -303,6 +335,109 @@ TMUI.segmented($('scaleSeg'), b => {
   scaleKind = b.dataset.s; try { localStorage.setItem('tm.scale', scaleKind); } catch (_) {}
   tl.setScale(SCALES[scaleKind]); slider.value = String(tl.scale.slider.value(age));
 });
+
+// ---------- events and sites: pins on the globe, marks on the timeline, a popover with sources ----------
+let EV = null, KINDS = {}, showContested = true, popIdx = null;
+try { if (localStorage.getItem('hj.contested') === '0') showContested = false; } catch (_) {}
+$('contestedOn').checked = showContested;
+const yearsTxt = ka => fmtAgo(ka).replace(/ 전$| ago$/, '');     // "6만 5천 년" / "65,000 years"
+const evRange = e => (!showContested && e.accepted) ? { max: e.accepted[0], min: e.accepted[1] } : { max: e.max, min: e.min };
+const evShown = e => showContested || !e.contested;
+function evAgeText(e) {
+  const r = evRange(e), ago = LANG === 'ko' ? ' 전' : ' ago';
+  if (e.atLeast) return t('atLeast', { a: yearsTxt(r.max) }) + ago;
+  if (r.max - r.min < 0.05 * r.max + 0.01) return t('about', { a: yearsTxt(e.best) }) + ago;
+  return t('range', { a: yearsTxt(r.max), b: yearsTxt(r.min) }) + ago;
+}
+// visible on the globe from a little before its range until a while after (scaled to how long ago it was)
+function evWindow(e) { const r = evRange(e); return { from: r.max + Math.max(0.3, e.best * 0.05), to: Math.max(0, r.min - Math.max(0.5, e.best * 0.2)) }; }
+const evNow = e => { const r = evRange(e), pad = Math.max(0.15, e.best * 0.02); return age <= r.max + pad && age >= r.min - pad; };
+let pinEls = [];
+function buildPins() {
+  const box = $('pins'); box.innerHTML = ''; pinEls = [];
+  if (!EV) return;
+  EV.forEach((e, i) => {
+    const b = document.createElement('button'); b.className = 'pin'; b.style.setProperty('--k', KINDS[e.kind].color);
+    b.innerHTML = '<i></i><span></span>'; b.lastChild.textContent = e[LANG][0];
+    b.onclick = ev => { ev.stopPropagation(); openPop(i); };
+    box.appendChild(b); pinEls[i] = b; e.pos = sphereXYZ(e.lon, e.lat).multiplyScalar(1.004);
+  });
+}
+const _v = new THREE.Vector3(), _c = new THREE.Vector3();
+function placePins() {
+  if (!EV) return;
+  const w = innerWidth, h = innerHeight; G.camera.getWorldPosition(_c);
+  EV.forEach((e, i) => {
+    const b = pinEls[i]; if (!b) return;
+    const win = evWindow(e), on = evShown(e) && age <= win.from && age >= win.to;
+    if (!on) { b.hidden = true; return; }
+    _v.copy(e.pos).applyMatrix4(G.earth.matrixWorld);
+    const facing = _v.dot(_c.clone().sub(_v)) > 0;
+    if (!facing) { b.hidden = true; return; }
+    _v.project(G.camera);
+    b.hidden = false; b.style.transform = `translate(${(_v.x + 1) / 2 * w - 7}px, ${(1 - _v.y) / 2 * h}px) translateY(-50%)`;
+    b.classList.toggle('dim', !evNow(e)); b.classList.toggle('on', popIdx === i);
+  });
+  if (popIdx !== null) placePop();
+}
+function buildEvRow() {
+  const row = $('evrow'); row.innerHTML = '';
+  if (!EV) return;
+  const pc = a => tl.pct(Math.max(0, Math.min(AGE_MAX, a)));
+  EV.forEach((e, i) => {
+    if (!evShown(e)) return;
+    const mk = (cls, a0, a1) => {
+      const d = document.createElement('button'); d.style.setProperty('--k', KINDS[e.kind].color); d.dataset.i = i;
+      d.title = `${e[LANG][0]} · ${evAgeText(e)}`; d.setAttribute('aria-label', d.title);
+      d.onclick = () => goToEvent(i);
+      if (a0 - a1 > 0 && pc(a1) - pc(a0) > 0.6) { d.className = 'rng ' + cls; d.style.left = pc(a0) + '%'; d.style.width = (pc(a1) - pc(a0)) + '%'; }
+      else { d.className = cls; d.style.left = pc((a0 + a1) / 2) + '%'; }
+      row.appendChild(d);
+    };
+    if (showContested && e.accepted) { mk('claim', e.max, e.accepted[0]); mk('', e.accepted[0], e.accepted[1]); }
+    else { const r = evRange(e); mk(e.contested ? 'contested' : '', r.max, r.min); }
+  });
+}
+function markCurrent() { $('evrow').querySelectorAll('button').forEach(b => b.classList.toggle('cur', EV && evNow(EV[+b.dataset.i]))); }
+const pop = $('pop');
+function openPop(i) {
+  const e = EV[i], k = KINDS[e.kind]; popIdx = i;
+  pop.style.setProperty('--k', k.color);
+  $('popKind').textContent = k[LANG] || k.en;
+  if (e.dispute || e.contested) { const s = document.createElement('span'); s.className = 'badge'; s.textContent = t('disputed'); $('popKind').appendChild(s); }
+  $('popTitle').textContent = e[LANG][0]; $('popAge').textContent = evAgeText(e); $('popText').textContent = e[LANG][1];
+  const dsp = $('popDsp'); dsp.hidden = !e.dispute;
+  if (e.dispute) { dsp.innerHTML = '<b></b><span></span>'; dsp.firstChild.textContent = t('disputed'); dsp.lastChild.textContent = e.dispute[LANG] || e.dispute.en; }
+  const src = $('popSrc'); src.innerHTML = '';
+  e.src.forEach(s => { const li = document.createElement('li'), a = document.createElement('a'); a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.label; li.appendChild(a); src.appendChild(li); });
+  pop.hidden = false; placePins(); placePop();
+}
+function closePop() { popIdx = null; pop.hidden = true; pinEls.forEach(b => b && b.classList.remove('on')); }
+function placePop() {
+  const b = pinEls[popIdx], pw = pop.offsetWidth, ph = pop.offsetHeight;
+  let x, y;
+  if (b && !b.hidden) { const r = b.getBoundingClientRect(); x = r.left; y = r.bottom + 10; if (y + ph > innerHeight - 16) y = r.top - ph - 10; }
+  else { x = 16; y = 140; }
+  pop.style.left = Math.max(16, Math.min(innerWidth - pw - 16, x)) + 'px'; pop.style.top = Math.max(16, y) + 'px';
+}
+function goToEvent(i) {
+  const e = EV[i]; stop(); setAge(evRange(e).max - (evRange(e).max - evRange(e).min) / 2);
+  G.stopAuto(); G.faceLocal(sphereXYZ(e.lon, e.lat)); openPop(i);
+}
+$('popX').onclick = closePop;
+$('popGo').onclick = () => { if (popIdx !== null) goToEvent(popIdx); };
+G.canvas.addEventListener('pointerdown', () => { if (popIdx !== null) closePop(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
+$('contestedOn').onchange = e => {
+  showContested = e.target.checked; try { localStorage.setItem('hj.contested', showContested ? '1' : '0'); } catch (_) {}
+  buildEvRow(); markCurrent(); if (popIdx !== null) openPop(popIdx);
+};
+function currentEvent() {           // the event whose range holds the playhead and is closest in time
+  if (!EV) return null;
+  let best = null, bd = Infinity;
+  EV.forEach(e => { if (evShown(e) && evNow(e)) { const d = Math.abs(e.best - age); if (d < bd) { bd = d; best = e; } } });
+  return best;
+}
 
 // ---------- loop ----------
 let lastFrame = performance.now();
@@ -317,6 +452,7 @@ function loop(now) {
   }
   G.stepTween(now); G.stepInertia(dt); G.applyView(); G.drift(dt, age);
   G.renderer.render(G.scene, G.camera);
+  placePins();
   requestAnimationFrame(loop);
 }
 
@@ -336,7 +472,8 @@ function loadRelief(src) {
 }
 applyLang();
 requestAnimationFrame(loop);
-Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r => r.json())]).then(([r, sea]) => {
+Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r => r.json()), fetch('data/events.json').then(r => r.json())]).then(([r, sea, ev]) => {
+  EV = ev.events; KINDS = ev.kinds; buildPins(); buildEvRow();
   RW = r.w; RH = r.h; relief = r.e; shade = shadeGrid(relief, RW, RH); SEA = sea;
   gridCv = document.createElement('canvas'); gridCv.width = RW; gridCv.height = RH;
   gridCtx = gridCv.getContext('2d'); gridImg = gridCtx.createImageData(RW, RH);

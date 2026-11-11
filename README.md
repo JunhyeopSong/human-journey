@@ -11,7 +11,8 @@ A 3D globe that follows people across the world over the last 300,000 years, on 
 Prototype · 프로토타입
 - ✅ Globe, timeline (linear / log scale), playback, Korean and English · 지구본, 타임라인(선형/로그), 재생, 한국어·영어
 - ✅ Coastlines from sea level (land bridges such as Sunda, Sahul and Beringia appear in glacial times) · 해수면에 따른 해안선(빙기에 순다·사훌·베링 땅다리)
-- ⏳ Ice sheets, events and sites, species ranges, routes, 10 languages · 빙상, 사건·유적, 종 분포, 이동 경로, 10개 언어
+- ✅ 34 events and sites with dated ranges, disputed claims shown with both sides and sources · 연대 범위가 있는 사건·유적 34개, 논쟁은 양쪽 주장과 출처 함께
+- ⏳ Ice sheets, species ranges, routes, 10 languages · 빙상, 종 분포, 이동 경로, 10개 언어
 
 ## Data sources · 데이터 출처
 
@@ -19,6 +20,7 @@ Prototype · 프로토타입
 |---|---|---|
 | Sea level · 해수면 | Spratt & Lisiecki (2016), *Clim. Past* 12:1079 — [doi:10.5194/cp-12-1079-2016](https://doi.org/10.5194/cp-12-1079-2016), [NOAA study 19982](https://www.ncei.noaa.gov/access/paleo-search/study/19982). Short PC1 stack, 0–430 ka, shifted so today = 0 m | NOAA open data |
 | Relief · 지형 | ETOPO1 (NOAA NCEI) via [ERDDAP etopo180](https://coastwatch.pfeg.noaa.gov/erddap/griddap/etopo180.html), reduced to 0.25° | Free use and redistribution |
+| Events and sites · 사건·유적 | Published studies cited in each event's popover and in `docs/data/events.json` (dates and summaries still to be reviewed) · 각 사건 팝업과 `docs/data/events.json`에 출처 표기 (연대·요약 검토 예정) | — |
 | 3D rendering | [three.js](https://threejs.org) r128 | MIT |
 | Icons · 아이콘 | [Lucide](https://lucide.dev) | ISC |
 
