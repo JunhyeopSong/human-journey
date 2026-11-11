@@ -612,11 +612,12 @@ function hull(P) {                  // convex hull (monotone chain) of [x, y] po
   for (const q of p.slice().reverse()) { while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
   return lo.slice(0, -1).concat(up.slice(0, -1));
 }
-// Homo sapiens spread: every 1° cell gets the time people could first have reached it — spreading at ~1,000 km per
-// thousand years from the early African sites (within 1,800 km, inside Africa) and from each migration route as it
-// advances (within 4,000 km).
+// Homo sapiens spread: every 1° cell gets the time people could first have reached it — within Africa ~120 km per
+// thousand years from the early sites, elsewhere ~600 km per thousand years from each migration route as it advances.
+// A spread stays on the landmass where it starts (Africa, Eurasia, Sahul, the Americas, remote Oceania), so people
+// cross between landmasses only along the routes.
 // A reached cell is filled while it is dry land and not under ice, so the range covers regions, not corridors.
-const SW = 360, SH = 181, SPREAD_KM_PER_KA = 1000;
+const SW = 360, SH = 181, SPREAD_KM_PER_KA = 600;
 let arrMain = null, arrEarly = null, earlyGone = null, earlyEnd = 0, sapCv = null, sapCtx = null, sapImg = null;
 const EARLY_FADE_KA = 10;          // the early Levant foothold shrinks back over 10 thousand years, edges first
 function buildSpread(sp) {
@@ -627,17 +628,24 @@ function buildSpread(sp) {
   const AFRICA = [[-20, 38], [10, 38], [32.4, 31.6], [32.4, 29.8], [43.4, 12.7], [52, 12], [52, -37], [12, -37], [-20, 2]];
   const inPoly = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j];
     if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
-  const inAfrica = new Uint8Array(SW * SH);
-  for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) inAfrica[i * SW + k] = inPoly(-180 + k + 0.5, 90 - i, AFRICA) ? 1 : 0;
+  // landmasses: a spread stays on the landmass where it starts; people cross between them only along the routes
+  const region = (lon, lat) => inPoly(lon, lat, AFRICA) ? 1
+    : (lon > -170 && lon < -25) ? 2                                                     // the Americas
+    : ((lon >= 129 && lon < 156 && lat < 0 && lat > -45) || (lon >= 112 && lon < 129 && lat < -12 && lat > -45)) ? 3   // Sahul
+    : (lon >= 156 || lon <= -170) && lat < 0 ? 4                                         // remote Oceania, Aotearoa
+    : 5;                                                                                 // Eurasia
+  const cellReg = new Uint8Array(SW * SH);
+  for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) cellReg[i * SW + k] = region(-180 + k + 0.5, 90 - i);
   const field = seeds => {
     const out = new Float32Array(SW * SH).fill(-1);
     for (const sd of seeds) { const v = sphereXYZ(sd.lon, sd.lat), lim = Math.cos(sd.reach / 6371);
-      for (let j = 0; j < out.length; j++) { if (sd.africa && !inAfrica[j]) continue; const c = cells[j], dt = c.x * v.x + c.y * v.y + c.z * v.z; if (dt < lim) continue;
-        const a = sd.age - 6371 * Math.acos(Math.min(1, dt)) / SPREAD_KM_PER_KA; if (a > out[j]) out[j] = a; } }
+      const rg = region(sd.lon, sd.lat), sp = sd.speed || SPREAD_KM_PER_KA;
+      for (let j = 0; j < out.length; j++) { if (sd.sameRegion && cellReg[j] !== rg) continue; const c = cells[j], dt = c.x * v.x + c.y * v.y + c.z * v.z; if (dt < lim) continue;
+        const a = sd.age - 6371 * Math.acos(Math.min(1, dt)) / sp; if (a > out[j]) out[j] = a; } }
     return out;
   };
-  const main = sp.sites.map(st => ({ lon: st.lon, lat: st.lat, age: st.max, reach: 1800, africa: true })), early = [];
-  RT.forEach(r => { const dst = r.fadeAt ? early : main; for (let i = 0; i < r.ll.length; i += 2) dst.push({ lon: r.ll[i][0], lat: r.ll[i][1], age: r.ages[i], reach: r.fadeAt ? 1200 : 4000 }); if (r.fadeAt) earlyEnd = r.fadeAt; });
+  const main = sp.sites.map(st => ({ lon: st.lon, lat: st.lat, age: st.max, reach: 20000, sameRegion: true, speed: 120 })), early = [];   // Africa fills slowly from its sites
+  RT.forEach(r => { const dst = r.fadeAt ? early : main; for (let i = 0; i < r.ll.length; i += 2) dst.push(r.fadeAt ? { lon: r.ll[i][0], lat: r.ll[i][1], age: r.ages[i], reach: 1200 } : { lon: r.ll[i][0], lat: r.ll[i][1], age: r.ages[i], reach: 20000, sameRegion: true }); if (r.fadeAt) earlyEnd = r.fadeAt; });
   arrMain = field(main); arrEarly = field(early);
   // when each early cell is given up: the last-reached (outer) cells first, the first-reached (core) last, at earlyEnd
   let lo = Infinity, hi = -Infinity; for (const a of arrEarly) if (a >= 0) { lo = Math.min(lo, a); hi = Math.max(hi, a); }
