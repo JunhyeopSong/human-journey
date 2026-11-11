@@ -613,21 +613,29 @@ function hull(P) {                  // convex hull (monotone chain) of [x, y] po
   return lo.slice(0, -1).concat(up.slice(0, -1));
 }
 // Homo sapiens spread: every 1° cell gets the time people could first have reached it — spreading at ~1,000 km per
-// thousand years from the early African sites and from each migration route as it advances (within 4,500 / 4,000 km).
+// thousand years from the early African sites (within 1,800 km, inside Africa) and from each migration route as it
+// advances (within 4,000 km).
 // A reached cell is filled while it is dry land and not under ice, so the range covers regions, not corridors.
 const SW = 360, SH = 181, SPREAD_KM_PER_KA = 1000;
 let arrMain = null, arrEarly = null, earlyEnd = 0, sapCv = null, sapCtx = null, sapImg = null;
 function buildSpread(sp) {
   const cells = new Array(SW * SH);
   for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) cells[i * SW + k] = sphereXYZ(-180 + k + 0.5, 90 - i);
+  // Africa (cut at Sinai and the Bab-el-Mandeb): the early African sites spread only here; leaving Africa happens
+  // only along the migration routes
+  const AFRICA = [[-20, 38], [10, 38], [32.4, 31.6], [32.4, 29.8], [43.4, 12.7], [52, 12], [52, -37], [12, -37], [-20, 2]];
+  const inPoly = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+  const inAfrica = new Uint8Array(SW * SH);
+  for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) inAfrica[i * SW + k] = inPoly(-180 + k + 0.5, 90 - i, AFRICA) ? 1 : 0;
   const field = seeds => {
     const out = new Float32Array(SW * SH).fill(-1);
     for (const sd of seeds) { const v = sphereXYZ(sd.lon, sd.lat), lim = Math.cos(sd.reach / 6371);
-      for (let j = 0; j < out.length; j++) { const c = cells[j], dt = c.x * v.x + c.y * v.y + c.z * v.z; if (dt < lim) continue;
+      for (let j = 0; j < out.length; j++) { if (sd.africa && !inAfrica[j]) continue; const c = cells[j], dt = c.x * v.x + c.y * v.y + c.z * v.z; if (dt < lim) continue;
         const a = sd.age - 6371 * Math.acos(Math.min(1, dt)) / SPREAD_KM_PER_KA; if (a > out[j]) out[j] = a; } }
     return out;
   };
-  const main = sp.sites.map(st => ({ lon: st.lon, lat: st.lat, age: st.max, reach: 4500 })), early = [];
+  const main = sp.sites.map(st => ({ lon: st.lon, lat: st.lat, age: st.max, reach: 1800, africa: true })), early = [];
   RT.forEach(r => { const dst = r.fadeAt ? early : main; for (let i = 0; i < r.ll.length; i += 2) dst.push({ lon: r.ll[i][0], lat: r.ll[i][1], age: r.ages[i], reach: 4000 }); if (r.fadeAt) earlyEnd = r.fadeAt; });
   arrMain = field(main); arrEarly = field(early);
   sapCv = document.createElement('canvas'); sapCv.width = SW; sapCv.height = SH; sapCtx = sapCv.getContext('2d'); sapImg = sapCtx.createImageData(SW, SH);
