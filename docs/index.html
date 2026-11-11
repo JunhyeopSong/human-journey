@@ -597,7 +597,8 @@ function updateRoutes() {
     const on = showRoutes && n > 0 && !(r.fadeAt && age < r.fadeAt);
     r.pts.visible = on; if (on) r.pts.geometry.setDrawRange(0, n);
     const active = on && age > r.end;                       // still advancing: bright, with a label at its tip
-    r.pts.material.opacity = active ? 1 : 0.55;
+    r.pts.material.opacity = showRanges ? (active ? 0.75 : 0.3) : (active ? 1 : 0.55);
+    r.pts.material.size = (showRanges ? 3.4 : 5) * G.renderer.getPixelRatio();
     if (!active) { b.hidden = !(on && popRoute === k); if (b.hidden) return; }
     const i = Math.max(0, (active ? n : r.ages.length) - 1);
     _v.set(r.pos[i * 3], r.pos[i * 3 + 1], r.pos[i * 3 + 2]).applyMatrix4(G.earth.matrixWorld);
@@ -668,7 +669,7 @@ function drawRanges() {
     });
     // draw the shape far to the left and keep only its blurred shadow in place: soft edges in every browser
     rctx.save(); rctx.translate(-RCW * 2, 0);
-    rctx.shadowOffsetX = RCW * 2; rctx.shadowBlur = 10; rctx.shadowColor = sp.color + 'a8';
+    rctx.shadowOffsetX = RCW * 2; rctx.shadowBlur = 10; rctx.shadowColor = sp.color + (sp.alpha || 'a8');
     rctx.fillStyle = sp.color; rctx.strokeStyle = sp.color; rctx.lineWidth = R * 2; rctx.lineJoin = 'round'; rctx.lineCap = 'round';
     rctx.fill(path); rctx.stroke(path); rctx.stroke(band); rctx.restore();
   });
