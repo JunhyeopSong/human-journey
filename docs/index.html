@@ -57,8 +57,8 @@
     <div class="group">
       <div class="item"><span data-i18n="scale">타임라인 눈금</span>
         <div class="seg" id="scaleSeg" role="radiogroup" data-i18n-aria="scale" aria-label="타임라인 눈금">
-          <button role="radio" data-s="linear" aria-checked="true" data-i18n="linear">선형</button>
-          <button role="radio" data-s="log" aria-checked="false" data-i18n="log">로그</button>
+          <button role="radio" data-s="linear" aria-checked="false" data-i18n="linear">선형</button>
+          <button role="radio" data-s="log" aria-checked="true" data-i18n="log">로그</button>
         </div>
       </div>
       <label class="item"><span><span data-i18n="contested">논쟁 중인 연대도 보기</span><small data-i18n="contestedSub">끄면 널리 인정된 연대만</small></span><span class="sw"><input type="checkbox" role="switch" id="contestedOn" checked><span class="tr"></span></span></label>
@@ -374,8 +374,8 @@ function sphereXYZ(lon, lat) {        // matches THREE.SphereGeometry UV layout 
 const AGE_MAX = 2000;               // thousand years ago
 let age = 2000, playing = false, speedVal = 1;
 const SCALES = { linear: TMUI.scale.linear(AGE_MAX, 0, 0.1), log: TMUI.scale.shiftedLog(AGE_MAX, 0, 10) };
-let scaleKind = 'linear';
-try { if (localStorage.getItem('tm.scale') === 'log') scaleKind = 'log'; } catch (_) {}
+let scaleKind = 'log';               // default: log, so the recent past is not squeezed (a chosen 'linear' is kept)
+try { if (localStorage.getItem('tm.scale') === 'linear') scaleKind = 'linear'; } catch (_) {}
 const slider = $('t');
 const TICKS = { linear: [2000, 1500, 1000, 500, 0], log: [2000, 1000, 500, 200, 100, 50, 20, 10, 0] };
 const tickLabel = a => a >= 1000 ? `-${+(a / 1000).toFixed(1)}M` : `-${a}k`;
@@ -428,7 +428,7 @@ $('play').onclick = () => { if (playing) return stop(); if (age <= 0) setAge(AGE
 TMUI.segmented($('speed'), b => { speedVal = +b.dataset.v; });
 function step(dir) {                // dir +1 = toward the past; next tick of the current scale
   stop();
-  const marks = [...new Set([...TICKS[scaleKind], ...(scaleKind === 'linear' ? Array.from({ length: 31 }, (_, i) => i * 10) : [])])].sort((a, b) => a - b);
+  const marks = [...new Set([...TICKS[scaleKind], ...(scaleKind === 'linear' ? Array.from({ length: 21 }, (_, i) => i * 100) : [])])].sort((a, b) => a - b);
   const next = dir > 0 ? marks.find(x => x > age + 1e-6) : [...marks].reverse().find(x => x < age - 1e-6);
   if (next != null) setAge(next);
 }
