@@ -126,10 +126,10 @@ const I18N = {
       seaMid: '해수면이 지금보다 {m} m 낮습니다. 대륙붕 일부가 육지로 드러났습니다.', seaNear: '해수면이 지금과 비슷합니다.',
       seaHigh: '해수면이 지금보다 {m} m 높습니다. 간빙기의 따뜻한 시기입니다.', ice: '빙기', warm: '간빙기',
       deep: '-6000 m', seaLvl: '해수면', high: '+5500 m',
-      ice: '빙상', iceSub: '개략도 · 해수면에 맞춰 커지고 줄어듦',
+      ice: '빙상', iceSub: '북반구는 Batchelor 외 2019 복원, 그 사이는 해수면으로 조절',
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
-      foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–430 ka, 오늘을 0 m로 맞춤. 지형: ETOPO1 (NOAA, 0.25°로 줄임). 빙상: 마지막 빙기 최성기의 대략적인 범위를 직접 그린 개략도로, 해수면이 오르내림에 따라 가장자리부터 줄고 늘게 했습니다(실제 복원 자료로 바꿀 예정). 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
+      foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–430 ka, 오늘을 0 m로 맞춤. 지형: ETOPO1 (NOAA, 0.25°로 줄임). 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
   en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', lang: 'Language', scale: 'Timeline scale',
       linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
@@ -140,10 +140,10 @@ const I18N = {
       seaMid: 'Sea level is {m} m lower than today. Parts of the continental shelves are dry land.', seaNear: 'Sea level is close to today’s.',
       seaHigh: 'Sea level is {m} m higher than today, in a warm interglacial.', ice: 'glacial', warm: 'interglacial',
       deep: '-6000 m', seaLvl: 'sea level', high: '+5500 m',
-      ice: 'Ice sheets', iceSub: 'Schematic · grows and shrinks with sea level',
+      ice: 'Ice sheets', iceSub: 'Northern Hemisphere: Batchelor et al. 2019; in between, scaled with sea level',
       pins: 'Events on the map', close: 'Close', goHere: 'Go to this time', events: 'Events', contested: 'Show disputed dates too', contestedSub: 'Off: widely accepted dates only',
       disputed: 'disputed', about: 'about {a}', atLeast: 'at least {a}', range: 'about {a} – {b}', sources: 'Sources',
-      foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–430 ka, shifted so today = 0 m. Relief: ETOPO1 (NOAA), reduced to 0.25°. Ice sheets: a hand-drawn schematic of the Last Glacial Maximum extent that shrinks from its edges as sea level rises (to be replaced with published reconstructions). Prototype: crustal rebound is not modelled yet.' } },
+      foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–430 ka, shifted so today = 0 m. Relief: ETOPO1 (NOAA), reduced to 0.25°. Ice sheets: Northern Hemisphere from the best-estimate reconstructions of Batchelor et al. 2019 (Nature Communications, CC BY 4.0) for 12 time slices, reduced to 0.25°; between slices the nearest one shrinks or grows from its edges with sea level. Present Greenland and Antarctic ice from the relief; Patagonia is a hand-drawn schematic. Prototype: crustal rebound is not modelled yet.' } },
 };
 const STAGES = [   // ICS colours
   { from: 300, to: 129, color: '#FFF2C7', ko: '치바니안 (중기 플라이스토세)', en: 'Chibanian (Middle Pleistocene)', range: '774 – 129 ka' },
@@ -204,20 +204,17 @@ function shadeGrid(elev, w, h) {    // NW-lit hillshade, as in the Continental T
   }
   return s;
 }
-// ---------- ice sheets: schematic ----------
-// Rough outlines of the ice at the Last Glacial Maximum (~21 ka), drawn by hand from the general shape shown in
-// textbook maps — NOT digitised from a dataset. For any time, ice covers the part of each outline that lies far
-// enough from its edge: f = how glacial the sea level is (0 today … 1 at −125 m), ice where depth-from-edge ≥ (1 − f).
-// Greenland and Antarctica keep their present ice. To be replaced by published reconstructions once licensed.
+// ---------- ice sheets ----------
+// Northern Hemisphere: best-estimate reconstructions of Batchelor et al. 2019 (Nature Communications, CC BY 4.0) for
+// 12 time slices from MIS 8 to the LGM, rasterised to 0.25° (data/ice_nh.png). Inside a slice's time range its
+// extent is shown as mapped; at other times the nearest slice shrinks or grows from its edges with sea level.
+// Present-day Greenland and Antarctica come from the relief; Patagonia is a small hand-drawn schematic (the dataset
+// covers the Northern Hemisphere only).
 const ICE_LGM = [
-  [[-124,47],[-131,52],[-138,58],[-150,61],[-147,63.5],[-141,64],[-136,66],[-135,69],[-125,72],[-118,76],[-100,80],[-75,83],[-65,81],[-65,72],[-60,67],[-62,63],[-58,58],[-52,52],[-50,47],[-60,43.5],[-66,42],[-70,41],[-73.5,40.6],[-76,41.2],[-80,41],[-84,39.5],[-88,38.8],[-91,41],[-96,41.5],[-100,46],[-110,48.8],[-114,49],[-120,48],[-122.5,47]],
   [[-73,78],[-60,82.5],[-30,83.5],[-12,81],[-17,75],[-21,70],[-30,67],[-40,63],[-43,59.5],[-49,61],[-54,66],[-57,70],[-60,75]],
-  [[-10.5,51.5],[-11,55],[-9,58.5],[-4,60.5],[1,62],[5,64],[10,67],[14,69.5],[18,71],[16,74],[10,78],[20,81],[45,81.5],[60,79],[66,76],[68,73],[60,70],[50,68],[44,66],[40,64],[38,61],[34,58],[30,55.5],[24,54],[20,52.8],[14,52.5],[10,53.3],[8,54.5],[4,53.5],[1,53],[-2,52.3],[-4.5,51.6],[-6,52]],
-  [[5.5,45],[7,44.2],[10,45.6],[13.5,46],[16,47.3],[13,48],[9,47.8],[6,46.6]],
   [[-73.5,-38],[-71,-38],[-70.5,-44],[-71,-50],[-69.5,-53],[-68,-55],[-71,-56],[-75.5,-53],[-76,-47],[-74.5,-42]],
-  [[-24.5,66.6],[-22,67.3],[-15,67],[-12.5,65.5],[-13.5,63.8],[-18,62.8],[-22.5,63.5],[-24.8,65]],   // Iceland
 ];
-const GREENLAND = 1;                // index in ICE_LGM: keeps its present ice too
+const GREENLAND = 0;                // outline used only for Greenland's present ice
 let iceDepth = null, iceSheet = null, showIce = true;
 try { if (localStorage.getItem('hj.ice') === '0') showIce = false; } catch (_) {}
 function buildIce() {               // per grid cell: 0 outside, else distance from the outline's edge ÷ the outline's deepest point
@@ -257,28 +254,60 @@ function buildIce() {               // per grid cell: 0 outside, else distance f
     }
   });
 }
+let NH = null, nhPick = null;      // NH = { rows, slices: [{name, from, to, sea, depth}] }; nhPick = current { depth, thr }
+function depthField(mask, rows) {   // normalised distance from the mask's edge (0 outside, → 1 deepest), with a gentle wobble
+  const n = rows * RW, step = 360 / (RW - 1), KM = 111.2 * step, d = new Float32Array(n);
+  for (let j = 0; j < n; j++) d[j] = mask[j] ? 1e9 : 0;
+  const dx = r => KM * Math.max(0.05, Math.cos((90 - r * step) * Math.PI / 180));
+  for (let r = 0; r < rows; r++) { const ex = dx(r), dg = Math.hypot(ex, KM);
+    for (let c = 0; c < RW; c++) { const j = r * RW + c; if (!d[j]) continue;
+      let v = d[j]; v = Math.min(v, d[r * RW + (c + RW - 1) % RW] + ex); if (r > 0) { v = Math.min(v, d[j - RW] + KM); if (c > 0) v = Math.min(v, d[j - RW - 1] + dg); if (c < RW - 1) v = Math.min(v, d[j - RW + 1] + dg); } d[j] = v; } }
+  for (let r = rows - 1; r >= 0; r--) { const ex = dx(r), dg = Math.hypot(ex, KM);
+    for (let c = RW - 1; c >= 0; c--) { const j = r * RW + c; if (!d[j]) continue;
+      let v = d[j]; v = Math.min(v, d[r * RW + (c + 1) % RW] + ex); if (r < rows - 1) { v = Math.min(v, d[j + RW] + KM); if (c < RW - 1) v = Math.min(v, d[j + RW + 1] + dg); if (c > 0) v = Math.min(v, d[j + RW - 1] + dg); } d[j] = v; } }
+  let max = 0; for (let j = 0; j < n; j++) if (d[j] > max) max = d[j];
+  for (let j = 0; j < n; j++) if (d[j]) {
+    const lat = 90 - Math.floor(j / RW) * step, lon = (j % RW) * step - 180, t = d[j] / max;
+    const w = 0.045 * (Math.sin(lon * 0.9 + lat * 0.4) * Math.sin(lat * 1.3 - lon * 0.2) + 0.5 * Math.sin(lon * 2.7 + 1.3) * Math.sin(lat * 3.1 + 0.7));
+    d[j] = Math.max(0.001, Math.min(1, t + w * Math.min(1, t * 6)));
+  }
+  return d;
+}
+const glacial = sea => Math.max(0, Math.min(1, -sea / 125));
+function pickNH(a) {                // which mapped slice, and how much of it, for age a
+  if (!NH) return null;
+  const S = NH.slices, inSlice = S.find(s => a >= s.to && a <= s.from);
+  if (inSlice) return { slice: inSlice, thr: 0 };
+  let best = null, bd = Infinity;
+  S.forEach(s => { const dd = a > s.from ? a - s.from : s.to - a; if (dd < bd) { bd = dd; best = s; } });
+  const ratio = Math.min(1, glacial(seaAt(a)) / Math.max(0.05, best.glac));
+  return { slice: best, thr: ratio <= 0.02 ? 2 : 1 - ratio };     // thr 2 = none of it
+}
 function iceAt(j, f, e) {            // e = height above the sea of that time
   const lat = 90 - Math.floor(j / RW) * 360 / (RW - 1);
   if (lat < -60 && (relief[j] > 0 || (f > 0.4 && relief[j] > -700 * f))) return 1;      // Antarctica (+ grounded on the shelf in glacials)
+  if (nhPick && j < NH.rows * RW) { const dd = nhPick.slice.depth[j]; if (dd && dd >= nhPick.thr) return 2; }   // mapped NH ice
   const k = iceSheet[j]; if (k < 0) return 0;
-  if (k === GREENLAND && relief[j] > 300) return 1;                                        // Greenland's present ice
+  if (k === GREENLAND) return relief[j] > 300 ? 1 : 0;                                       // Greenland's present ice
   return iceDepth[j] >= 1 - f ? 1 : 0;
 }
 
-let paintedSea = null;
+let paintedSea = null, paintedIce = '';
 function paint(sea) {
   if (!relief) return;
-  const d = gridImg.data, n = RW * RH, f = Math.max(0, Math.min(1, -sea / 125));
+  const d = gridImg.data, n = RW * RH, f = glacial(sea);
+  nhPick = pickNH(age);
   for (let j = 0; j < n; j++) {
     const e = relief[j] - sea;                              // height above the sea of that time
     let li = Math.round((e + 6000) / 10); li = li < 0 ? 0 : li > 1220 ? 1220 : li;
     if (e > 0 && li < 601) li = 601;                        // newly dry shelf still reads as land
     if (e <= 0 && li > 599) li = 599;
     const s = shade[j];
-    if (showIce && iceDepth && iceAt(j, f, e)) {              // ice: white-blue, lightly shaded, bluer at the edges
-      // a dome: brighter toward the centre of the sheet, faintly blue at its edge; present ice keeps its surface shading
-      const dome = iceSheet[j] >= 0 && !(iceSheet[j] === GREENLAND && relief[j] > 300) ? Math.sqrt(Math.max(0, iceDepth[j] - (1 - f)) / Math.max(0.05, f)) : 0.8;
-      const k = 0.84 + 0.16 * Math.min(1, dome), q = iceSheet[j] >= 0 && dome < 0.8 ? 1 : Math.min(1.1, Math.max(0.85, s));
+    const ia = showIce && iceDepth ? iceAt(j, f, e) : 0;
+    if (ia) {                                                  // ice: a dome, brighter toward the centre, faintly blue at the edge
+      const dome = ia === 2 ? Math.sqrt(Math.max(0, nhPick.slice.depth[j] - nhPick.thr) / Math.max(0.05, 1 - nhPick.thr))
+        : iceSheet[j] === 1 ? Math.sqrt(Math.max(0, iceDepth[j] - (1 - f)) / Math.max(0.05, f)) : 0.8;
+      const k = 0.84 + 0.16 * Math.min(1, dome), q = dome < 0.8 ? 1 : Math.min(1.1, Math.max(0.85, s));
       d[j * 4] = 214 * k * q; d[j * 4 + 1] = 230 * k * q; d[j * 4 + 2] = 246 * Math.min(1, 0.94 + 0.06 * k) * q; d[j * 4 + 3] = 255; continue;
     }
     d[j * 4] = ELUT[li * 3] * s; d[j * 4 + 1] = ELUT[li * 3 + 1] * s; d[j * 4 + 2] = ELUT[li * 3 + 2] * s; d[j * 4 + 3] = 255;
@@ -288,7 +317,7 @@ function paint(sea) {
   const cw = TW / (RW - 1), ch = TH / (RH - 1);
   g.drawImage(gridCv, -cw / 2, -ch / 2, RW * cw, RH * ch);
   if (G) G.texture.needsUpdate = true;
-  paintedSea = sea;
+  paintedSea = sea; paintedIce = nhPick ? nhPick.slice.name + ':' + nhPick.thr.toFixed(2) : '';
 }
 
 // ---------- sea level (Spratt & Lisiecki 2016, 1 kyr steps) ----------
@@ -351,7 +380,8 @@ function setAge(a, fromSlider) {
   age = Math.max(0, Math.min(AGE_MAX, a));
   if (!fromSlider) slider.value = String(tl.scale.slider.value(age));
   updateUI();
-  const sea = seaAt(age); if (paintedSea === null || Math.abs(sea - paintedSea) >= 0.5) paint(sea);
+  const sea = seaAt(age), pk = pickNH(age), key = pk ? pk.slice.name + ':' + pk.thr.toFixed(2) : '';
+  if (paintedSea === null || Math.abs(sea - paintedSea) >= 0.5 || key !== paintedIce) paint(sea);
 }
 // playback: linear → constant time speed (2.5 thousand years per second at "normal");
 // log → constant speed along the bar (the whole bar in 120 s at "normal")
@@ -544,9 +574,19 @@ function loadRelief(src) {
 }
 applyLang();
 requestAnimationFrame(loop);
-Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r => r.json()), fetch('data/events.json').then(r => r.json())]).then(([r, sea, ev]) => {
+function loadGray(src) {
+  return new Promise((res, rej) => { const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
+    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0); const d = x.getImageData(0, 0, im.width, im.height).data, o = new Uint8Array(im.width * im.height);
+    for (let i = 0; i < o.length; i++) o[i] = d[i * 4]; res(o); }; im.onerror = () => rej(new Error(src)); im.src = src; });
+}
+Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r => r.json()), fetch('data/events.json').then(r => r.json()),
+  fetch('data/ice_nh.json').then(r => r.json()), loadGray('data/ice_nh.png')]).then(([r, sea, ev, im, ia]) => {
   EV = ev.events; KINDS = ev.kinds; buildPins(); buildEvRow();
   RW = r.w; RH = r.h; relief = r.e; shade = shadeGrid(relief, RW, RH); SEA = sea; buildIce();
+  const rows = im.grid.rows, per = rows * RW;
+  NH = { rows, slices: im.slices.map((s, i) => {
+    let g = 0, k = 0; for (let a = Math.ceil(s.to); a <= Math.floor(s.from); a++) { g += glacial(seaAt(a)); k++; }   // how glacial the sea was during the slice
+    return { ...s, glac: k ? g / k : glacial(seaAt((s.from + s.to) / 2)), depth: depthField(ia.subarray(i * per, (i + 1) * per), rows) }; }) };
   gridCv = document.createElement('canvas'); gridCv.width = RW; gridCv.height = RH;
   gridCtx = gridCv.getContext('2d'); gridImg = gridCtx.createImageData(RW, RH);
   $('loading').hidden = true;

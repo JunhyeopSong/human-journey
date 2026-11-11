@@ -1,0 +1,71 @@
+{
+ "source": "Batchelor, C.L. et al. (2019) The configuration of Northern Hemisphere ice sheets through the Quaternary. Nature Communications 10, 3713. doi:10.1038/s41467-019-11601-2 — best-estimate reconstructions (OSF osf.io/7jen3), CC BY 4.0. Rasterised to 0.25°, 30–90°N.",
+ "grid": {
+  "w": 1441,
+  "rows": 241,
+  "latTop": 90,
+  "latBottom": 30
+ },
+ "slices": [
+  {
+   "name": "LGM",
+   "from": 26,
+   "to": 19
+  },
+  {
+   "name": "30 ka",
+   "from": 32,
+   "to": 28
+  },
+  {
+   "name": "35 ka",
+   "from": 37,
+   "to": 33
+  },
+  {
+   "name": "40 ka",
+   "from": 42,
+   "to": 38
+  },
+  {
+   "name": "45 ka",
+   "from": 47.5,
+   "to": 43
+  },
+  {
+   "name": "MIS 4",
+   "from": 72,
+   "to": 58
+  },
+  {
+   "name": "MIS 5a",
+   "from": 86,
+   "to": 72
+  },
+  {
+   "name": "MIS 5b",
+   "from": 92,
+   "to": 86
+  },
+  {
+   "name": "MIS 5c",
+   "from": 108,
+   "to": 92
+  },
+  {
+   "name": "MIS 5d",
+   "from": 117,
+   "to": 108
+  },
+  {
+   "name": "MIS 6",
+   "from": 190,
+   "to": 132
+  },
+  {
+   "name": "MIS 8",
+   "from": 279,
+   "to": 243
+  }
+ ]
+}

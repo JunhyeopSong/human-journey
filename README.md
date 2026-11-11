@@ -12,7 +12,7 @@ Prototype · 프로토타입
 - ✅ Globe, timeline (linear / log scale), playback, Korean and English · 지구본, 타임라인(선형/로그), 재생, 한국어·영어
 - ✅ Coastlines from sea level (land bridges such as Sunda, Sahul and Beringia appear in glacial times) · 해수면에 따른 해안선(빙기에 순다·사훌·베링 땅다리)
 - ✅ 34 events and sites with dated ranges, disputed claims shown with both sides and sources · 연대 범위가 있는 사건·유적 34개, 논쟁은 양쪽 주장과 출처 함께
-- ✅ Ice sheets as a schematic that grows and shrinks with sea level (to be replaced by published reconstructions) · 해수면에 맞춰 커지고 줄어드는 빙상 개략도(실제 복원 자료로 바꿀 예정)
+- ✅ Ice sheets: published Northern Hemisphere reconstructions for 12 time slices, scaled with sea level in between · 빙상: 12개 시기의 북반구 복원 자료, 그 사이는 해수면으로 조절
 - ⏳ Species ranges, routes, 10 languages · 종 분포, 이동 경로, 10개 언어
 
 ## Data sources · 데이터 출처
@@ -21,7 +21,7 @@ Prototype · 프로토타입
 |---|---|---|
 | Sea level · 해수면 | Spratt & Lisiecki (2016), *Clim. Past* 12:1079 — [doi:10.5194/cp-12-1079-2016](https://doi.org/10.5194/cp-12-1079-2016), [NOAA study 19982](https://www.ncei.noaa.gov/access/paleo-search/study/19982). Short PC1 stack, 0–430 ka, shifted so today = 0 m | NOAA open data |
 | Relief · 지형 | ETOPO1 (NOAA NCEI) via [ERDDAP etopo180](https://coastwatch.pfeg.noaa.gov/erddap/griddap/etopo180.html), reduced to 0.25° | Free use and redistribution |
-| Ice sheets · 빙상 | Hand-drawn schematic of the Last Glacial Maximum extent, scaled with sea level — not a dataset · 마지막 빙기 최성기 범위를 직접 그린 개략도를 해수면에 맞춰 조절 (자료가 아님) | — |
+| Ice sheets · 빙상 | Batchelor, C.L. et al. (2019) The configuration of Northern Hemisphere ice sheets through the Quaternary. *Nat. Commun.* 10, 3713 — [doi:10.1038/s41467-019-11601-2](https://doi.org/10.1038/s41467-019-11601-2); best-estimate reconstructions for LGM, 30, 35, 40, 45 ka, MIS 4, 5a–5d, 6 and 8 from [OSF 7jen3](https://osf.io/7jen3/), rasterised to 0.25° (`docs/data/ice_nh.png`). Between slices the nearest one is shrunk or grown with sea level. Present Greenland and Antarctic ice from the relief; Patagonia is a hand-drawn schematic · 12개 시기 최적 추정 복원을 0.25°로 변환, 그 사이는 해수면으로 조절. 그린란드·남극 현재 빙상은 지형에서, 파타고니아는 개략도 | CC BY 4.0 |
 | Events and sites · 사건·유적 | Published studies cited in each event's popover and in `docs/data/events.json` (dates and summaries still to be reviewed) · 각 사건 팝업과 `docs/data/events.json`에 출처 표기 (연대·요약 검토 예정) | — |
 | 3D rendering | [three.js](https://threejs.org) r128 | MIT |
 | Icons · 아이콘 | [Lucide](https://lucide.dev) | ISC |
