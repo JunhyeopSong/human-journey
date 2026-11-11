@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>인류의 여정</title>
+<meta name="description" content="30만 년 전부터 지금까지, 해수면과 함께 바뀌는 지구 위에서 인류가 세계로 퍼져 나간 길을 따라가는 3D 지구본 (프로토타입)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://junhyeopsong.github.io/time-machine-ui/v1/tokens.css">
+<link rel="stylesheet" href="https://junhyeopsong.github.io/time-machine-ui/v1/base.css">
+<style>
+/* shared look: time-machine-ui v1 · below: this product only */
+.proto { font-size: 9.5px; padding: 1px 6px; border-radius: 999px; border: 0.5px solid var(--accent); color: var(--accent); letter-spacing: .02em; text-transform: none; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="loading" data-i18n="loading">지형 데이터를 불러오는 중…</div>
+
+<div class="hud">
+  <div class="glass era" id="era" aria-live="polite">
+    <span class="eyebrow"><span id="eraEyebrow">—</span><span class="proto" data-i18n="proto">프로토타입</span></span>
+    <span class="period"><span class="chip" id="eraChip"></span><span id="eraName">—</span></span>
+    <span class="txt" id="eraText"></span>
+  </div>
+
+  <button class="glass icon" id="gear" data-icon="sliders-horizontal" data-i18n-aria="settings" data-i18n-title="settings" aria-label="보기 설정" aria-expanded="false" aria-controls="sheet" title="보기 설정"></button>
+  <section class="glass sheet" id="sheet" data-i18n-aria="settings" aria-label="보기 설정" hidden><div class="sheet-in" id="sheetIn">
+    <div class="group">
+      <label class="item" for="lang"><span data-i18n="lang">언어</span><select id="lang"></select></label>
+    </div>
+    <div class="group">
+      <div class="item"><span data-i18n="scale">타임라인 눈금</span>
+        <div class="seg" id="scaleSeg" role="radiogroup" data-i18n-aria="scale" aria-label="타임라인 눈금">
+          <button role="radio" data-s="linear" aria-checked="true" data-i18n="linear">선형</button>
+          <button role="radio" data-s="log" aria-checked="false" data-i18n="log">로그</button>
+        </div>
+      </div>
+      <label class="item"><span data-i18n="spin">자동 회전</span><span class="sw"><input type="checkbox" role="switch" id="spin" checked><span class="tr"></span></span></label>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="foot" id="foot"></div>
+    <div class="foot fb"><span data-i18n="feedback">피드백·오류 제보</span>: <a href="mailto:sapu0000@gmail.com">sapu0000@gmail.com</a><a class="gh" href="https://github.com/JunhyeopSong/human-journey/issues/new" target="_blank" rel="noopener" data-i18n-aria="feedbackGithub" data-i18n-title="feedbackGithub" aria-label="GitHub에 이슈 남기기" title="GitHub에 이슈 남기기"><svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a></div>
+  </div></section>
+
+  <nav class="glass nav" data-i18n-aria="globeCtl" aria-label="지구본 조작">
+    <button id="zIn" data-icon="plus" data-i18n-aria="zoomIn" data-i18n-title="zoomIn" aria-label="확대" title="확대"></button>
+    <button id="zOut" data-icon="minus" data-i18n-aria="zoomOut" data-i18n-title="zoomOut" aria-label="축소" title="축소"></button>
+    <button id="home" data-icon="globe" data-i18n-aria="home" data-i18n-title="home" aria-label="지구 전체 보기" title="지구 전체 보기"></button>
+  </nav>
+
+  <div class="glass hint" id="hint"><span data-i18n="hint1">드래그로 돌리기 · 휠·핀치로 확대</span><span class="hide-sm" data-i18n="hint2"> · Space 재생/정지 · 1·2·3 속도</span></div>
+
+  <section class="glass dock" data-i18n-aria="timeCtl" aria-label="시간 조절">
+    <div class="row1">
+      <div class="transport" role="group" data-i18n-aria="transport" aria-label="재생 조작">
+        <button class="step" id="back" data-i18n-aria="back" data-i18n-title="back" aria-label="과거로" title="과거로 (←)"><svg viewBox="0 0 16 16"><path d="M12 2.8v10.4a.6.6 0 0 1-.9.5L3.4 8.5a.6.6 0 0 1 0-1l7.7-5.2a.6.6 0 0 1 .9.5z"/></svg></button>
+        <button class="play" id="play" data-i18n-title="playTitle" aria-label="재생" title="재생 / 정지 (Space)">
+          <svg class="tri" viewBox="0 0 16 16"><path d="M4 2.5v11a.6.6 0 0 0 .9.5l9-5.5a.6.6 0 0 0 0-1l-9-5.5a.6.6 0 0 0-.9.5z"/></svg>
+          <svg class="pause" viewBox="0 0 16 16"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>
+        </button>
+        <button class="step" id="fwd" data-i18n-aria="fwd" data-i18n-title="fwd" aria-label="현재 쪽으로" title="현재 쪽으로 (→)"><svg viewBox="0 0 16 16"><path d="M4 2.8v10.4a.6.6 0 0 0 .9.5l7.7-5.2a.6.6 0 0 0 0-1L4.9 2.3a.6.6 0 0 0-.9.5z"/></svg></button>
+        <span class="divider" aria-hidden="true"></span>
+        <div class="seg" id="speed" role="radiogroup" data-i18n-aria="speed" aria-label="재생 속도">
+          <button role="radio" data-v="0.4" data-i18n="slow" aria-checked="false">느리게</button>
+          <button role="radio" data-v="1" data-i18n="normal" aria-checked="true">보통</button>
+          <button role="radio" data-v="3" data-i18n="fast" aria-checked="false">빠르게</button>
+        </div>
+      </div>
+      <span class="spacer"></span>
+      <div class="tchip" id="seaChip"><span class="tv" id="seaVal">—</span><span class="tl" data-i18n="sea">해수면</span></div>
+      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span></div>
+    </div>
+    <div class="track" id="track">
+      <div class="strata" id="strata"></div>
+      <div class="tltip" id="tltip" hidden role="tooltip"><i></i><b></b><span></span></div>
+      <input type="range" id="t" data-i18n-aria="slider" aria-label="시간 선택: 왼쪽이 과거, 오른쪽이 현재">
+    </div>
+    <div class="ticks" id="ticks"></div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://junhyeopsong.github.io/time-machine-ui/v1/ui.js"></script>
+<script>
+TMUI.fillIcons();
+const $ = id => document.getElementById(id);
+const D2R = Math.PI / 180;
+
+// ---------- language (shared with the other time machines on this site) ----------
+const I18N = {
+  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', lang: '언어', scale: '타임라인 눈금',
+      linear: '선형', log: '로그', spin: '자동 회전', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
+      globeCtl: '지구본 조작', zoomIn: '확대', zoomOut: '축소', home: '지구 전체 보기', hint1: '드래그로 돌리기 · 휠·핀치로 확대',
+      hint2: ' · Space 재생/정지 · 1·2·3 속도', timeCtl: '시간 조절', transport: '재생 조작', back: '과거로', fwd: '현재 쪽으로',
+      play: '재생', pause: '정지', playTitle: '재생 / 정지 (Space)', speed: '재생 속도', slow: '느리게', normal: '보통', fast: '빠르게',
+      sea: '해수면', slider: '시간 선택: 왼쪽이 과거, 오른쪽이 현재', present: '현재', now: '현재', ago: '{n} 전', seaM: '{m} m',
+      eyebrow: '{p} · {r}', seaLow: '해수면이 지금보다 {m} m 낮습니다. 얕은 바다가 육지로 드러나 베링·순다·사훌 같은 땅다리가 생깁니다.',
+      seaMid: '해수면이 지금보다 {m} m 낮습니다. 대륙붕 일부가 육지로 드러났습니다.', seaNear: '해수면이 지금과 비슷합니다.',
+      seaHigh: '해수면이 지금보다 {m} m 높습니다. 간빙기의 따뜻한 시기입니다.', ice: '빙기', warm: '간빙기',
+      deep: '-6000 m', seaLvl: '해수면', high: '+5500 m',
+      foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–430 ka, 오늘을 0 m로 맞춤. 지형: ETOPO1 (NOAA, 0.25°로 줄임). 빙상과 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
+  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', lang: 'Language', scale: 'Timeline scale',
+      linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
+      globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
+      hint2: ' · Space play/pause · 1·2·3 speed', timeCtl: 'Time controls', transport: 'Playback', back: 'Toward the past', fwd: 'Toward today',
+      play: 'Play', pause: 'Pause', playTitle: 'Play / pause (Space)', speed: 'Playback speed', slow: 'Slow', normal: 'Normal', fast: 'Fast',
+      sea: 'Sea level', slider: 'Pick a time: past on the left, today on the right', present: 'Today', now: 'today', ago: '{n} ago', seaM: '{m} m',
+      eyebrow: '{p} · {r}', seaLow: 'Sea level is {m} m lower than today. Shallow seas become land and bridges such as Beringia, Sunda and Sahul appear.',
+      seaMid: 'Sea level is {m} m lower than today. Parts of the continental shelves are dry land.', seaNear: 'Sea level is close to today’s.',
+      seaHigh: 'Sea level is {m} m higher than today, in a warm interglacial.', ice: 'glacial', warm: 'interglacial',
+      deep: '-6000 m', seaLvl: 'sea level', high: '+5500 m',
+      foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–430 ka, shifted so today = 0 m. Relief: ETOPO1 (NOAA), reduced to 0.25°. Prototype: ice sheets and crustal rebound are not shown yet.' } },
+};
+const STAGES = [   // ICS colours
+  { from: 300, to: 129, color: '#FFF2C7', ko: '치바니안 (중기 플라이스토세)', en: 'Chibanian (Middle Pleistocene)', range: '774 – 129 ka' },
+  { from: 129, to: 11.7, color: '#FFF2D3', ko: '후기 플라이스토세', en: 'Late Pleistocene', range: '129 – 11.7 ka' },
+  { from: 11.7, to: 0, color: '#FEEBD2', ko: '홀로세', en: 'Holocene', range: '11.7 ka – today' },
+];
+function pickLang() {
+  try { for (const k of ['tm.lang', 'lang']) { const v = localStorage.getItem(k); if (v in I18N) return v; } } catch (_) {}
+  for (const l of (navigator.languages || [navigator.language || 'en'])) { const b = String(l).slice(0, 2).toLowerCase(); if (b in I18N) return b; }
+  return 'en';
+}
+let LANG = pickLang();
+function t(k, vars) { let s = I18N[LANG].ui[k] ?? I18N.ko.ui[k] ?? k; if (vars) for (const v in vars) s = s.split('{' + v + '}').join(vars[v]); return s; }
+const stageName = s => s[LANG] || s.en;
+function fmtAgo(ka) {               // "2만 3천 년 전" / "23,000 years ago"
+  if (ka <= 0.0005) return t('present');
+  const y = Math.round(ka * 1000 / (ka < 10 ? 100 : 1000)) * (ka < 10 ? 100 : 1000);
+  if (LANG === 'ko') {
+    const man = Math.floor(y / 10000), ch = Math.floor((y % 10000) / 1000), b = Math.floor((y % 1000) / 100);
+    return t('ago', { n: [man ? man + '만' : '', ch ? ch + '천' : '', b ? b + '백' : ''].filter(Boolean).join(' ') + ' 년' });
+  }
+  return t('ago', { n: y.toLocaleString('en-US') + ' years' });
+}
+
+// ---------- terrain: present-day relief flooded to the sea level of the time ----------
+const TW = 2048, TH = 1024;
+const tex = document.createElement('canvas'); tex.width = TW; tex.height = TH;
+const g = tex.getContext('2d');
+const HYPSO = [   // same colours as the Continental Time Machine
+  [-6000, '#071d3a'], [-4500, '#0b2c55'], [-3000, '#123f72'], [-1500, '#1d5a90'],
+  [-200, '#3a86b8'], [-1, '#6cb6d6'], [0, '#5d8f52'], [250, '#7aa35a'], [700, '#a9ad6c'],
+  [1300, '#bf9f68'], [2200, '#9c7653'], [3200, '#8a7468'], [4200, '#d6d0ca'], [5500, '#ffffff'],
+];
+const ELUT = (() => {
+  const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const n = 1221, out = new Uint8ClampedArray(n * 3);
+  for (let i = 0; i < n; i++) {
+    const e = -6000 + i * 10;
+    let k = 0; while (k < HYPSO.length - 2 && e > HYPSO[k + 1][0]) k++;
+    const [e0, c0] = HYPSO[k], [e1, c1] = HYPSO[k + 1];
+    const f = Math.max(0, Math.min(1, (e - e0) / (e1 - e0))), a = hex(c0), b = hex(c1);
+    for (let j = 0; j < 3; j++) out[i * 3 + j] = a[j] + (b[j] - a[j]) * f;
+  }
+  return out;
+})();
+let RW = 0, RH = 0, relief = null, shade = null, gridCv = null, gridCtx = null, gridImg = null;
+function shadeGrid(elev, w, h) {    // NW-lit hillshade, as in the Continental Time Machine
+  const s = new Float32Array(w * h), res = 360 / (w - 1), kk = 1 / res;
+  for (let r = 0; r < h; r++) {
+    const lat = 90 - r * res, kx = 1 / Math.max(0.2, Math.cos(lat * D2R));
+    for (let c = 0; c < w; c++) {
+      const e = elev[r * w + c];
+      const ex = elev[r * w + (c + 1) % w] - elev[r * w + (c + w - 1) % w];
+      const ey = elev[Math.min(h - 1, r + 1) * w + c] - elev[Math.max(0, r - 1) * w + c];
+      const k = (e > 0 ? 0.00018 : 0.00005) * Math.min(kk, 2.6);
+      s[r * w + c] = Math.max(0.55, Math.min(1.35, 1 - k * (ex * kx) * 0.7 + k * ey * 0.7));
+    }
+  }
+  return s;
+}
+let paintedSea = null;
+function paint(sea) {
+  if (!relief) return;
+  const d = gridImg.data, n = RW * RH;
+  for (let j = 0; j < n; j++) {
+    const e = relief[j] - sea;                              // height above the sea of that time
+    let li = Math.round((e + 6000) / 10); li = li < 0 ? 0 : li > 1220 ? 1220 : li;
+    if (e > 0 && li < 601) li = 601;                        // newly dry shelf still reads as land
+    if (e <= 0 && li > 599) li = 599;
+    const s = shade[j];
+    d[j * 4] = ELUT[li * 3] * s; d[j * 4 + 1] = ELUT[li * 3 + 1] * s; d[j * 4 + 2] = ELUT[li * 3 + 2] * s; d[j * 4 + 3] = 255;
+  }
+  gridCtx.putImageData(gridImg, 0, 0);
+  g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+  const cw = TW / (RW - 1), ch = TH / (RH - 1);
+  g.drawImage(gridCv, -cw / 2, -ch / 2, RW * cw, RH * ch);
+  if (G) G.texture.needsUpdate = true;
+  paintedSea = sea;
+}
+
+// ---------- sea level (Spratt & Lisiecki 2016, 1 kyr steps) ----------
+let SEA = null;
+function seaAt(ka) {
+  if (!SEA) return 0;
+  const a = Math.max(0, Math.min(SEA.sea.length - 1, ka)), i = Math.floor(a), f = a - i;
+  return i + 1 < SEA.sea.length ? SEA.sea[i] * (1 - f) + SEA.sea[i + 1] * f : SEA.sea[i];
+}
+
+// ---------- globe (time-machine-ui) ----------
+let G = null;
+G = TMUI.globe({ stage: $('stage'), texture: tex,
+  onStopAuto: () => { $('spin').checked = false; },
+  stars: { jump: 10, maxRate: 25, layers: [   // drift per thousand years
+    { n: 1700, px: 1.5, color: 0x8794b4, k: 0.002 }, { n: 520, px: 2.1, color: 0xaab8d6, k: 0.0032 },
+    { n: 180, px: 2.8, color: 0xdde5f5, k: 0.0044 }] } });
+const { view, flyTo } = G;
+addEventListener('resize', G.resize); G.resize();
+$('zIn').onclick = () => { G.stopAuto(); flyTo(view.spin, view.tilt, 1 + (view.dist - 1) * 0.55, 350); };
+$('zOut').onclick = () => flyTo(view.spin, view.tilt, 1 + (view.dist - 1) / 0.55, 350);
+$('home').onclick = () => flyTo(view.spin, 0.3, G.homeDist, 700);
+$('spin').onchange = e => { G.autoSpin = e.target.checked; G.halt(); };
+G.canvas.addEventListener('pointerdown', () => $('hint').classList.add('gone'), { once: true });
+function sphereXYZ(lon, lat) {        // matches THREE.SphereGeometry UV layout (same as the continent app)
+  const phi = (lon + 180) * D2R, cl = Math.cos(lat * D2R);
+  return new THREE.Vector3(-Math.cos(phi) * cl, Math.sin(lat * D2R), Math.sin(phi) * cl);
+}
+{ const v = sphereXYZ(75, 10); view.spin = -Math.atan2(v.x, v.z); view.tilt = Math.asin(v.y) - 0.12; G.applyView(); } // Africa → Asia
+
+// ---------- time ----------
+const AGE_MAX = 300;                // thousand years ago
+let age = 300, playing = false, speedVal = 1;
+const SCALES = { linear: TMUI.scale.linear(AGE_MAX, 0, 0.1), log: TMUI.scale.shiftedLog(AGE_MAX, 0, 10) };
+let scaleKind = 'linear';
+try { if (localStorage.getItem('tm.scale') === 'log') scaleKind = 'log'; } catch (_) {}
+const slider = $('t');
+const TICKS = { linear: [300, 250, 200, 150, 100, 50, 0], log: [300, 200, 100, 50, 20, 10, 5, 0] };
+const tl = TMUI.timeline({
+  track: $('track'), strata: $('strata'), tip: $('tltip'), ticks: $('ticks'), slider, scale: SCALES[scaleKind], getAge: () => age,
+  bands: () => STAGES.map(s => ({ from: s.from, to: s.to, color: s.color, name: stageName(s), range: s.range })),
+  tickList: () => TICKS[scaleKind].map(a => ({ age: a, now: a === 0, label: a === 0 ? t('present') : `-${a}k` })),
+});
+slider.addEventListener('input', () => { stop(); setAge(tl.scale.slider.age(+slider.value), true); });
+function stageAt(a) { return STAGES.find(s => a <= s.from && a >= s.to) || STAGES[0]; }
+function updateUI() {
+  const s = stageAt(age), sea = seaAt(age), m = Math.round(sea);
+  $('when').textContent = fmtAgo(age);
+  $('ka').textContent = age < 1 ? `${Math.round(age * 1000)} a` : `${age.toFixed(1)} ka`;
+  $('seaVal').textContent = t('seaM', { m: (m > 0 ? '+' : m < 0 ? '−' : '') + Math.abs(m) });
+  $('eraEyebrow').textContent = t('eyebrow', { p: stageName(s), r: s.range });
+  $('eraChip').style.background = s.color;
+  $('eraName').textContent = fmtAgo(age) + ' · ' + t(sea < -20 ? 'ice' : 'warm');
+  $('eraText').textContent = sea < -60 ? t('seaLow', { m: -m }) : sea < -15 ? t('seaMid', { m: -m }) : sea > 2 ? t('seaHigh', { m }) : t('seaNear');
+}
+function setAge(a, fromSlider) {
+  age = Math.max(0, Math.min(AGE_MAX, a));
+  if (!fromSlider) slider.value = String(tl.scale.slider.value(age));
+  updateUI();
+  const sea = seaAt(age); if (paintedSea === null || Math.abs(sea - paintedSea) >= 0.5) paint(sea);
+}
+// playback: linear → constant time speed (2.5 thousand years per second at "normal");
+// log → constant speed along the bar (the whole bar in 120 s at "normal")
+function setPlayIcon(on) { $('play').classList.toggle('on', on); $('play').setAttribute('aria-label', on ? t('pause') : t('play')); }
+function stop() { playing = false; setPlayIcon(false); }
+$('play').onclick = () => { if (playing) return stop(); if (age <= 0) setAge(AGE_MAX); playing = true; setPlayIcon(true); };
+TMUI.segmented($('speed'), b => { speedVal = +b.dataset.v; });
+function step(dir) {                // dir +1 = toward the past; next tick of the current scale
+  stop();
+  const marks = [...new Set([...TICKS[scaleKind], ...(scaleKind === 'linear' ? Array.from({ length: 31 }, (_, i) => i * 10) : [])])].sort((a, b) => a - b);
+  const next = dir > 0 ? marks.find(x => x > age + 1e-6) : [...marks].reverse().find(x => x < age - 1e-6);
+  if (next != null) setAge(next);
+}
+$('back').onclick = () => step(1); $('fwd').onclick = () => step(-1);
+addEventListener('keydown', e => {
+  const tg = e.target, tag = tg.tagName;
+  if (tag === 'SELECT' || (tag === 'INPUT' && tg.type === 'text') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); if (!e.repeat) $('play').click(); return; }
+  if (e.shiftKey || tag === 'INPUT' && tg.type === 'range') return;
+  if (['1', '2', '3'].includes(e.key)) { const b = document.querySelectorAll('#speed button')[+e.key - 1]; if (b) { e.preventDefault(); b.click(); } return; }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); step(1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); step(-1); }
+});
+
+// ---------- settings, language ----------
+const sheet = $('sheet'), gear = $('gear');
+const sheetEdges = TMUI.edgeFade($('sheetIn'), { axis: 'y', zone: 22, maxSize: 64, when: () => !sheet.hidden,
+  items: () => $('sheetIn').querySelectorAll('.item, .legend, .foot') });
+TMUI.popover(gear, sheet, { onOpen: sheetEdges });
+function renderLegend() {
+  const stops = HYPSO.map(([e, c]) => `${c} ${((e + 6000) / 11500 * 100).toFixed(1)}%`).join(',');
+  $('legend').innerHTML = `<div class="scale"><div class="bar" style="background:linear-gradient(90deg,${stops})"></div>
+    <div class="lbl"><span>${t('deep')}</span><span>${t('seaLvl')}</span><span>${t('high')}</span></div></div>`;
+}
+function applyLang() {
+  document.documentElement.lang = LANG; document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
+  document.querySelectorAll('[data-i18n-title]').forEach(el => el.title = t(el.dataset.i18nTitle));
+  $('foot').textContent = t('foot'); renderLegend(); tl.rebuild(); updateUI(); setPlayIcon(playing);
+}
+(() => {
+  const sel = $('lang');
+  Object.keys(I18N).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = I18N[k].name; sel.appendChild(o); });
+  sel.value = LANG;
+  sel.onchange = () => { LANG = sel.value; try { localStorage.setItem('tm.lang', LANG); } catch (_) {} applyLang(); };
+})();
+document.querySelectorAll('#scaleSeg button').forEach(b => b.setAttribute('aria-checked', b.dataset.s === scaleKind));
+TMUI.segmented($('scaleSeg'), b => {
+  scaleKind = b.dataset.s; try { localStorage.setItem('tm.scale', scaleKind); } catch (_) {}
+  tl.setScale(SCALES[scaleKind]); slider.value = String(tl.scale.slider.value(age));
+});
+
+// ---------- loop ----------
+let lastFrame = performance.now();
+function loop(now) {
+  const dt = Math.min(0.1, (now - lastFrame) / 1000); lastFrame = now;
+  if (playing) {
+    let a;
+    if (scaleKind === 'linear') a = age - 2.5 * speedVal * dt;
+    else a = tl.scale.age(Math.min(1, tl.scale.pct(age) / 100 + speedVal * dt / 120));
+    if (a <= 0) { a = 0; stop(); }
+    setAge(a);
+  }
+  G.stepTween(now); G.stepInertia(dt); G.applyView(); G.drift(dt, age);
+  G.renderer.render(G.scene, G.camera);
+  requestAnimationFrame(loop);
+}
+
+// ---------- boot ----------
+function loadRelief(src) {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => {
+      const c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
+      const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0);
+      const d = x.getImageData(0, 0, im.width, im.height).data, out = new Float32Array(im.width * im.height);
+      for (let i = 0; i < out.length; i++) out[i] = d[i * 4] * 256 + d[i * 4 + 1] - 12000;
+      res({ w: im.width, h: im.height, e: out });
+    };
+    im.onerror = () => rej(new Error(src)); im.src = src;
+  });
+}
+applyLang();
+requestAnimationFrame(loop);
+Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r => r.json())]).then(([r, sea]) => {
+  RW = r.w; RH = r.h; relief = r.e; shade = shadeGrid(relief, RW, RH); SEA = sea;
+  gridCv = document.createElement('canvas'); gridCv.width = RW; gridCv.height = RH;
+  gridCtx = gridCv.getContext('2d'); gridImg = gridCtx.createImageData(RW, RH);
+  $('loading').hidden = true;
+  setAge(age); paint(seaAt(age));
+}).catch(e => { $('loading').textContent = String(e); });
+</script>
+</body>
+</html>
