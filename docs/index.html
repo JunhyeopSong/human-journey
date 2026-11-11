@@ -165,12 +165,12 @@ const I18N = {
       disputed: 'disputed', about: 'about {a}', atLeast: 'at least {a}', range: 'about {a} – {b}', sources: 'Sources',
       foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–800 ka, shifted so today = 0 m; 0.8–2 Ma estimated from the LR04 benthic d18O stack (Lisiecki & Raymo 2005) — less certain. Relief: ETOPO1 (NOAA), reduced to 0.25°. Mean temperature: the EPICA Dome C Antarctic record (Jouzel et al. 2007, NOAA) scaled so the Last Glacial Maximum is 6.1 °C below today (Tierney et al. 2020) — an approximation of the global mean; before 800 ka estimated from LR04. Ice sheets: Northern Hemisphere from the best-estimate reconstructions of Batchelor et al. 2019 (Nature Communications, CC BY 4.0) for 12 time slices, reduced to 0.25°; between slices the nearest one shrinks or grows from its edges with sea level. Present Greenland and Antarctic ice from the relief; Patagonia is a hand-drawn schematic. Species ranges: drawn only from dated sites — Timmermann et al. 2022 (Nature, Supplementary Table 1, CC BY 4.0) for 30 ka – 2 Ma, the ROAD database (ROCEEH, CC BY-SA 4.0) for Homo sapiens after 30 ka, and a list of published sites with their sources; after 50 ka Homo sapiens also spreads on foot over land from accepted sites (about 500 km per thousand years, no sea crossings). Prototype: crustal rebound is not modelled yet.' } },
 };
-const STAGES = [   // ICS colours
-  { from: 2000, to: 1800, color: '#FFEDB3', ko: '젤라시안 (전기 플라이스토세)', en: 'Gelasian (Early Pleistocene)', range: '2.58 – 1.8 Ma' },
-  { from: 1800, to: 774, color: '#FFF2BA', ko: '칼라브리안 (전기 플라이스토세)', en: 'Calabrian (Early Pleistocene)', range: '1.8 Ma – 774 ka' },
-  { from: 774, to: 129, color: '#FFF2C7', ko: '치바니안 (중기 플라이스토세)', en: 'Chibanian (Middle Pleistocene)', range: '774 – 129 ka' },
-  { from: 129, to: 11.7, color: '#FFF2D3', ko: '후기 플라이스토세', en: 'Late Pleistocene', range: '129 – 11.7 ka' },
-  { from: 11.7, to: 0, color: '#FEEBD2', ko: '홀로세', en: 'Holocene', range: '11.7 ka – today' },
+const STAGES = [   // distinct colours like the Continental Time Machine's periods (the ICS ones for these stages are all pale yellow); the Holocene keeps the Quaternary yellow
+  { from: 2000, to: 1800, color: '#C98A3C', ko: '젤라시안 (전기 플라이스토세)', en: 'Gelasian (Early Pleistocene)', range: '2.58 – 1.8 Ma' },
+  { from: 1800, to: 774, color: '#86A85A', ko: '칼라브리안 (전기 플라이스토세)', en: 'Calabrian (Early Pleistocene)', range: '1.8 Ma – 774 ka' },
+  { from: 774, to: 129, color: '#3FA9BF', ko: '치바니안 (중기 플라이스토세)', en: 'Chibanian (Middle Pleistocene)', range: '774 – 129 ka' },
+  { from: 129, to: 11.7, color: '#8E6CC4', ko: '후기 플라이스토세', en: 'Late Pleistocene', range: '129 – 11.7 ka' },
+  { from: 11.7, to: 0, color: '#F2E86D', ko: '홀로세', en: 'Holocene', range: '11.7 ka – today' },
 ];
 function pickLang() {
   try { for (const k of ['tm.lang', 'lang']) { const v = localStorage.getItem(k); if (v in I18N) return v; } } catch (_) {}
