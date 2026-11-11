@@ -14,7 +14,7 @@ Prototype · 프로토타입
 - ✅ 34 events and sites with dated ranges, disputed claims shown with both sides and sources · 연대 범위가 있는 사건·유적 34개, 논쟁은 양쪽 주장과 출처 함께
 - ✅ Ice sheets: published Northern Hemisphere reconstructions for 12 time slices, scaled with sea level in between · 빙상: 12개 시기의 북반구 복원 자료, 그 사이는 해수면으로 조절
 - ✅ 9 migration routes drawn as dotted “possible routes” that grow with time, with disputes and sources · 시간에 따라 자라는 점선 이동 경로 9개 (논쟁·출처 포함)
-- ✅ Ranges of six archaic species as soft areas around sites dated to the time · 연대가 맞는 유적 주변을 흐린 영역으로 그린 고인류 6종의 분포
+- ✅ Ranges of six archaic species as soft areas around sites dated to the time, and Homo sapiens spreading along the routes · 연대가 맞는 유적 주변을 흐린 영역으로 그린 고인류 6종의 분포, 이동 경로를 따라 넓어지는 현생인류
 - ⏳ 10 languages, product switcher, pausing at events · 10개 언어, 제품 전환 메뉴, 재생 중 사건에서 멈추기
 
 ## Data sources · 데이터 출처
