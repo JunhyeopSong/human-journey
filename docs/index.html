@@ -183,6 +183,7 @@ const stageName = s => s[LANG] || s.en;
 function fmtAgo(ka) {               // "2만 3천 년 전" / "23,000 years ago"
   if (ka <= 0.0005) return t('present');
   const y = Math.round(ka * 1000 / (ka < 10 ? 100 : 1000)) * (ka < 10 ? 100 : 1000);
+  if (y === 0) return t('present');   // under 50 years
   if (LANG === 'ko') {
     const man = Math.floor(y / 10000), ch = Math.floor((y % 10000) / 1000), b = Math.floor((y % 1000) / 100);
     return t('ago', { n: [man ? man + '만' : '', ch ? ch + '천' : '', b ? b + '백' : ''].filter(Boolean).join(' ') + ' 년' });
@@ -400,16 +401,28 @@ function updateTemp() {
   $('tempVal').textContent = c == null ? '—' : tempUnit === 'F' ? `${(c * 9 / 5 + 32).toFixed(1)}°F` : `${c.toFixed(1)}°C`;
 }
 function stageAt(a) { return STAGES.find(s => a <= s.from && a >= s.to) || STAGES[0]; }
-function updateUI() {
-  const s = stageAt(age), sea = seaAt(age), m = Math.round(sea);
-  $('when').textContent = fmtAgo(age);
+// While playing, the readouts change at a pace people can read: the year is rounded to a step that changes about
+// twice a second at the current speed, and the texts update at most four times a second.
+let playRate = 0, lastUI = 0;
+const NICE = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100];
+function shownAge() {
+  if (!playing || playRate <= 0) return age;
+  const step = NICE.find(n => n >= playRate / 2) || 100;
+  return Math.round(age / step) * step;
+}
+function updateUI(force) {
+  const now = performance.now();
+  if (playing && !force && now - lastUI < 250) return;
+  lastUI = now;
+  const s = stageAt(age), sea = seaAt(age), m = Math.round(sea), sa = shownAge();
+  $('when').textContent = fmtAgo(sa);
   updateTemp();
-  $('ka').textContent = age < 1 ? `${Math.round(age * 1000)} a` : `${age.toFixed(1)} ka`;
+  $('ka').textContent = sa < 1 ? `${Math.round(sa * 1000)} a` : playing && sa >= 10 ? `${Math.round(sa)} ka` : `${sa.toFixed(1)} ka`;
   $('seaVal').textContent = t('seaM', { m: (m > 0 ? '+' : m < 0 ? '−' : '') + Math.abs(m) });
   $('eraEyebrow').textContent = t('eyebrow', { p: stageName(s), r: s.range });
   $('eraChip').style.background = s.color;
   const ce = typeof currentEvent === 'function' ? currentEvent() : null;
-  $('eraName').textContent = ce ? ce[LANG][0] : fmtAgo(age) + ' · ' + t(sea < -20 ? 'ice' : 'warm');
+  $('eraName').textContent = ce ? ce[LANG][0] : fmtAgo(sa) + ' · ' + t(sea < -20 ? 'ice' : 'warm');
   if (EV) markCurrent();
   $('eraText').textContent = ce ? ce[LANG][1] : sea < -60 ? t('seaLow', { m: -m }) : sea < -15 ? t('seaMid', { m: -m }) : sea > 2 ? t('seaHigh', { m }) : t('seaNear');
 }
@@ -423,7 +436,7 @@ function setAge(a, fromSlider) {
 // playback: linear → constant time speed (2.5 thousand years per second at "normal");
 // log → constant speed along the bar (the whole bar in 120 s at "normal")
 function setPlayIcon(on) { $('play').classList.toggle('on', on); $('play').setAttribute('aria-label', on ? t('pause') : t('play')); }
-function stop() { playing = false; setPlayIcon(false); }
+function stop() { playing = false; playRate = 0; setPlayIcon(false); updateUI(true); }
 $('play').onclick = () => { if (playing) return stop(); if (age <= 0) setAge(AGE_MAX); playing = true; setPlayIcon(true); };
 TMUI.segmented($('speed'), b => { speedVal = +b.dataset.v; });
 function step(dir) {                // dir +1 = toward the past; next tick of the current scale
@@ -742,13 +755,16 @@ $('rangesOn').onchange = e => { showRanges = e.target.checked; try { localStorag
 
 // ---------- loop ----------
 let lastFrame = performance.now();
+const MAX_KA_PER_S = 12;            // at "normal"; slow ×0.4, fast ×3
 function loop(now) {
   const dt = Math.min(0.1, (now - lastFrame) / 1000); lastFrame = now;
   if (playing) {
     let a;
     if (scaleKind === 'linear') a = age - 2.5 * (AGE_MAX / 300) * speedVal * dt;   // the whole span in about 2 minutes
     else a = tl.scale.age(Math.min(1, tl.scale.pct(age) / 100 + speedVal * dt / 120));
-    if (a <= 0) { a = 0; stop(); }
+    a = Math.max(a, age - MAX_KA_PER_S * speedVal * dt);   // never faster than people can follow (a 41-kyr ice-age cycle takes seconds)
+    if (dt > 0) playRate = playRate ? playRate * 0.8 + (age - a) / dt * 0.2 : (age - a) / dt;
+    if (a <= 0.001) { a = 0; stop(); }   // the log scale only approaches 0
     setAge(a);
   }
   G.stepTween(now); G.stepInertia(dt); G.applyView(); G.drift(dt, age);
