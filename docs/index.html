@@ -23,6 +23,7 @@
 .pop .src { margin: 0; padding: 0 0 0 14px; font-size: 11px; line-height: 1.5; color: var(--ink-3); }
 .pop .src a { color: var(--ink-2); }
 .pop .badge { font-size: 9.5px; padding: 1px 6px; border-radius: 999px; border: 0.5px solid #ffcf8a; color: #ffcf8a; margin-left: 6px; letter-spacing: 0; }
+@media (max-width: 640px) { #seaChip { display: none; } }
 .proto { white-space: nowrap; flex: none; font-size: 9.5px; padding: 1px 6px; border-radius: 999px; border: 0.5px solid var(--accent); color: var(--accent); letter-spacing: .02em; text-transform: none; }
 </style>
 </head>
@@ -62,9 +63,17 @@
       </div>
       <label class="item"><span><span data-i18n="contested">논쟁 중인 연대도 보기</span><small data-i18n="contestedSub">끄면 널리 인정된 연대만</small></span><span class="sw"><input type="checkbox" role="switch" id="contestedOn" checked><span class="tr"></span></span></label>
       <label class="item"><span><span data-i18n="ranges">종 분포</span><small data-i18n="rangesSub">흐린 영역 = 연대가 맞는 유적 주변</small></span><span class="sw"><input type="checkbox" role="switch" id="rangesOn" checked><span class="tr"></span></span></label>
-      <label class="item"><span><span data-i18n="routes">이동 경로</span><small data-i18n="routesSub">점선 = 가능한 경로 (정확한 길이 아님)</small></span><span class="sw"><input type="checkbox" role="switch" id="routesOn" checked><span class="tr"></span></span></label>
       <label class="item"><span><span data-i18n="ice">빙상</span><small data-i18n="iceSub">개략도 · 해수면에 맞춰 커지고 줄어듦</small></span><span class="sw"><input type="checkbox" role="switch" id="iceOn" checked><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="spin">자동 회전</span><span class="sw"><input type="checkbox" role="switch" id="spin" checked><span class="tr"></span></span></label>
+    </div>
+    <div class="group">
+      <label class="item"><span data-i18n="temp">평균 기온</span><span class="sw"><input type="checkbox" role="switch" id="tempOn" checked><span class="tr"></span></span></label>
+      <div class="item"><span data-i18n="unit">단위</span>
+        <div class="seg" id="unit" role="radiogroup" data-i18n-aria="unit" aria-label="온도 단위">
+          <button role="radio" data-u="C" aria-checked="true">°C</button>
+          <button role="radio" data-u="F" aria-checked="false">°F</button>
+        </div>
+      </div>
     </div>
     <div class="legend" id="legend"></div>
     <div class="foot" id="foot"></div>
@@ -97,6 +106,7 @@
       </div>
       <span class="spacer"></span>
       <div class="tchip" id="seaChip"><span class="tv" id="seaVal">—</span><span class="tl" data-i18n="sea">해수면</span></div>
+      <div class="tchip" id="temp"><span class="tv" id="tempVal">—</span><span class="tl" data-i18n="temp">평균 기온</span></div>
       <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span></div>
     </div>
     <div class="track" id="track">
@@ -128,13 +138,13 @@ const I18N = {
       seaMid: '해수면이 지금보다 {m} m 낮습니다. 대륙붕 일부가 육지로 드러났습니다.', seaNear: '해수면이 지금과 비슷합니다.',
       seaHigh: '해수면이 지금보다 {m} m 높습니다. 간빙기의 따뜻한 시기입니다.', ice: '빙기', warm: '간빙기',
       deep: '-6000 m', seaLvl: '해수면', high: '+5500 m',
+      temp: '평균 기온', unit: '단위', tempTitle: '지구 평균 지표 기온 (근사치)',
       ranges: '종 분포', rangesSub: '흐린 영역 = 연대가 맞는 유적 주변', species: '종 분포', sitesNow: '지금 보이는 유적 {n}곳 (전체 {m}곳)',
       rangeNote: '지도의 흐린 영역은 이 시기 연대가 확인된 유적 주변을 이은 대략적인 범위로, 실제로 살던 곳을 모두 나타내지는 않습니다.',
-      routes: '이동 경로', routesSub: '점선 = 가능한 경로 (정확한 길이 아님)', route: '이동 경로',
       ice: '빙상', iceSub: '북반구는 Batchelor 외 2019 복원, 그 사이는 해수면으로 조절',
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
-      foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–430 ka, 오늘을 0 m로 맞춤. 지형: ETOPO1 (NOAA, 0.25°로 줄임). 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
+      foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–430 ka, 오늘을 0 m로 맞춤. 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
   en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', lang: 'Language', scale: 'Timeline scale',
       linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
@@ -145,13 +155,13 @@ const I18N = {
       seaMid: 'Sea level is {m} m lower than today. Parts of the continental shelves are dry land.', seaNear: 'Sea level is close to today’s.',
       seaHigh: 'Sea level is {m} m higher than today, in a warm interglacial.', ice: 'glacial', warm: 'interglacial',
       deep: '-6000 m', seaLvl: 'sea level', high: '+5500 m',
+      temp: 'Mean temp.', unit: 'Unit', tempTitle: 'Global mean surface temperature (approximate)',
       ranges: 'Species ranges', rangesSub: 'Soft areas = around sites dated to the time', species: 'Species range', sitesNow: '{n} sites shown now ({m} in all)',
       rangeNote: 'The soft area joins the sites dated to this time; it is a rough outline, not a map of everywhere they lived.',
-      routes: 'Migration routes', routesSub: 'Dotted = possible route, not an exact track', route: 'Migration route',
       ice: 'Ice sheets', iceSub: 'Northern Hemisphere: Batchelor et al. 2019; in between, scaled with sea level',
       pins: 'Events on the map', close: 'Close', goHere: 'Go to this time', events: 'Events', contested: 'Show disputed dates too', contestedSub: 'Off: widely accepted dates only',
       disputed: 'disputed', about: 'about {a}', atLeast: 'at least {a}', range: 'about {a} – {b}', sources: 'Sources',
-      foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–430 ka, shifted so today = 0 m. Relief: ETOPO1 (NOAA), reduced to 0.25°. Ice sheets: Northern Hemisphere from the best-estimate reconstructions of Batchelor et al. 2019 (Nature Communications, CC BY 4.0) for 12 time slices, reduced to 0.25°; between slices the nearest one shrinks or grows from its edges with sea level. Present Greenland and Antarctic ice from the relief; Patagonia is a hand-drawn schematic. Prototype: crustal rebound is not modelled yet.' } },
+      foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–430 ka, shifted so today = 0 m. Relief: ETOPO1 (NOAA), reduced to 0.25°. Mean temperature: the EPICA Dome C Antarctic record (Jouzel et al. 2007, NOAA) scaled so the Last Glacial Maximum is 6.1 °C below today (Tierney et al. 2020) — an approximation of the global mean. Ice sheets: Northern Hemisphere from the best-estimate reconstructions of Batchelor et al. 2019 (Nature Communications, CC BY 4.0) for 12 time slices, reduced to 0.25°; between slices the nearest one shrinks or grows from its edges with sea level. Present Greenland and Antarctic ice from the relief; Patagonia is a hand-drawn schematic. Prototype: crustal rebound is not modelled yet.' } },
 };
 const STAGES = [   // ICS colours
   { from: 300, to: 129, color: '#FFF2C7', ko: '치바니안 (중기 플라이스토세)', en: 'Chibanian (Middle Pleistocene)', range: '774 – 129 ka' },
@@ -371,10 +381,24 @@ const tl = TMUI.timeline({
   onRebuild: () => { if (typeof buildEvRow === 'function' && EV) { buildEvRow(); markCurrent(); } },
 });
 slider.addEventListener('input', () => { stop(); setAge(tl.scale.slider.age(+slider.value), true); });
+// ---------- mean temperature (approximate global mean; see the sources) ----------
+let TEMP = null, tempUnit = 'C';
+try { if (localStorage.getItem('tm.unit') === 'F') tempUnit = 'F'; } catch (_) {}
+function tempAt(a) {
+  if (!TEMP) return null;
+  const x = Math.max(0, Math.min(TEMP.length - 1, a)), i = Math.floor(x), f = x - i;
+  return i + 1 < TEMP.length ? TEMP[i] * (1 - f) + TEMP[i + 1] * f : TEMP[i];
+}
+function updateTemp() {
+  const chip = $('temp'), on = $('tempOn').checked, c = tempAt(age);
+  chip.hidden = !on; chip.title = t('tempTitle');
+  $('tempVal').textContent = c == null ? '—' : tempUnit === 'F' ? `${(c * 9 / 5 + 32).toFixed(1)}°F` : `${c.toFixed(1)}°C`;
+}
 function stageAt(a) { return STAGES.find(s => a <= s.from && a >= s.to) || STAGES[0]; }
 function updateUI() {
   const s = stageAt(age), sea = seaAt(age), m = Math.round(sea);
   $('when').textContent = fmtAgo(age);
+  updateTemp();
   $('ka').textContent = age < 1 ? `${Math.round(age * 1000)} a` : `${age.toFixed(1)} ka`;
   $('seaVal').textContent = t('seaM', { m: (m > 0 ? '+' : m < 0 ? '−' : '') + Math.abs(m) });
   $('eraEyebrow').textContent = t('eyebrow', { p: stageName(s), r: s.range });
@@ -431,7 +455,6 @@ function applyLang() {
   document.querySelectorAll('[data-i18n-title]').forEach(el => el.title = t(el.dataset.i18nTitle));
   $('foot').textContent = t('foot'); renderLegend(); tl.rebuild(); updateUI(); setPlayIcon(playing);
   if (EV) { buildPins(); if (popIdx !== null) openPop(popIdx); }
-  if (RT) { RT.forEach((r, k) => { routeEls[k].lastChild.textContent = r[LANG][0]; }); if (popRoute !== null) openRoutePop(popRoute); }
   if (SPC) { SPC.forEach((sp, k) => { speciesEls[k].lastChild.textContent = sp[LANG][0]; }); if (popSpecies !== null) openSpeciesPop(popSpecies); }
 }
 (() => {
@@ -535,9 +558,12 @@ function goToEvent(i) {
   G.stopAuto(); G.faceLocal(sphereXYZ(e.lon, e.lat)); openPop(i);
 }
 $('popX').onclick = closePop;
-$('popGo').onclick = () => { if (popRoute !== null) goToRoute(popRoute); else if (popSpecies !== null) goToSpecies(popSpecies); else if (popIdx !== null) goToEvent(popIdx); };
+$('popGo').onclick = () => { if (popSpecies !== null) goToSpecies(popSpecies); else if (popIdx !== null) goToEvent(popIdx); };
 G.canvas.addEventListener('pointerdown', () => { if (popIdx !== null) closePop(); });
 addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
+$('tempOn').onchange = updateTemp;
+document.querySelectorAll('#unit button').forEach(b => b.setAttribute('aria-checked', b.dataset.u === tempUnit));
+TMUI.segmented($('unit'), b => { tempUnit = b.dataset.u; try { localStorage.setItem('tm.unit', tempUnit); } catch (_) {} updateTemp(); });
 $('iceOn').checked = showIce;
 $('iceOn').onchange = e => { showIce = e.target.checked; try { localStorage.setItem('hj.ice', showIce ? '1' : '0'); } catch (_) {} paint(seaAt(age)); };
 $('contestedOn').onchange = e => {
@@ -551,18 +577,9 @@ function currentEvent() {           // the event whose range holds the playhead 
   return best;
 }
 
-// ---------- migration routes: dotted paths that grow as time passes each waypoint ----------
-let RT = null, routeEls = [], popRoute = null, showRoutes = true;
-try { if (localStorage.getItem('hj.routes') === '0') showRoutes = false; } catch (_) {}
-$('routesOn').checked = showRoutes;
-const routeDot = (() => {          // soft round dot
-  const c = document.createElement('canvas'); c.width = c.height = 32;
-  const x = c.getContext('2d'), gr = x.createRadialGradient(16, 16, 0, 16, 16, 16);
-  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.45, 'rgba(255,255,255,.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
-  x.fillStyle = gr; x.fillRect(0, 0, 32, 32); return new THREE.CanvasTexture(c);
-})();
+// ---------- migration routes (data only): dated waypoints that the Homo sapiens spread follows ----------
+let RT = null, routeEls = [], popRoute = null;   // routes are not drawn: they are the skeleton of the Homo sapiens spread
 function buildRoutes(list) {
-  const pr = G.renderer.getPixelRatio();
   RT = list.map(r => {
     const pos = [], ages = [], tmp = new THREE.Vector3();
     for (let i = 0; i + 1 < r.path.length; i++) {
@@ -571,63 +588,14 @@ function buildRoutes(list) {
       for (let k = 0; k < n; k++) { const t = k / n; tmp.copy(A).lerp(B, t).normalize().multiplyScalar(1.006); pos.push(tmp.x, tmp.y, tmp.z); ages.push(a0 + (a1 - a0) * t); }
     }
     const L = r.path[r.path.length - 1]; tmp.copy(sphereXYZ(L[0], L[1])).multiplyScalar(1.006); pos.push(tmp.x, tmp.y, tmp.z); ages.push(L[2]);
-    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    const mat = new THREE.PointsMaterial({ color: r.color, size: 5 * pr, sizeAttenuation: false, map: routeDot, transparent: true, depthWrite: false });
-    const pts = new THREE.Points(geo, mat); pts.visible = false; G.earth.add(pts);
     const ll = []; for (let i = 0; i < pos.length; i += 3) {    // lon/lat of each sample (inverse of sphereXYZ)
       const x = pos[i], y = pos[i + 1], z = pos[i + 2], rr = Math.hypot(x, y, z);
       let lon = Math.atan2(z, -x) / D2R - 180; if (lon < -180) lon += 360; ll.push([lon, Math.asin(y / rr) / D2R]);
     }
-    return { ...r, pts, ages, pos, ll, start: ages[0], end: ages[ages.length - 1] };
-  });
-  const box = $('pins'); routeEls = RT.map((r, k) => {
-    const b = document.createElement('button'); b.className = 'pin route'; b.style.setProperty('--k', r.color); b.hidden = true;
-    b.innerHTML = '<i></i><span></span>'; b.lastChild.textContent = r[LANG][0];
-    b.onclick = ev => { ev.stopPropagation(); openRoutePop(k); };
-    box.appendChild(b); return b;
+    return { ...r, ages, pos, ll, start: ages[0], end: ages[ages.length - 1] };
   });
 }
 function routeN(r) { let n = 0; while (n < r.ages.length && r.ages[n] >= age) n++; return (r.fadeAt && age < r.fadeAt) ? 0 : n; }
-function updateRoutes() {
-  if (!RT) return;
-  const w = innerWidth, h = innerHeight; G.camera.getWorldPosition(_c);
-  RT.forEach((r, k) => {
-    const b = routeEls[k];
-    let n = 0; while (n < r.ages.length && r.ages[n] >= age) n++;
-    const on = showRoutes && n > 0 && !(r.fadeAt && age < r.fadeAt);
-    r.pts.visible = on; if (on) r.pts.geometry.setDrawRange(0, n);
-    const active = on && age > r.end;                       // still advancing: bright, with a label at its tip
-    r.pts.material.opacity = showRanges ? (active ? 0.75 : 0.3) : (active ? 1 : 0.55);
-    r.pts.material.size = (showRanges ? 3.4 : 5) * G.renderer.getPixelRatio();
-    if (!active) { b.hidden = !(on && popRoute === k); if (b.hidden) return; }
-    const i = Math.max(0, (active ? n : r.ages.length) - 1);
-    _v.set(r.pos[i * 3], r.pos[i * 3 + 1], r.pos[i * 3 + 2]).applyMatrix4(G.earth.matrixWorld);
-    if (_v.dot(_c.clone().sub(_v)) <= 0) { b.hidden = true; return; }
-    _v.project(G.camera); b.hidden = false;
-    b.style.transform = `translate(${(_v.x + 1) / 2 * w - 7}px, ${(1 - _v.y) / 2 * h}px) translateY(-50%)`;
-    b.classList.toggle('on', popRoute === k);
-  });
-}
-function openRoutePop(k) {
-  const r = RT[k]; popRoute = k; popIdx = null; popSpecies = null;
-  pop.style.setProperty('--k', r.color);
-  $('popKind').textContent = t('route');
-  if (r.contested) { const s = document.createElement('span'); s.className = 'badge'; s.textContent = t('disputed'); $('popKind').appendChild(s); }
-  $('popTitle').textContent = r[LANG][0];
-  $('popAge').textContent = t('range', { a: yearsTxt(r.start), b: yearsTxt(r.end) }) + (LANG === 'ko' ? ' 전' : ' ago');
-  $('popText').textContent = r[LANG][1];
-  const dsp = $('popDsp'); dsp.hidden = !r.dispute;
-  if (r.dispute) { dsp.innerHTML = '<b></b><span></span>'; dsp.firstChild.textContent = t('disputed'); dsp.lastChild.textContent = r.dispute[LANG] || r.dispute.en; }
-  const src = $('popSrc'); src.innerHTML = '';
-  r.src.forEach(s => { const li = document.createElement('li'), a = document.createElement('a'); a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.label; li.appendChild(a); src.appendChild(li); });
-  pinEls.forEach(b => b && b.classList.remove('on'));
-  pop.hidden = false; updateRoutes(); placePop();
-}
-function goToRoute(k) {
-  const r = RT[k]; stop(); setAge(r.start); G.stopAuto(); G.faceLocal(sphereXYZ(r.path[0][0], r.path[0][1])); openRoutePop(k);
-}
-$('routesOn').onchange = e => { showRoutes = e.target.checked; try { localStorage.setItem('hj.routes', showRoutes ? '1' : '0'); } catch (_) {} if (!showRoutes && popRoute !== null) closePop(); };
-
 // ---------- species ranges: soft areas around the sites dated to the current time ----------
 let SPC = null, speciesEls = [], popSpecies = null, showRanges = true, rangeKey = '';
 try { if (localStorage.getItem('hj.ranges') === '0') showRanges = false; } catch (_) {}
@@ -644,10 +612,49 @@ function hull(P) {                  // convex hull (monotone chain) of [x, y] po
   for (const q of p.slice().reverse()) { while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
   return lo.slice(0, -1).concat(up.slice(0, -1));
 }
+// Homo sapiens spread: every 1° cell gets the time people could first have reached it — spreading at ~1,000 km per
+// thousand years from the early African sites and from each migration route as it advances (within 4,500 / 4,000 km).
+// A reached cell is filled while it is dry land and not under ice, so the range covers regions, not corridors.
+const SW = 360, SH = 181, SPREAD_KM_PER_KA = 1000;
+let arrMain = null, arrEarly = null, earlyEnd = 0, sapCv = null, sapCtx = null, sapImg = null;
+function buildSpread(sp) {
+  const cells = new Array(SW * SH);
+  for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) cells[i * SW + k] = sphereXYZ(-180 + k + 0.5, 90 - i);
+  const field = seeds => {
+    const out = new Float32Array(SW * SH).fill(-1);
+    for (const sd of seeds) { const v = sphereXYZ(sd.lon, sd.lat), lim = Math.cos(sd.reach / 6371);
+      for (let j = 0; j < out.length; j++) { const c = cells[j], dt = c.x * v.x + c.y * v.y + c.z * v.z; if (dt < lim) continue;
+        const a = sd.age - 6371 * Math.acos(Math.min(1, dt)) / SPREAD_KM_PER_KA; if (a > out[j]) out[j] = a; } }
+    return out;
+  };
+  const main = sp.sites.map(st => ({ lon: st.lon, lat: st.lat, age: st.max, reach: 4500 })), early = [];
+  RT.forEach(r => { const dst = r.fadeAt ? early : main; for (let i = 0; i < r.ll.length; i += 2) dst.push({ lon: r.ll[i][0], lat: r.ll[i][1], age: r.ages[i], reach: 4000 }); if (r.fadeAt) earlyEnd = r.fadeAt; });
+  arrMain = field(main); arrEarly = field(early);
+  sapCv = document.createElement('canvas'); sapCv.width = SW; sapCv.height = SH; sapCtx = sapCv.getContext('2d'); sapImg = sapCtx.createImageData(SW, SH);
+}
+function paintSpread(sp) {          // the reached land of this moment into the small canvas
+  const d = sapImg.data, sea = seaAt(age), f = glacial(sea), col = sp.color, R = parseInt(col.slice(1, 3), 16), Gc = parseInt(col.slice(3, 5), 16), B = parseInt(col.slice(5, 7), 16);
+  const step = 360 / (RW - 1);
+  for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) {
+    const j = i * SW + k, reached = arrMain[j] >= age || (arrEarly[j] >= age && age >= earlyEnd);
+    let on = false;
+    if (reached && relief) {
+      const rj = Math.round(i / step) * RW + Math.min(RW - 1, Math.round((k + 0.5) / step));
+      on = relief[rj] > sea && !(iceDepth && iceAt(rj, f, relief[rj] - sea));
+    }
+    d[j * 4] = R; d[j * 4 + 1] = Gc; d[j * 4 + 2] = B; d[j * 4 + 3] = on ? 255 : 0;
+  }
+  sapCtx.putImageData(sapImg, 0, 0);
+}
 function drawRanges() {
   rctx.clearRect(0, 0, RCW, RCH);
   if (showRanges && SPC) [...SPC].sort((a, b) => (b.followsRoutes ? 1 : 0) - (a.followsRoutes ? 1 : 0)).forEach(sp => {
-    const on = sp.sites.filter(siteOn); if (!on.length && !(sp.followsRoutes && RT)) return;
+    rctx.save(); rctx.translate(-RCW * 2, 0);           // draw far to the left, keep only the blurred shadow: soft edges everywhere
+    rctx.shadowOffsetX = RCW * 2; rctx.shadowBlur = 10; rctx.shadowColor = sp.color + (sp.alpha || 'a8');
+    if (sp.followsRoutes && arrMain) {                   // Homo sapiens: the filled spread
+      paintSpread(sp); rctx.imageSmoothingEnabled = true; rctx.drawImage(sapCv, 0, 0, RCW, RCH); rctx.restore(); return;
+    }
+    const on = sp.sites.filter(siteOn); if (!on.length) { rctx.restore(); return; }
     const P = on.map(st => [(st.lon + 180) / 360 * RCW, (90 - st.lat) / 180 * RCH]);
     const R = 600 / 111 / 360 * RCW;               // ~600 km around each site
     // a disc around each site, and a band between sites closer than ~2,200 km — clusters join up, but far-apart sites
@@ -658,20 +665,8 @@ function drawRanges() {
       const a = on[i], b = on[j], km = 6371 * sphereXYZ(a.lon, a.lat).angleTo(sphereXYZ(b.lon, b.lat));
       if (km < 2200) { path.moveTo(P[i][0], P[i][1]); path.lineTo(P[j][0], P[j][1]); }
     }
-    const band = new Path2D();                             // stroked only (filling would close each route into a polygon)
-    if (sp.followsRoutes && RT) RT.forEach(r => {          // Homo sapiens: the area also follows every route as far as it has come
-      const n = routeN(r); if (n < 1) return;
-      for (let i = 0; i < n; i++) {
-        const x = (r.ll[i][0] + 180) / 360 * RCW, y = (90 - r.ll[i][1]) / 180 * RCH;
-        if (i === 0 || Math.abs(x - (r.ll[i - 1][0] + 180) / 360 * RCW) > RCW / 2) band.moveTo(x, y); else band.lineTo(x, y);   // split at the date line
-      }
-      if (n === 1) { const x = (r.ll[0][0] + 180) / 360 * RCW, y = (90 - r.ll[0][1]) / 180 * RCH; band.moveTo(x + 0.1, y); band.arc(x, y, 0.1, 0, Math.PI * 2); }
-    });
-    // draw the shape far to the left and keep only its blurred shadow in place: soft edges in every browser
-    rctx.save(); rctx.translate(-RCW * 2, 0);
-    rctx.shadowOffsetX = RCW * 2; rctx.shadowBlur = 10; rctx.shadowColor = sp.color + (sp.alpha || 'a8');
     rctx.fillStyle = sp.color; rctx.strokeStyle = sp.color; rctx.lineWidth = R * 2; rctx.lineJoin = 'round'; rctx.lineCap = 'round';
-    rctx.fill(path); rctx.stroke(path); rctx.stroke(band); rctx.restore();
+    rctx.fill(path); rctx.stroke(path); rctx.restore();
   });
   rangeTex.needsUpdate = true;
 }
@@ -686,7 +681,7 @@ function buildSpecies(list) {
 }
 function updateSpecies() {
   if (!SPC) return;
-  const key = showRanges ? SPC.map(sp => sp.sites.map(st => siteOn(st) ? 1 : 0).join('')).join('|') + (RT ? '#' + RT.map(routeN).join(',') : '') : '';
+  const key = showRanges ? SPC.map(sp => sp.sites.map(st => siteOn(st) ? 1 : 0).join('')).join('|') + (arrMain ? '#' + Math.round(age * 4) + ':' + paintedIce : '') : '';
   if (key !== rangeKey) { rangeKey = key; drawRanges(); }
   const w = innerWidth, h = innerHeight; G.camera.getWorldPosition(_c);
   SPC.forEach((sp, k) => {
@@ -734,7 +729,7 @@ function loop(now) {
     setAge(a);
   }
   G.stepTween(now); G.stepInertia(dt); G.applyView(); G.drift(dt, age);
-  updateRoutes(); updateSpecies();
+  updateSpecies();
   G.renderer.render(G.scene, G.camera);
   placePins();
   requestAnimationFrame(loop);
@@ -763,8 +758,9 @@ function loadGray(src) {
 }
 Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r => r.json()), fetch('data/events.json').then(r => r.json()),
   fetch('data/ice_nh.json').then(r => r.json()), loadGray('data/ice_nh.png'), fetch('data/routes.json').then(r => r.json()),
-  fetch('data/species.json').then(r => r.json())]).then(([r, sea, ev, im, ia, rt, spc]) => {
-  buildRoutes(rt.routes); buildSpecies(spc.species);
+  fetch('data/species.json').then(r => r.json()), fetch('data/temperature.json').then(r => r.json())]).then(([r, sea, ev, im, ia, rt, spc, tp]) => {
+  TEMP = tp.gmst;
+  buildRoutes(rt.routes); buildSpecies(spc.species); buildSpread(spc.species.find(x => x.followsRoutes));
   EV = ev.events; KINDS = ev.kinds; buildPins(); buildEvRow();
   RW = r.w; RH = r.h; relief = r.e; shade = shadeGrid(relief, RW, RH); SEA = sea; buildIce();
   const rows = im.grid.rows, per = rows * RW;
