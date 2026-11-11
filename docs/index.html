@@ -61,6 +61,7 @@
         </div>
       </div>
       <label class="item"><span><span data-i18n="contested">논쟁 중인 연대도 보기</span><small data-i18n="contestedSub">끄면 널리 인정된 연대만</small></span><span class="sw"><input type="checkbox" role="switch" id="contestedOn" checked><span class="tr"></span></span></label>
+      <label class="item"><span><span data-i18n="routes">이동 경로</span><small data-i18n="routesSub">점선 = 가능한 경로 (정확한 길이 아님)</small></span><span class="sw"><input type="checkbox" role="switch" id="routesOn" checked><span class="tr"></span></span></label>
       <label class="item"><span><span data-i18n="ice">빙상</span><small data-i18n="iceSub">개략도 · 해수면에 맞춰 커지고 줄어듦</small></span><span class="sw"><input type="checkbox" role="switch" id="iceOn" checked><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="spin">자동 회전</span><span class="sw"><input type="checkbox" role="switch" id="spin" checked><span class="tr"></span></span></label>
     </div>
@@ -126,6 +127,7 @@ const I18N = {
       seaMid: '해수면이 지금보다 {m} m 낮습니다. 대륙붕 일부가 육지로 드러났습니다.', seaNear: '해수면이 지금과 비슷합니다.',
       seaHigh: '해수면이 지금보다 {m} m 높습니다. 간빙기의 따뜻한 시기입니다.', ice: '빙기', warm: '간빙기',
       deep: '-6000 m', seaLvl: '해수면', high: '+5500 m',
+      routes: '이동 경로', routesSub: '점선 = 가능한 경로 (정확한 길이 아님)', route: '이동 경로',
       ice: '빙상', iceSub: '북반구는 Batchelor 외 2019 복원, 그 사이는 해수면으로 조절',
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
@@ -140,6 +142,7 @@ const I18N = {
       seaMid: 'Sea level is {m} m lower than today. Parts of the continental shelves are dry land.', seaNear: 'Sea level is close to today’s.',
       seaHigh: 'Sea level is {m} m higher than today, in a warm interglacial.', ice: 'glacial', warm: 'interglacial',
       deep: '-6000 m', seaLvl: 'sea level', high: '+5500 m',
+      routes: 'Migration routes', routesSub: 'Dotted = possible route, not an exact track', route: 'Migration route',
       ice: 'Ice sheets', iceSub: 'Northern Hemisphere: Batchelor et al. 2019; in between, scaled with sea level',
       pins: 'Events on the map', close: 'Close', goHere: 'Go to this time', events: 'Events', contested: 'Show disputed dates too', contestedSub: 'Off: widely accepted dates only',
       disputed: 'disputed', about: 'about {a}', atLeast: 'at least {a}', range: 'about {a} – {b}', sources: 'Sources',
@@ -423,6 +426,7 @@ function applyLang() {
   document.querySelectorAll('[data-i18n-title]').forEach(el => el.title = t(el.dataset.i18nTitle));
   $('foot').textContent = t('foot'); renderLegend(); tl.rebuild(); updateUI(); setPlayIcon(playing);
   if (EV) { buildPins(); if (popIdx !== null) openPop(popIdx); }
+  if (RT) { RT.forEach((r, k) => { routeEls[k].lastChild.textContent = r[LANG][0]; }); if (popRoute !== null) openRoutePop(popRoute); }
 }
 (() => {
   const sel = $('lang');
@@ -454,7 +458,7 @@ function evWindow(e) { const r = evRange(e); return { from: r.max + Math.max(0.3
 const evNow = e => { const r = evRange(e), pad = Math.max(0.15, e.best * 0.02); return age <= r.max + pad && age >= r.min - pad; };
 let pinEls = [];
 function buildPins() {
-  const box = $('pins'); box.innerHTML = ''; pinEls = [];
+  const box = $('pins'); box.querySelectorAll('.pin:not(.route)').forEach(n => n.remove()); pinEls = [];
   if (!EV) return;
   EV.forEach((e, i) => {
     const b = document.createElement('button'); b.className = 'pin'; b.style.setProperty('--k', KINDS[e.kind].color);
@@ -478,7 +482,7 @@ function placePins() {
     b.hidden = false; b.style.transform = `translate(${(_v.x + 1) / 2 * w - 7}px, ${(1 - _v.y) / 2 * h}px) translateY(-50%)`;
     b.classList.toggle('dim', !evNow(e)); b.classList.toggle('on', popIdx === i);
   });
-  if (popIdx !== null) placePop();
+  if (popIdx !== null || popRoute !== null) placePop();
 }
 function buildEvRow() {
   const row = $('evrow'); row.innerHTML = '';
@@ -501,7 +505,7 @@ function buildEvRow() {
 function markCurrent() { $('evrow').querySelectorAll('button').forEach(b => b.classList.toggle('cur', EV && evNow(EV[+b.dataset.i]))); }
 const pop = $('pop');
 function openPop(i) {
-  const e = EV[i], k = KINDS[e.kind]; popIdx = i;
+  const e = EV[i], k = KINDS[e.kind]; popIdx = i; popRoute = null;
   pop.style.setProperty('--k', k.color);
   $('popKind').textContent = k[LANG] || k.en;
   if (e.dispute || e.contested) { const s = document.createElement('span'); s.className = 'badge'; s.textContent = t('disputed'); $('popKind').appendChild(s); }
@@ -512,9 +516,9 @@ function openPop(i) {
   e.src.forEach(s => { const li = document.createElement('li'), a = document.createElement('a'); a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.label; li.appendChild(a); src.appendChild(li); });
   pop.hidden = false; placePins(); placePop();
 }
-function closePop() { popIdx = null; pop.hidden = true; pinEls.forEach(b => b && b.classList.remove('on')); }
+function closePop() { popIdx = null; popRoute = null; pop.hidden = true; pinEls.forEach(b => b && b.classList.remove('on')); }
 function placePop() {
-  const b = pinEls[popIdx], pw = pop.offsetWidth, ph = pop.offsetHeight;
+  const b = popRoute !== null ? routeEls[popRoute] : pinEls[popIdx], pw = pop.offsetWidth, ph = pop.offsetHeight;
   let x, y;
   if (b && !b.hidden) { const r = b.getBoundingClientRect(); x = r.left; y = r.bottom + 10; if (y + ph > innerHeight - 16) y = r.top - ph - 10; }
   else { x = 16; y = 140; }
@@ -525,7 +529,7 @@ function goToEvent(i) {
   G.stopAuto(); G.faceLocal(sphereXYZ(e.lon, e.lat)); openPop(i);
 }
 $('popX').onclick = closePop;
-$('popGo').onclick = () => { if (popIdx !== null) goToEvent(popIdx); };
+$('popGo').onclick = () => { if (popRoute !== null) goToRoute(popRoute); else if (popIdx !== null) goToEvent(popIdx); };
 G.canvas.addEventListener('pointerdown', () => { if (popIdx !== null) closePop(); });
 addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
 $('iceOn').checked = showIce;
@@ -541,6 +545,77 @@ function currentEvent() {           // the event whose range holds the playhead 
   return best;
 }
 
+// ---------- migration routes: dotted paths that grow as time passes each waypoint ----------
+let RT = null, routeEls = [], popRoute = null, showRoutes = true;
+try { if (localStorage.getItem('hj.routes') === '0') showRoutes = false; } catch (_) {}
+$('routesOn').checked = showRoutes;
+const routeDot = (() => {          // soft round dot
+  const c = document.createElement('canvas'); c.width = c.height = 32;
+  const x = c.getContext('2d'), gr = x.createRadialGradient(16, 16, 0, 16, 16, 16);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.45, 'rgba(255,255,255,.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = gr; x.fillRect(0, 0, 32, 32); return new THREE.CanvasTexture(c);
+})();
+function buildRoutes(list) {
+  const pr = G.renderer.getPixelRatio();
+  RT = list.map(r => {
+    const pos = [], ages = [], tmp = new THREE.Vector3();
+    for (let i = 0; i + 1 < r.path.length; i++) {
+      const [lo0, la0, a0] = r.path[i], [lo1, la1, a1] = r.path[i + 1];
+      const A = sphereXYZ(lo0, la0), B = sphereXYZ(lo1, la1), n = Math.max(2, Math.ceil(A.angleTo(B) / (1.15 * D2R)));
+      for (let k = 0; k < n; k++) { const t = k / n; tmp.copy(A).lerp(B, t).normalize().multiplyScalar(1.006); pos.push(tmp.x, tmp.y, tmp.z); ages.push(a0 + (a1 - a0) * t); }
+    }
+    const L = r.path[r.path.length - 1]; tmp.copy(sphereXYZ(L[0], L[1])).multiplyScalar(1.006); pos.push(tmp.x, tmp.y, tmp.z); ages.push(L[2]);
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    const mat = new THREE.PointsMaterial({ color: r.color, size: 5 * pr, sizeAttenuation: false, map: routeDot, transparent: true, depthWrite: false });
+    const pts = new THREE.Points(geo, mat); pts.visible = false; G.earth.add(pts);
+    return { ...r, pts, ages, pos, start: ages[0], end: ages[ages.length - 1] };
+  });
+  const box = $('pins'); routeEls = RT.map((r, k) => {
+    const b = document.createElement('button'); b.className = 'pin route'; b.style.setProperty('--k', r.color); b.hidden = true;
+    b.innerHTML = '<i></i><span></span>'; b.lastChild.textContent = r[LANG][0];
+    b.onclick = ev => { ev.stopPropagation(); openRoutePop(k); };
+    box.appendChild(b); return b;
+  });
+}
+function updateRoutes() {
+  if (!RT) return;
+  const w = innerWidth, h = innerHeight; G.camera.getWorldPosition(_c);
+  RT.forEach((r, k) => {
+    const b = routeEls[k];
+    let n = 0; while (n < r.ages.length && r.ages[n] >= age) n++;
+    const on = showRoutes && n > 0 && !(r.fadeAt && age < r.fadeAt);
+    r.pts.visible = on; if (on) r.pts.geometry.setDrawRange(0, n);
+    const active = on && age > r.end;                       // still advancing: bright, with a label at its tip
+    r.pts.material.opacity = active ? 1 : 0.55;
+    if (!active) { b.hidden = !(on && popRoute === k); if (b.hidden) return; }
+    const i = Math.max(0, (active ? n : r.ages.length) - 1);
+    _v.set(r.pos[i * 3], r.pos[i * 3 + 1], r.pos[i * 3 + 2]).applyMatrix4(G.earth.matrixWorld);
+    if (_v.dot(_c.clone().sub(_v)) <= 0) { b.hidden = true; return; }
+    _v.project(G.camera); b.hidden = false;
+    b.style.transform = `translate(${(_v.x + 1) / 2 * w - 7}px, ${(1 - _v.y) / 2 * h}px) translateY(-50%)`;
+    b.classList.toggle('on', popRoute === k);
+  });
+}
+function openRoutePop(k) {
+  const r = RT[k]; popRoute = k; popIdx = null;
+  pop.style.setProperty('--k', r.color);
+  $('popKind').textContent = t('route');
+  if (r.contested) { const s = document.createElement('span'); s.className = 'badge'; s.textContent = t('disputed'); $('popKind').appendChild(s); }
+  $('popTitle').textContent = r[LANG][0];
+  $('popAge').textContent = t('range', { a: yearsTxt(r.start), b: yearsTxt(r.end) }) + (LANG === 'ko' ? ' 전' : ' ago');
+  $('popText').textContent = r[LANG][1];
+  const dsp = $('popDsp'); dsp.hidden = !r.dispute;
+  if (r.dispute) { dsp.innerHTML = '<b></b><span></span>'; dsp.firstChild.textContent = t('disputed'); dsp.lastChild.textContent = r.dispute[LANG] || r.dispute.en; }
+  const src = $('popSrc'); src.innerHTML = '';
+  r.src.forEach(s => { const li = document.createElement('li'), a = document.createElement('a'); a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.label; li.appendChild(a); src.appendChild(li); });
+  pinEls.forEach(b => b && b.classList.remove('on'));
+  pop.hidden = false; updateRoutes(); placePop();
+}
+function goToRoute(k) {
+  const r = RT[k]; stop(); setAge(r.start); G.stopAuto(); G.faceLocal(sphereXYZ(r.path[0][0], r.path[0][1])); openRoutePop(k);
+}
+$('routesOn').onchange = e => { showRoutes = e.target.checked; try { localStorage.setItem('hj.routes', showRoutes ? '1' : '0'); } catch (_) {} if (!showRoutes && popRoute !== null) closePop(); };
+
 // ---------- loop ----------
 let lastFrame = performance.now();
 function loop(now) {
@@ -553,6 +628,7 @@ function loop(now) {
     setAge(a);
   }
   G.stepTween(now); G.stepInertia(dt); G.applyView(); G.drift(dt, age);
+  updateRoutes();
   G.renderer.render(G.scene, G.camera);
   placePins();
   requestAnimationFrame(loop);
@@ -580,7 +656,8 @@ function loadGray(src) {
     for (let i = 0; i < o.length; i++) o[i] = d[i * 4]; res(o); }; im.onerror = () => rej(new Error(src)); im.src = src; });
 }
 Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r => r.json()), fetch('data/events.json').then(r => r.json()),
-  fetch('data/ice_nh.json').then(r => r.json()), loadGray('data/ice_nh.png')]).then(([r, sea, ev, im, ia]) => {
+  fetch('data/ice_nh.json').then(r => r.json()), loadGray('data/ice_nh.png'), fetch('data/routes.json').then(r => r.json())]).then(([r, sea, ev, im, ia, rt]) => {
+  buildRoutes(rt.routes);
   EV = ev.events; KINDS = ev.kinds; buildPins(); buildEvRow();
   RW = r.w; RH = r.h; relief = r.e; shade = shadeGrid(relief, RW, RH); SEA = sea; buildIce();
   const rows = im.grid.rows, per = rows * RW;
