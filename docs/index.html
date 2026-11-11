@@ -62,7 +62,7 @@
         </div>
       </div>
       <label class="item"><span><span data-i18n="contested">논쟁 중인 연대도 보기</span><small data-i18n="contestedSub">끄면 널리 인정된 연대만</small></span><span class="sw"><input type="checkbox" role="switch" id="contestedOn" checked><span class="tr"></span></span></label>
-      <label class="item"><span><span data-i18n="ranges">종 분포</span><small data-i18n="rangesSub">흐린 영역 = 연대가 맞는 유적 주변</small></span><span class="sw"><input type="checkbox" role="switch" id="rangesOn" checked><span class="tr"></span></span></label>
+      <label class="item"><span><span data-i18n="ranges">종 분포</span><small data-i18n="rangesSub">옅은 영역 = 연대가 측정된 유적 주변</small></span><span class="sw"><input type="checkbox" role="switch" id="rangesOn" checked><span class="tr"></span></span></label>
       <label class="item"><span><span data-i18n="ice">빙상</span><small data-i18n="iceSub">개략도 · 해수면에 맞춰 커지고 줄어듦</small></span><span class="sw"><input type="checkbox" role="switch" id="iceOn" checked><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="spin">자동 회전</span><span class="sw"><input type="checkbox" role="switch" id="spin" checked><span class="tr"></span></span></label>
     </div>
@@ -139,9 +139,9 @@ const I18N = {
       seaHigh: '해수면이 지금보다 {m} m 높습니다. 간빙기의 따뜻한 시기입니다.', ice: '빙기', warm: '간빙기',
       deep: '-6000 m', seaLvl: '해수면', high: '+5500 m',
       temp: '평균 기온', unit: '단위', tempTitle: '지구 평균 지표 기온 (근사치)',
-      ranges: '종 분포', rangesSub: '진하게 = 확인된 유적 · 옅게 = 추정 · 빗금 = 논쟁', species: '종 분포', sitesNow: '지금 보이는 유적 {n}곳 (전체 {m}곳)',
-      rangeNote: '진한 영역은 지금 시기로 연대가 측정된 유적 주변, 옅은 영역은 그 주변 육지로 넓힌 추정입니다. 조사가 적은 지역은 비어 보일 수 있습니다.',
-      disputedSites: '이 종으로 볼지(또는 연대가) 논쟁 중인 유적 {n}곳은 빗금으로 따로 표시합니다.', moreSources: '외 출처 {n}건',
+      ranges: '종 분포', rangesSub: '옅은 영역 = 연대가 측정된 유적 주변 · 겹치면 줄무늬', species: '종 분포', sitesNow: '지금 보이는 유적 {n}곳 (전체 {m}곳)',
+      rangeNote: '옅은 영역은 지금 시기 전후로 연대가 측정된 유적 주변의 육지입니다. 여러 종이 겹치는 곳은 줄무늬로 표시합니다. 조사가 적은 지역은 비어 보일 수 있습니다.', sapiensNote: '현생인류는 5만 년 전 이후 유적이 확인된 땅덩어리 안에서 천 년에 약 250 km씩 넓어진다고 보고 채웠습니다(빙기 육교 포함, 바다 건너 유적이 없는 곳은 제외).',
+      disputedSites: '이 종으로 볼지(또는 연대가) 논쟁 중인 유적 {n}곳은 \'논쟁 중인 연대도 보기\'를 켜면 분포에 포함됩니다.', moreSources: '외 출처 {n}건',
       ice: '빙상', iceSub: '북반구는 Batchelor 외 2019 복원, 그 사이는 해수면으로 조절',
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
@@ -157,9 +157,9 @@ const I18N = {
       seaHigh: 'Sea level is {m} m higher than today, in a warm interglacial.', ice: 'glacial', warm: 'interglacial',
       deep: '-6000 m', seaLvl: 'sea level', high: '+5500 m',
       temp: 'Mean temp.', unit: 'Unit', tempTitle: 'Global mean surface temperature (approximate)',
-      ranges: 'Species ranges', rangesSub: 'Strong = dated sites · faint = inferred · hatched = disputed', species: 'Species range', sitesNow: '{n} sites shown now ({m} in all)',
-      rangeNote: 'Strong colour: around sites dated to this time. Faint colour: inferred, over nearby land. Little-studied regions can look empty.',
-      disputedSites: '{n} sites whose attribution to this species (or date) is debated are hatched separately.', moreSources: '{n} more sources',
+      ranges: 'Species ranges', rangesSub: 'Light areas = around dated sites · stripes where they overlap', species: 'Species range', sitesNow: '{n} sites shown now ({m} in all)',
+      rangeNote: 'The light area is land around sites dated to about this time; where species overlap it turns into stripes. Little-studied regions can look empty.', sapiensNote: 'After 50 ka, Homo sapiens is assumed to widen by about 250 km per thousand years over each landmass where its sites are dated (including ice-age land bridges, never across sea to places without a dated site).',
+      disputedSites: '{n} sites whose attribution to this species (or date) is debated are included when \'Show disputed dates too\' is on.', moreSources: '{n} more sources',
       ice: 'Ice sheets', iceSub: 'Northern Hemisphere: Batchelor et al. 2019; in between, scaled with sea level',
       pins: 'Events on the map', close: 'Close', goHere: 'Go to this time', events: 'Events', contested: 'Show disputed dates too', contestedSub: 'Off: widely accepted dates only',
       disputed: 'disputed', about: 'about {a}', atLeast: 'at least {a}', range: 'about {a} – {b}', sources: 'Sources',
@@ -581,11 +581,11 @@ function currentEvent() {           // the event whose range holds the playhead 
 
 // ---------- species ranges from dated sites ----------
 // data/sites.json: dated sites attributed to a species (Timmermann et al. 2022 Suppl. Table 1; ROAD for Homo sapiens
-// after 30 ka; a short curated list for the Americas, Sahul, Oceania and the island species). For the current time:
-//   confirmed — close around sites dated to now (strong colour)
-//   inferred  — a wide, smooth envelope around sites dated to around now, on dry, ice-free land only (faint colour)
-//   disputed  — around sites whose species attribution or date is debated (amber hatching; off with the setting)
-// No single origin and no spread model: only what dated sites show.
+// after 30 ka; a short curated list for the Americas, Sahul, Oceania and the island species).
+// Each species is one light fill over dry, ice-free land around its sites dated to around now, with an outline in its
+// colour; where species overlap the fill turns into stripes of each colour, so none hides another. A site's area grows
+// in as time reaches its oldest date and shrinks away after its youngest, so ranges spread smoothly. Sites whose
+// attribution or date is disputed join in only with the "show disputed dates" setting. No single origin, no spread model.
 let popRoute = null, routeEls = [];   // (routes are no longer shown)
 let SAPIENS = -1, SPC = null, SITES = null, SITE_SRC = [], speciesEls = [], popSpecies = null, showRanges = true, rangeKey = '';
 try { if (localStorage.getItem('hj.ranges') === '0') showRanges = false; } catch (_) {}
@@ -594,51 +594,119 @@ const RCW = 2048, RCH = 1024, rangeCv = document.createElement('canvas'); rangeC
 const rctx = rangeCv.getContext('2d'), rangeTex = new THREE.CanvasTexture(rangeCv);
 const rangeMesh = new THREE.Mesh(new THREE.SphereGeometry(1.0025, 128, 96), new THREE.MeshBasicMaterial({ map: rangeTex, transparent: true, depthWrite: false }));
 G.earth.add(rangeMesh);
-const DW = 720, DH = 361, CONF_KM = 450, INF_KM = 1600, DISP_KM = 600;
+const DW = 720, DH = 361, SITE_KM = 1700, FILL_A = 0.4, LINE_A = 0.95;
 const dens = document.createElement('canvas'); dens.width = DW; dens.height = DH; const dctx = dens.getContext('2d', { willReadFrequently: true });
 const outCv = document.createElement('canvas'); outCv.width = DW; outCv.height = DH; const octx = outCv.getContext('2d'); const outImg = octx.createImageData(DW, DH);
-const siteNow = (st, a) => { const pad = Math.max(1, a * 0.05); return a <= st[4] + pad && a >= st[3] - pad; };       // confirmed window
-const siteNear = (st, a) => { const pad = Math.max(3, a * 0.2);                                                    // inferred window;
-  return a <= st[4] + pad && (a >= st[3] - pad || (st[0] === SAPIENS && st[4] <= 50)); };  // H. sapiens stays where it settled after 50 ka
-function splat(st, km, color) {     // a soft round spot around a site (wider east–west toward the poles), across the date line too
+const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
+// how much of a site's area shows at age a (0–1): grows in from its oldest date, shrinks after its youngest
+function siteW(st, a) {
+  const pad = Math.max(2, a * 0.12), grow = Math.max(1.5, a * 0.08);
+  const w = clamp01((st[4] + pad - a) / grow);
+  return st[0] === SAPIENS && st[4] <= 50 ? w : w * clamp01((a - (st[3] - pad)) / grow);   // H. sapiens stays where it settled after 50 ka
+}
+const siteShown = st => !st[5] || showContested;
+const siteNow = (st, a) => siteShown(st) && siteW(st, a) >= 0.5;
+function splat(st, w) {     // a soft round spot around a site (wider east–west toward the poles), across the date line too
+  const km = SITE_KM * (1 - (1 - w) * (1 - w));       // ease out: grows quickly at first, then settles
   const x = (st[1] + 180) / 360 * DW, y = (90 - st[2]) / 180 * DH, ry = km / 111 / 180 * DH, rx = Math.min(DW / 3, ry / Math.max(0.15, Math.cos(st[2] * D2R)));
   for (const ox of [0, -DW, DW]) {
     if (x + ox + rx < 0 || x + ox - rx > DW) continue;
     dctx.save(); dctx.translate(x + ox, y); dctx.scale(rx / ry, 1);
-    const g = dctx.createRadialGradient(0, 0, 0, 0, 0, ry); g.addColorStop(0, color); g.addColorStop(1, 'rgb(0,0,0)');
+    const g = dctx.createRadialGradient(0, 0, 0, 0, 0, ry); g.addColorStop(0, '#a0a0a0'); g.addColorStop(0.45, '#303030'); g.addColorStop(1, '#000');
     dctx.fillStyle = g; dctx.beginPath(); dctx.arc(0, 0, ry, 0, Math.PI * 2); dctx.fill(); dctx.restore();
   }
 }
 const ramp = (v, a, b) => v <= a ? 0 : v >= b ? 1 : (v - a) / (b - a) * (v - a) / (b - a) * (3 - 2 * (v - a) / (b - a));
+const EDGE = 110;                 // density at the edge of a range
+let landF = null, covs = [], comp = null;
+// Homo sapiens after 50 ka: once a site shows people on a landmass, the area around it keeps widening (~250 km per
+// thousand years, up to ~5,000 km) but only over that same landmass (joined by land bridges since 50 ka), so by the present it covers the land people reached
+// without jumping seas to places with no dated site.
+const SETTLE_KM_PER_KA = 250, SETTLE_MAX_KM = 5000;
+let compSea = null, compLand = null;
+function landmasses() {            // label land connected at the lowest sea level since 50 ka (land bridges people could walk), wrapping east–west
+  let low = 0; for (let a = Math.floor(age); a <= 50; a++) low = Math.min(low, seaAt(a));
+  low = Math.round(low); if (low === compSea) return; compSea = low;
+  const N = DW * DH; comp = comp || new Int32Array(N); compLand = compLand || new Uint8Array(N); comp.fill(0); let lab = 0; const q = new Int32Array(N);
+  for (let i = 0; i < DH; i++) for (let k = 0; k < DW; k++) {
+    const r0 = Math.min(RH - 1, i * 2) * RW, c1 = Math.min(RW - 1, k * 2 + 1); compLand[i * DW + k] = relief[r0 + c1] > low || relief[Math.min(RH - 1, i * 2 + 1) * RW + c1] > low ? 1 : 0;
+  }
+  const landF = compLand;
+  for (let s0 = 0; s0 < N; s0++) {
+    if (comp[s0] || !landF[s0]) continue; lab++; let h = 0, tl = 0; q[tl++] = s0; comp[s0] = lab;
+    while (h < tl) {
+      const j = q[h++], i = (j / DW) | 0, x = j - i * DW;
+      const nb = [i * DW + (x + 1) % DW, i * DW + (x + DW - 1) % DW, i > 0 ? j - DW : -1, i < DH - 1 ? j + DW : -1];
+      for (const n of nb) if (n >= 0 && !comp[n] && landF[n]) { comp[n] = lab; q[tl++] = n; }
+    }
+  }
+}
+function settle(on, cov) {
+  const cell = new Map();            // the oldest site in each 5° cell is enough (its circle covers the younger ones)
+  for (const [st] of on) if (st[4] <= 50 && !st[5]) { const c = Math.floor(st[1] / 5) * 100 + Math.floor(st[2] / 5), o = cell.get(c); if (!o || st[4] > o[4]) cell.set(c, st); }
+  const grow = [...cell.values()].map(st => [st, Math.min(SETTLE_MAX_KM, SETTLE_KM_PER_KA * (st[4] - age))]).filter(x => x[1] > 50);
+  if (!grow.length) return;
+  landmasses();
+  const mine = new Set();
+  dctx.globalCompositeOperation = 'source-over'; dctx.fillStyle = '#000'; dctx.fillRect(0, 0, DW, DH); dctx.globalCompositeOperation = 'lighten';
+  for (const [st, km] of grow) {
+    const x = Math.floor((st[1] + 180) / 360 * DW) % DW, y = Math.min(DH - 1, Math.floor((90 - st[2]) / 180 * DH));
+    for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {     // the site's landmass (sites can sit on the coast)
+      const yy = y + dy; if (yy < 0 || yy >= DH) continue; const c = comp[yy * DW + (x + dx + DW) % DW]; if (c) mine.add(c);
+    }
+    const cx = (st[1] + 180) / 360 * DW, cy = (90 - st[2]) / 180 * DH, ry = km / 111 / 180 * DH, rx = Math.min(DW / 2, ry / Math.max(0.15, Math.cos(st[2] * D2R)));
+    for (const ox of [0, -DW, DW]) {
+      if (cx + ox + rx < 0 || cx + ox - rx > DW) continue;
+      dctx.save(); dctx.translate(cx + ox, cy); dctx.scale(rx / ry, 1);
+      const g = dctx.createRadialGradient(0, 0, 0, 0, 0, ry); g.addColorStop(0, '#fff'); g.addColorStop(0.8, '#fff'); g.addColorStop(1, '#000');
+      dctx.fillStyle = g; dctx.beginPath(); dctx.arc(0, 0, ry, 0, Math.PI * 2); dctx.fill(); dctx.restore();
+    }
+  }
+  const d = dctx.getImageData(0, 0, DW, DH).data;
+  for (let j = 0; j < DW * DH; j++) if (landF[j] && comp[j] && mine.has(comp[j]) && d[j * 4] > cov[j]) cov[j] = d[j * 4];
+}
 function drawRanges() {
   rctx.clearRect(0, 0, RCW, RCH);
   if (showRanges && SITES && relief) {
-    const o = outImg.data; o.fill(0);
-    const sea = seaAt(age), f = glacial(sea), land = new Uint8Array(DW * DH);
-    for (let i = 0; i < DH; i++) for (let k = 0; k < DW; k++) {       // dry, ice-free land of this moment
-      const rj = Math.min(RH - 1, i * 2) * RW + Math.min(RW - 1, k * 2 + 1), e = relief[rj] - sea;
-      land[i * DW + k] = e > 0 && !(iceDepth && iceAt(rj, f, e)) ? 1 : 0;
+    const o = outImg.data, N = DW * DH; o.fill(0);
+    const sea = seaAt(age), f = glacial(sea);
+    landF = landF || new Float32Array(N);
+    for (let i = 0; i < DH; i++) for (let k = 0; k < DW; k++) {       // share of dry, ice-free land in each cell (smooth coasts)
+      const r0 = Math.min(RH - 1, i * 2) * RW, r1 = Math.min(RH - 1, i * 2 + 1) * RW, c0 = Math.min(RW - 1, k * 2), c1 = Math.min(RW - 1, k * 2 + 1);
+      let n = 0; for (const rj of [r0 + c0, r0 + c1, r1 + c0, r1 + c1]) { const e = relief[rj] - sea; if (e > 0 && !(iceDepth && iceAt(rj, f, e))) n++; }
+      landF[i * DW + k] = n / 4;
     }
-    const paint = (j, rgb, a) => { if (a >= o[j * 4 + 3]) { o[j * 4] = rgb[0]; o[j * 4 + 1] = rgb[1]; o[j * 4 + 2] = rgb[2]; o[j * 4 + 3] = a; } };
+    const present = [];
     SPC.forEach((sp, k) => {
-      const on = SITES.filter(st => st[0] === k && !st[5] && siteNear(st, age)); if (!on.length) return;
+      const on = [], best = new Map();   // one spot per 1° cell (the strongest), so dense site clusters stay fast to draw
+      for (const st of SITES) if (st[0] === k && siteShown(st)) { const w = siteW(st, age); if (w > 0.01) on.push([st, w]); }
+      for (const p of on) { const c = Math.floor(p[0][1]) * 1000 + Math.floor(p[0][2]), o = best.get(c); if (!o || p[1] > o[1]) best.set(c, p); }
+      if (!on.length) return;
       dctx.globalCompositeOperation = 'source-over'; dctx.fillStyle = '#000'; dctx.fillRect(0, 0, DW, DH);
-      dctx.globalCompositeOperation = 'lighten';
-      on.forEach(st => { splat(st, INF_KM, 'rgb(0,255,0)'); if (siteNow(st, age)) splat(st, CONF_KM, 'rgb(255,0,0)'); });
-      const d = dctx.getImageData(0, 0, DW, DH).data, rgb = sp.rgb;
-      for (let j = 0; j < DW * DH; j++) {
-        if (!land[j]) continue;
-        const a = Math.max(225 * ramp(d[j * 4], 60, 130), 150 * ramp(d[j * 4 + 1], 35, 95));   // soft edges
-        if (a > 2) paint(j, rgb, a);
-      }
+      dctx.globalCompositeOperation = 'lighter'; best.forEach(([st, w]) => splat(st, w));   // added up, so nearby sites merge smoothly
+      const d = dctx.getImageData(0, 0, DW, DH).data, cov = covs[k] = covs[k] || new Uint8Array(N);
+      for (let j = 0; j < N; j++) cov[j] = d[j * 4];
+      if (k === SAPIENS) settle(on, cov);
+      present.push(k);
     });
-    if (showContested) {            // disputed: amber hatching over land
-      const on = SITES.filter(st => st[5] && siteNow(st, age));
-      if (on.length) {
-        dctx.globalCompositeOperation = 'source-over'; dctx.fillStyle = '#000'; dctx.fillRect(0, 0, DW, DH); dctx.globalCompositeOperation = 'lighten';
-        on.forEach(st => splat(st, DISP_KM, 'rgb(0,0,255)'));
-        const d = dctx.getImageData(0, 0, DW, DH).data;
-        for (let j = 0; j < DW * DH; j++) if (land[j] && d[j * 4 + 2] > 115 && ((j % DW) + Math.floor(j / DW)) % 6 < 2) { o[j * 4] = 255; o[j * 4 + 1] = 207; o[j * 4 + 2] = 138; o[j * 4 + 3] = 235; }
+    // fill: one light colour per species; where several overlap, diagonal stripes of each colour
+    const here = [];
+    for (let i = 0; i < DH; i++) for (let x = 0; x < DW; x++) {
+      const j = i * DW + x, lf = landF[j]; if (!lf) continue;
+      here.length = 0; let top = 0;
+      for (const k of present) { const a = ramp(covs[k][j], EDGE - 12, EDGE + 12); if (a > 0) { here.push(k); if (a > top) top = a; } }
+      if (!here.length) continue;
+      const k = here.length === 1 ? here[0] : here[Math.floor((x + i) / 3) % here.length], c = SPC[k].rgb;
+      o[j * 4] = c[0]; o[j * 4 + 1] = c[1]; o[j * 4 + 2] = c[2]; o[j * 4 + 3] = 255 * FILL_A * top * lf;
+    }
+    // outline: a thin line in the species' colour along the edge of each range (all species, so a covered one still shows)
+    for (const k of present) {
+      const cov = covs[k], c = SPC[k].rgb;
+      for (let j = 0; j < N; j++) {
+        const lf = landF[j]; if (!lf) continue;
+        const v = cov[j], a = 1 - Math.abs(v - EDGE - 6) / 14; if (a <= 0) continue;
+        const al = 255 * LINE_A * a * lf; if (al < o[j * 4 + 3] && o[j * 4 + 3] > 255 * FILL_A) continue;
+        o[j * 4] = c[0]; o[j * 4 + 1] = c[1]; o[j * 4 + 2] = c[2]; o[j * 4 + 3] = Math.max(o[j * 4 + 3], al);
       }
     }
     octx.putImageData(outImg, 0, 0);
@@ -659,11 +727,11 @@ function buildSpecies(info, data) {
 }
 function updateSpecies() {
   if (!SPC) return;
-  const key = showRanges ? Math.round(age * 2) + ':' + paintedIce + ':' + (showContested ? 1 : 0) : '';
+  const key = showRanges ? Math.round(age / Math.max(0.1, age * 0.004)) + ':' + paintedIce + ':' + (showContested ? 1 : 0) : '';
   if (key !== rangeKey && relief) { rangeKey = key; drawRanges(); }
   const w = innerWidth, h = innerHeight; G.camera.getWorldPosition(_c);
   SPC.forEach((sp, k) => {
-    const b = speciesEls[k], on = showRanges ? SITES.filter(st => st[0] === k && !st[5] && siteNow(st, age)) : [];
+    const b = speciesEls[k], on = showRanges ? SITES.filter(st => st[0] === k && siteNow(st, age)) : [];
     if (!on.length) { b.hidden = true; return; }
     // the label sits at the dated site closest to the middle of the ones shown now
     const c = new THREE.Vector3(); on.forEach(st => c.add(sphereXYZ(st[1], st[2]))); c.normalize();
@@ -678,12 +746,12 @@ function updateSpecies() {
 function openSpeciesPop(k) {
   const sp = SPC[k]; popSpecies = k; popIdx = null; popRoute = null;
   pop.style.setProperty('--k', sp.color);
-  const mine = SITES.filter(st => st[0] === k), now = mine.filter(st => !st[5] && siteNow(st, age)).length, disp = mine.filter(st => st[5]).length;
+  const mine = SITES.filter(st => st[0] === k), now = mine.filter(st => siteNow(st, age)).length, disp = mine.filter(st => st[5]).length;
   $('popKind').textContent = t('species');
   if (disp) { const s = document.createElement('span'); s.className = 'badge'; s.textContent = t('disputed'); $('popKind').appendChild(s); }
   $('popTitle').textContent = sp[LANG][0];
   $('popAge').textContent = t('sitesNow', { n: now, m: mine.length });
-  $('popText').textContent = sp[LANG][1] + ' ' + t('rangeNote');
+  $('popText').textContent = sp[LANG][1] + ' ' + t('rangeNote') + (k === SAPIENS ? ' ' + t('sapiensNote') : '');
   const dsp = $('popDsp'); dsp.hidden = !disp;
   if (disp) { dsp.innerHTML = '<b></b><span></span>'; dsp.firstChild.textContent = t('disputed'); dsp.lastChild.textContent = t('disputedSites', { n: disp }); }
   // sources: the databases and curated papers its sites come from (most used first), then the species' own references

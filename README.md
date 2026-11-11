@@ -13,7 +13,7 @@ Prototype · 프로토타입
 - ✅ Coastlines from sea level (land bridges such as Sunda, Sahul and Beringia appear in glacial times) · 해수면에 따른 해안선(빙기에 순다·사훌·베링 땅다리)
 - ✅ 34 events and sites with dated ranges, disputed claims shown with both sides and sources · 연대 범위가 있는 사건·유적 34개, 논쟁은 양쪽 주장과 출처 함께
 - ✅ Ice sheets: published Northern Hemisphere reconstructions for 12 time slices, scaled with sea level in between · 빙상: 12개 시기의 북반구 복원 자료, 그 사이는 해수면으로 조절
-- ✅ Species ranges drawn only from dated sites: strong colour around sites dated to the time, faint colour for an inferred envelope over dry, ice-free land, amber hatching for disputed sites (no single origin point, no spread model) · 연대가 측정된 유적만으로 그린 종 분포: 진하게 = 그 시기 유적 주변, 옅게 = 주변 육지로 넓힌 추정, 빗금 = 논쟁 중인 유적 (단일 기원지·확산 모델 없음)
+- ✅ Species ranges drawn from dated sites: one light fill per species with an outline in its colour, stripes where species overlap; areas grow in and shrink away smoothly with each site's dates; disputed sites included with the "show disputed dates" setting. After 50 ka Homo sapiens widens ~250 km per thousand years over each landmass where its sites are dated (joined by ice-age land bridges), so by today it covers the land people reached · 연대 유적으로 그린 종 분포: 종마다 옅은 칠 + 외곽선, 겹치면 줄무늬, 유적 연대에 따라 부드럽게 퍼지고 줄어듦; 현생인류는 5만 년 전 이후 유적이 있는 땅덩어리(빙기 육교 포함) 안에서 천 년에 약 250 km씩 넓어짐
 - ✅ Global mean temperature, °C / °F · 지구 평균 기온 (°C/°F)
 - ⏳ 10 languages, product switcher, pausing at events · 10개 언어, 제품 전환 메뉴, 재생 중 사건에서 멈추기
 
