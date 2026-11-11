@@ -139,12 +139,13 @@ const I18N = {
       seaHigh: '해수면이 지금보다 {m} m 높습니다. 간빙기의 따뜻한 시기입니다.', ice: '빙기', warm: '간빙기',
       deep: '-6000 m', seaLvl: '해수면', high: '+5500 m',
       temp: '평균 기온', unit: '단위', tempTitle: '지구 평균 지표 기온 (근사치)',
-      ranges: '종 분포', rangesSub: '흐린 영역 = 연대가 맞는 유적 주변', species: '종 분포', sitesNow: '지금 보이는 유적 {n}곳 (전체 {m}곳)',
-      rangeNote: '지도의 흐린 영역은 이 시기 연대가 확인된 유적 주변을 이은 대략적인 범위로, 실제로 살던 곳을 모두 나타내지는 않습니다.',
+      ranges: '종 분포', rangesSub: '진하게 = 확인된 유적 · 옅게 = 추정 · 빗금 = 논쟁', species: '종 분포', sitesNow: '지금 보이는 유적 {n}곳 (전체 {m}곳)',
+      rangeNote: '진한 영역은 지금 시기로 연대가 측정된 유적 주변, 옅은 영역은 그 주변 육지로 넓힌 추정입니다. 조사가 적은 지역은 비어 보일 수 있습니다.',
+      disputedSites: '이 종으로 볼지(또는 연대가) 논쟁 중인 유적 {n}곳은 빗금으로 따로 표시합니다.', moreSources: '외 출처 {n}건',
       ice: '빙상', iceSub: '북반구는 Batchelor 외 2019 복원, 그 사이는 해수면으로 조절',
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
-      foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–430 ka, 오늘을 0 m로 맞춤. 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
+      foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–430 ka, 오늘을 0 m로 맞춤. 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 종 분포: 연대가 측정된 유적만으로 그림 — Timmermann 외 2022 (Nature, 보충표 1, CC BY 4.0) 3만–35만 년 전, ROAD 데이터베이스 (ROCEEH, CC BY-SA 4.0) 3만 년 전 이후 현생인류, 그리고 출처를 붙인 유적 목록. 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
   en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', lang: 'Language', scale: 'Timeline scale',
       linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
@@ -156,12 +157,13 @@ const I18N = {
       seaHigh: 'Sea level is {m} m higher than today, in a warm interglacial.', ice: 'glacial', warm: 'interglacial',
       deep: '-6000 m', seaLvl: 'sea level', high: '+5500 m',
       temp: 'Mean temp.', unit: 'Unit', tempTitle: 'Global mean surface temperature (approximate)',
-      ranges: 'Species ranges', rangesSub: 'Soft areas = around sites dated to the time', species: 'Species range', sitesNow: '{n} sites shown now ({m} in all)',
-      rangeNote: 'The soft area joins the sites dated to this time; it is a rough outline, not a map of everywhere they lived.',
+      ranges: 'Species ranges', rangesSub: 'Strong = dated sites · faint = inferred · hatched = disputed', species: 'Species range', sitesNow: '{n} sites shown now ({m} in all)',
+      rangeNote: 'Strong colour: around sites dated to this time. Faint colour: inferred, over nearby land. Little-studied regions can look empty.',
+      disputedSites: '{n} sites whose attribution to this species (or date) is debated are hatched separately.', moreSources: '{n} more sources',
       ice: 'Ice sheets', iceSub: 'Northern Hemisphere: Batchelor et al. 2019; in between, scaled with sea level',
       pins: 'Events on the map', close: 'Close', goHere: 'Go to this time', events: 'Events', contested: 'Show disputed dates too', contestedSub: 'Off: widely accepted dates only',
       disputed: 'disputed', about: 'about {a}', atLeast: 'at least {a}', range: 'about {a} – {b}', sources: 'Sources',
-      foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–430 ka, shifted so today = 0 m. Relief: ETOPO1 (NOAA), reduced to 0.25°. Mean temperature: the EPICA Dome C Antarctic record (Jouzel et al. 2007, NOAA) scaled so the Last Glacial Maximum is 6.1 °C below today (Tierney et al. 2020) — an approximation of the global mean. Ice sheets: Northern Hemisphere from the best-estimate reconstructions of Batchelor et al. 2019 (Nature Communications, CC BY 4.0) for 12 time slices, reduced to 0.25°; between slices the nearest one shrinks or grows from its edges with sea level. Present Greenland and Antarctic ice from the relief; Patagonia is a hand-drawn schematic. Prototype: crustal rebound is not modelled yet.' } },
+      foot: 'Sources · Sea level: Spratt & Lisiecki 2016 (Clim. Past, NOAA open data), 0–430 ka, shifted so today = 0 m. Relief: ETOPO1 (NOAA), reduced to 0.25°. Mean temperature: the EPICA Dome C Antarctic record (Jouzel et al. 2007, NOAA) scaled so the Last Glacial Maximum is 6.1 °C below today (Tierney et al. 2020) — an approximation of the global mean. Ice sheets: Northern Hemisphere from the best-estimate reconstructions of Batchelor et al. 2019 (Nature Communications, CC BY 4.0) for 12 time slices, reduced to 0.25°; between slices the nearest one shrinks or grows from its edges with sea level. Present Greenland and Antarctic ice from the relief; Patagonia is a hand-drawn schematic. Species ranges: drawn only from dated sites — Timmermann et al. 2022 (Nature, Supplementary Table 1, CC BY 4.0) for 30–350 ka, the ROAD database (ROCEEH, CC BY-SA 4.0) for Homo sapiens after 30 ka, and a list of published sites with their sources. Prototype: crustal rebound is not modelled yet.' } },
 };
 const STAGES = [   // ICS colours
   { from: 300, to: 129, color: '#FFF2C7', ko: '치바니안 (중기 플라이스토세)', en: 'Chibanian (Middle Pleistocene)', range: '774 – 129 ka' },
@@ -568,7 +570,7 @@ $('iceOn').checked = showIce;
 $('iceOn').onchange = e => { showIce = e.target.checked; try { localStorage.setItem('hj.ice', showIce ? '1' : '0'); } catch (_) {} paint(seaAt(age)); };
 $('contestedOn').onchange = e => {
   showContested = e.target.checked; try { localStorage.setItem('hj.contested', showContested ? '1' : '0'); } catch (_) {}
-  buildEvRow(); markCurrent(); if (popIdx !== null) openPop(popIdx);
+  buildEvRow(); markCurrent(); if (popIdx !== null) openPop(popIdx); rangeKey = '';
 };
 function currentEvent() {           // the event whose range holds the playhead and is closest in time
   if (!EV) return null;
@@ -577,122 +579,77 @@ function currentEvent() {           // the event whose range holds the playhead 
   return best;
 }
 
-// ---------- migration routes (data only): dated waypoints that the Homo sapiens spread follows ----------
-let RT = null, routeEls = [], popRoute = null;   // routes are not drawn: they are the skeleton of the Homo sapiens spread
-function buildRoutes(list) {
-  RT = list.map(r => {
-    const pos = [], ages = [], tmp = new THREE.Vector3();
-    for (let i = 0; i + 1 < r.path.length; i++) {
-      const [lo0, la0, a0] = r.path[i], [lo1, la1, a1] = r.path[i + 1];
-      const A = sphereXYZ(lo0, la0), B = sphereXYZ(lo1, la1), n = Math.max(2, Math.ceil(A.angleTo(B) / (1.15 * D2R)));
-      for (let k = 0; k < n; k++) { const t = k / n; tmp.copy(A).lerp(B, t).normalize().multiplyScalar(1.006); pos.push(tmp.x, tmp.y, tmp.z); ages.push(a0 + (a1 - a0) * t); }
-    }
-    const L = r.path[r.path.length - 1]; tmp.copy(sphereXYZ(L[0], L[1])).multiplyScalar(1.006); pos.push(tmp.x, tmp.y, tmp.z); ages.push(L[2]);
-    const ll = []; for (let i = 0; i < pos.length; i += 3) {    // lon/lat of each sample (inverse of sphereXYZ)
-      const x = pos[i], y = pos[i + 1], z = pos[i + 2], rr = Math.hypot(x, y, z);
-      let lon = Math.atan2(z, -x) / D2R - 180; if (lon < -180) lon += 360; ll.push([lon, Math.asin(y / rr) / D2R]);
-    }
-    return { ...r, ages, pos, ll, start: ages[0], end: ages[ages.length - 1] };
-  });
-}
-function routeN(r) { let n = 0; while (n < r.ages.length && r.ages[n] >= age) n++; return (r.fadeAt && age < r.fadeAt) ? 0 : n; }
-// ---------- species ranges: soft areas around the sites dated to the current time ----------
-let SPC = null, speciesEls = [], popSpecies = null, showRanges = true, rangeKey = '';
+// ---------- species ranges from dated sites ----------
+// data/sites.json: dated sites attributed to a species (Timmermann et al. 2022 Suppl. Table 1; ROAD for Homo sapiens
+// after 30 ka; a short curated list for the Americas, Sahul, Oceania and the island species). For the current time:
+//   confirmed — close around sites dated to now (strong colour)
+//   inferred  — a wide, smooth envelope around sites dated to around now, on dry, ice-free land only (faint colour)
+//   disputed  — around sites whose species attribution or date is debated (amber hatching; off with the setting)
+// No single origin and no spread model: only what dated sites show.
+let popRoute = null, routeEls = [];   // (routes are no longer shown)
+let SAPIENS = -1, SPC = null, SITES = null, SITE_SRC = [], speciesEls = [], popSpecies = null, showRanges = true, rangeKey = '';
 try { if (localStorage.getItem('hj.ranges') === '0') showRanges = false; } catch (_) {}
 $('rangesOn').checked = showRanges;
 const RCW = 2048, RCH = 1024, rangeCv = document.createElement('canvas'); rangeCv.width = RCW; rangeCv.height = RCH;
 const rctx = rangeCv.getContext('2d'), rangeTex = new THREE.CanvasTexture(rangeCv);
 const rangeMesh = new THREE.Mesh(new THREE.SphereGeometry(1.0025, 128, 96), new THREE.MeshBasicMaterial({ map: rangeTex, transparent: true, depthWrite: false }));
 G.earth.add(rangeMesh);
-const siteOn = st => { const pad = Math.max(4, age * 0.06); return age <= st.max + pad && age >= st.min - pad; };
-function hull(P) {                  // convex hull (monotone chain) of [x, y] points
-  const p = P.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]), cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
-  const lo = [], up = [];
-  for (const q of p) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
-  for (const q of p.slice().reverse()) { while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
-  return lo.slice(0, -1).concat(up.slice(0, -1));
-}
-// Homo sapiens spread: every 1° cell gets the time people could first have reached it — within Africa ~120 km per
-// thousand years from the early sites, elsewhere ~600 km per thousand years from each migration route as it advances.
-// A spread stays on the landmass where it starts (Africa, Eurasia, Sahul, the Americas, remote Oceania), so people
-// cross between landmasses only along the routes.
-// A reached cell is filled while it is dry land and not under ice, so the range covers regions, not corridors.
-const SW = 360, SH = 181, SPREAD_KM_PER_KA = 600;
-let arrMain = null, arrEarly = null, earlyGone = null, earlyEnd = 0, sapCv = null, sapCtx = null, sapImg = null;
-const EARLY_FADE_KA = 10;          // the early Levant foothold shrinks back over 10 thousand years, edges first
-function buildSpread(sp) {
-  const cells = new Array(SW * SH);
-  for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) cells[i * SW + k] = sphereXYZ(-180 + k + 0.5, 90 - i);
-  // Africa (cut at Sinai and the Bab-el-Mandeb): the early African sites spread only here; leaving Africa happens
-  // only along the migration routes
-  const AFRICA = [[-20, 38], [10, 38], [32.4, 31.6], [32.4, 29.8], [43.4, 12.7], [52, 12], [52, -37], [12, -37], [-20, 2]];
-  const inPoly = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j];
-    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
-  // landmasses: a spread stays on the landmass where it starts; people cross between them only along the routes
-  const region = (lon, lat) => inPoly(lon, lat, AFRICA) ? 1
-    : (lon > -170 && lon < -25) ? 2                                                     // the Americas
-    : ((lon >= 129 && lon < 156 && lat < 0 && lat > -45) || (lon >= 112 && lon < 129 && lat < -12 && lat > -45)) ? 3   // Sahul
-    : (lon >= 156 || lon <= -170) && lat < 0 ? 4                                         // remote Oceania, Aotearoa
-    : 5;                                                                                 // Eurasia
-  const cellReg = new Uint8Array(SW * SH);
-  for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) cellReg[i * SW + k] = region(-180 + k + 0.5, 90 - i);
-  const field = seeds => {
-    const out = new Float32Array(SW * SH).fill(-1);
-    for (const sd of seeds) { const v = sphereXYZ(sd.lon, sd.lat), lim = Math.cos(sd.reach / 6371);
-      const rg = region(sd.lon, sd.lat), sp = sd.speed || SPREAD_KM_PER_KA;
-      for (let j = 0; j < out.length; j++) { if (sd.sameRegion && cellReg[j] !== rg) continue; const c = cells[j], dt = c.x * v.x + c.y * v.y + c.z * v.z; if (dt < lim) continue;
-        const a = sd.age - 6371 * Math.acos(Math.min(1, dt)) / sp; if (a > out[j]) out[j] = a; } }
-    return out;
-  };
-  const main = sp.sites.map(st => ({ lon: st.lon, lat: st.lat, age: st.max, reach: 20000, sameRegion: true, speed: 120 })), early = [];   // Africa fills slowly from its sites
-  RT.forEach(r => { const dst = r.fadeAt ? early : main; for (let i = 0; i < r.ll.length; i += 2) dst.push(r.fadeAt ? { lon: r.ll[i][0], lat: r.ll[i][1], age: r.ages[i], reach: 1200 } : { lon: r.ll[i][0], lat: r.ll[i][1], age: r.ages[i], reach: 20000, sameRegion: true }); if (r.fadeAt) earlyEnd = r.fadeAt; });
-  arrMain = field(main); arrEarly = field(early);
-  // when each early cell is given up: the last-reached (outer) cells first, the first-reached (core) last, at earlyEnd
-  let lo = Infinity, hi = -Infinity; for (const a of arrEarly) if (a >= 0) { lo = Math.min(lo, a); hi = Math.max(hi, a); }
-  earlyGone = new Float32Array(arrEarly.length);
-  for (let j = 0; j < arrEarly.length; j++) earlyGone[j] = arrEarly[j] < 0 ? Infinity : earlyEnd + EARLY_FADE_KA * (hi - arrEarly[j]) / Math.max(1e-6, hi - lo);
-  sapCv = document.createElement('canvas'); sapCv.width = SW; sapCv.height = SH; sapCtx = sapCv.getContext('2d'); sapImg = sapCtx.createImageData(SW, SH);
-}
-function paintSpread(sp) {          // the reached land of this moment into the small canvas
-  const d = sapImg.data, sea = seaAt(age), f = glacial(sea), col = sp.color, R = parseInt(col.slice(1, 3), 16), Gc = parseInt(col.slice(3, 5), 16), B = parseInt(col.slice(5, 7), 16);
-  const step = 360 / (RW - 1);
-  for (let i = 0; i < SH; i++) for (let k = 0; k < SW; k++) {
-    const j = i * SW + k, reached = arrMain[j] >= age || (arrEarly[j] >= age && age >= earlyGone[j]);
-    let on = false;
-    if (reached && relief) {
-      const rj = Math.round(i / step) * RW + Math.min(RW - 1, Math.round((k + 0.5) / step));
-      on = relief[rj] > sea && !(iceDepth && iceAt(rj, f, relief[rj] - sea));
-    }
-    d[j * 4] = R; d[j * 4 + 1] = Gc; d[j * 4 + 2] = B; d[j * 4 + 3] = on ? 255 : 0;
+const DW = 720, DH = 361, CONF_KM = 450, INF_KM = 1600, DISP_KM = 600;
+const dens = document.createElement('canvas'); dens.width = DW; dens.height = DH; const dctx = dens.getContext('2d', { willReadFrequently: true });
+const outCv = document.createElement('canvas'); outCv.width = DW; outCv.height = DH; const octx = outCv.getContext('2d'); const outImg = octx.createImageData(DW, DH);
+const siteNow = (st, a) => { const pad = Math.max(1, a * 0.05); return a <= st[4] + pad && a >= st[3] - pad; };       // confirmed window
+const siteNear = (st, a) => { const pad = Math.max(3, a * 0.2);                                                    // inferred window;
+  return a <= st[4] + pad && (a >= st[3] - pad || (st[0] === SAPIENS && st[4] <= 50)); };  // H. sapiens stays where it settled after 50 ka
+function splat(st, km, color) {     // a soft round spot around a site (wider east–west toward the poles), across the date line too
+  const x = (st[1] + 180) / 360 * DW, y = (90 - st[2]) / 180 * DH, ry = km / 111 / 180 * DH, rx = Math.min(DW / 3, ry / Math.max(0.15, Math.cos(st[2] * D2R)));
+  for (const ox of [0, -DW, DW]) {
+    if (x + ox + rx < 0 || x + ox - rx > DW) continue;
+    dctx.save(); dctx.translate(x + ox, y); dctx.scale(rx / ry, 1);
+    const g = dctx.createRadialGradient(0, 0, 0, 0, 0, ry); g.addColorStop(0, color); g.addColorStop(1, 'rgb(0,0,0)');
+    dctx.fillStyle = g; dctx.beginPath(); dctx.arc(0, 0, ry, 0, Math.PI * 2); dctx.fill(); dctx.restore();
   }
-  sapCtx.putImageData(sapImg, 0, 0);
 }
+const ramp = (v, a, b) => v <= a ? 0 : v >= b ? 1 : (v - a) / (b - a) * (v - a) / (b - a) * (3 - 2 * (v - a) / (b - a));
 function drawRanges() {
   rctx.clearRect(0, 0, RCW, RCH);
-  if (showRanges && SPC) [...SPC].sort((a, b) => (b.followsRoutes ? 1 : 0) - (a.followsRoutes ? 1 : 0)).forEach(sp => {
-    rctx.save(); rctx.translate(-RCW * 2, 0);           // draw far to the left, keep only the blurred shadow: soft edges everywhere
-    rctx.shadowOffsetX = RCW * 2; rctx.shadowBlur = 10; rctx.shadowColor = sp.color + (sp.alpha || 'a8');
-    if (sp.followsRoutes && arrMain) {                   // Homo sapiens: the filled spread
-      paintSpread(sp); rctx.imageSmoothingEnabled = true; rctx.drawImage(sapCv, 0, 0, RCW, RCH); rctx.restore(); return;
+  if (showRanges && SITES && relief) {
+    const o = outImg.data; o.fill(0);
+    const sea = seaAt(age), f = glacial(sea), land = new Uint8Array(DW * DH);
+    for (let i = 0; i < DH; i++) for (let k = 0; k < DW; k++) {       // dry, ice-free land of this moment
+      const rj = Math.min(RH - 1, i * 2) * RW + Math.min(RW - 1, k * 2 + 1), e = relief[rj] - sea;
+      land[i * DW + k] = e > 0 && !(iceDepth && iceAt(rj, f, e)) ? 1 : 0;
     }
-    const on = sp.sites.filter(siteOn); if (!on.length) { rctx.restore(); return; }
-    const P = on.map(st => [(st.lon + 180) / 360 * RCW, (90 - st.lat) / 180 * RCH]);
-    const R = 600 / 111 / 360 * RCW;               // ~600 km around each site
-    // a disc around each site, and a band between sites closer than ~2,200 km — clusters join up, but far-apart sites
-    // are not bridged across regions with no evidence
-    const path = new Path2D();
-    P.forEach(q => { path.moveTo(q[0] + 0.1, q[1]); path.arc(q[0], q[1], 0.1, 0, Math.PI * 2); });
-    for (let i = 0; i < on.length; i++) for (let j = i + 1; j < on.length; j++) {
-      const a = on[i], b = on[j], km = 6371 * sphereXYZ(a.lon, a.lat).angleTo(sphereXYZ(b.lon, b.lat));
-      if (km < 2200) { path.moveTo(P[i][0], P[i][1]); path.lineTo(P[j][0], P[j][1]); }
+    const paint = (j, rgb, a) => { if (a >= o[j * 4 + 3]) { o[j * 4] = rgb[0]; o[j * 4 + 1] = rgb[1]; o[j * 4 + 2] = rgb[2]; o[j * 4 + 3] = a; } };
+    SPC.forEach((sp, k) => {
+      const on = SITES.filter(st => st[0] === k && !st[5] && siteNear(st, age)); if (!on.length) return;
+      dctx.globalCompositeOperation = 'source-over'; dctx.fillStyle = '#000'; dctx.fillRect(0, 0, DW, DH);
+      dctx.globalCompositeOperation = 'lighten';
+      on.forEach(st => { splat(st, INF_KM, 'rgb(0,255,0)'); if (siteNow(st, age)) splat(st, CONF_KM, 'rgb(255,0,0)'); });
+      const d = dctx.getImageData(0, 0, DW, DH).data, rgb = sp.rgb;
+      for (let j = 0; j < DW * DH; j++) {
+        if (!land[j]) continue;
+        const a = Math.max(225 * ramp(d[j * 4], 60, 130), 150 * ramp(d[j * 4 + 1], 35, 95));   // soft edges
+        if (a > 2) paint(j, rgb, a);
+      }
+    });
+    if (showContested) {            // disputed: amber hatching over land
+      const on = SITES.filter(st => st[5] && siteNow(st, age));
+      if (on.length) {
+        dctx.globalCompositeOperation = 'source-over'; dctx.fillStyle = '#000'; dctx.fillRect(0, 0, DW, DH); dctx.globalCompositeOperation = 'lighten';
+        on.forEach(st => splat(st, DISP_KM, 'rgb(0,0,255)'));
+        const d = dctx.getImageData(0, 0, DW, DH).data;
+        for (let j = 0; j < DW * DH; j++) if (land[j] && d[j * 4 + 2] > 115 && ((j % DW) + Math.floor(j / DW)) % 6 < 2) { o[j * 4] = 255; o[j * 4 + 1] = 207; o[j * 4 + 2] = 138; o[j * 4 + 3] = 235; }
+      }
     }
-    rctx.fillStyle = sp.color; rctx.strokeStyle = sp.color; rctx.lineWidth = R * 2; rctx.lineJoin = 'round'; rctx.lineCap = 'round';
-    rctx.fill(path); rctx.stroke(path); rctx.restore();
-  });
+    octx.putImageData(outImg, 0, 0);
+    rctx.imageSmoothingEnabled = true; rctx.imageSmoothingQuality = 'high'; rctx.drawImage(outCv, 0, 0, RCW, RCH);
+  }
   rangeTex.needsUpdate = true;
 }
-function buildSpecies(list) {
-  SPC = list;
+function buildSpecies(info, data) {
+  SITES = data.sites; SITE_SRC = data.sources; SAPIENS = data.species.indexOf('sapiens');
+  SPC = data.species.map(id => { const sp = info.find(x => x.id === id) || { id, color: '#cccccc', ko: [id, ''], en: [id, ''], src: [] };
+    return { ...sp, rgb: [1, 3, 5].map(i => parseInt(sp.color.slice(i, i + 2), 16)) }; });
   const box = $('pins'); speciesEls = SPC.map((sp, k) => {
     const b = document.createElement('button'); b.className = 'pin route species'; b.style.setProperty('--k', sp.color); b.hidden = true;
     b.innerHTML = '<i></i><span></span>'; b.lastChild.textContent = sp[LANG][0];
@@ -702,15 +659,18 @@ function buildSpecies(list) {
 }
 function updateSpecies() {
   if (!SPC) return;
-  const key = showRanges ? SPC.map(sp => sp.sites.map(st => siteOn(st) ? 1 : 0).join('')).join('|') + (arrMain ? '#' + Math.round(age * 4) + ':' + paintedIce : '') : '';
-  if (key !== rangeKey) { rangeKey = key; drawRanges(); }
+  const key = showRanges ? Math.round(age * 2) + ':' + paintedIce + ':' + (showContested ? 1 : 0) : '';
+  if (key !== rangeKey && relief) { rangeKey = key; drawRanges(); }
   const w = innerWidth, h = innerHeight; G.camera.getWorldPosition(_c);
   SPC.forEach((sp, k) => {
-    const b = speciesEls[k], on = showRanges ? sp.sites.filter(siteOn) : [];
+    const b = speciesEls[k], on = showRanges ? SITES.filter(st => st[0] === k && !st[5] && siteNow(st, age)) : [];
     if (!on.length) { b.hidden = true; return; }
-    _v.set(0, 0, 0); on.forEach(st => _v.add(sphereXYZ(st.lon, st.lat))); _v.normalize().multiplyScalar(1.004).applyMatrix4(G.earth.matrixWorld);
+    // the label sits at the dated site closest to the middle of the ones shown now
+    const c = new THREE.Vector3(); on.forEach(st => c.add(sphereXYZ(st[1], st[2]))); c.normalize();
+    let best = on[0], bd = -2; on.forEach(st => { const dd = sphereXYZ(st[1], st[2]).dot(c); if (dd > bd) { bd = dd; best = st; } });
+    _v.copy(sphereXYZ(best[1], best[2])).multiplyScalar(1.004).applyMatrix4(G.earth.matrixWorld);
     if (_v.dot(_c.clone().sub(_v)) <= 0) { b.hidden = true; return; }
-    _v.project(G.camera); b.hidden = false;                      // a little above the site, so it does not cover the event pin
+    _v.project(G.camera); b.hidden = false;                      // a little above the site, so it does not cover an event pin
     b.style.transform = `translate(${(_v.x + 1) / 2 * w - 7}px, ${(1 - _v.y) / 2 * h - 24}px) translateY(-50%)`;
     b.classList.toggle('on', popSpecies === k);
   });
@@ -718,22 +678,27 @@ function updateSpecies() {
 function openSpeciesPop(k) {
   const sp = SPC[k]; popSpecies = k; popIdx = null; popRoute = null;
   pop.style.setProperty('--k', sp.color);
+  const mine = SITES.filter(st => st[0] === k), now = mine.filter(st => !st[5] && siteNow(st, age)).length, disp = mine.filter(st => st[5]).length;
   $('popKind').textContent = t('species');
-  if (sp.dispute) { const s = document.createElement('span'); s.className = 'badge'; s.textContent = t('disputed'); $('popKind').appendChild(s); }
+  if (disp) { const s = document.createElement('span'); s.className = 'badge'; s.textContent = t('disputed'); $('popKind').appendChild(s); }
   $('popTitle').textContent = sp[LANG][0];
-  $('popAge').textContent = t('sitesNow', { n: sp.sites.filter(siteOn).length, m: sp.sites.length });
+  $('popAge').textContent = t('sitesNow', { n: now, m: mine.length });
   $('popText').textContent = sp[LANG][1] + ' ' + t('rangeNote');
-  const dsp = $('popDsp'); dsp.hidden = !sp.dispute;
-  if (sp.dispute) { dsp.innerHTML = '<b></b><span></span>'; dsp.firstChild.textContent = t('disputed'); dsp.lastChild.textContent = sp.dispute[LANG] || sp.dispute.en; }
+  const dsp = $('popDsp'); dsp.hidden = !disp;
+  if (disp) { dsp.innerHTML = '<b></b><span></span>'; dsp.firstChild.textContent = t('disputed'); dsp.lastChild.textContent = t('disputedSites', { n: disp }); }
+  // sources: the databases and curated papers its sites come from (most used first), then the species' own references
+  const cnt = new Map(); mine.forEach(st => cnt.set(st[6], (cnt.get(st[6]) || 0) + 1));
+  const list = [...cnt.entries()].sort((a, b) => b[1] - a[1]).map(([i]) => SITE_SRC[i]).concat(sp.src || []);
   const src = $('popSrc'); src.innerHTML = '';
-  sp.src.forEach(s => { const li = document.createElement('li'), a = document.createElement('a'); a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.label; li.appendChild(a); src.appendChild(li); });
+  list.slice(0, 7).forEach(s => { const li = document.createElement('li'), a = document.createElement('a'); a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.label; li.appendChild(a); src.appendChild(li); });
+  if (list.length > 7) { const li = document.createElement('li'); li.textContent = t('moreSources', { n: list.length - 7 }); src.appendChild(li); }
   pinEls.forEach(b => b && b.classList.remove('on'));
   pop.hidden = false; updateSpecies(); placePop();
 }
-function goToSpecies(k) {          // the time when the most of its sites are dated
-  const sp = SPC[k]; let best = age, bn = -1;
-  for (let a = AGE_MAX; a >= 0; a -= 1) { const n = sp.sites.filter(st => a <= st.max && a >= st.min).length; if (n > bn) { bn = n; best = a; } }
-  const c = new THREE.Vector3(); sp.sites.forEach(st => c.add(sphereXYZ(st.lon, st.lat)));
+function goToSpecies(k) {          // the time when the most of its sites are dated, centred on them
+  const mine = SITES.filter(st => st[0] === k && !st[5]); let best = age, bn = -1;
+  for (let a = AGE_MAX; a >= 0; a -= 1) { const n = mine.filter(st => siteNow(st, a)).length; if (n > bn) { bn = n; best = a; } }
+  const c = new THREE.Vector3(); mine.filter(st => siteNow(st, best)).forEach(st => c.add(sphereXYZ(st[1], st[2])));
   stop(); setAge(best); G.stopAuto(); G.faceLocal(c.normalize()); openSpeciesPop(k);
 }
 $('rangesOn').onchange = e => { showRanges = e.target.checked; try { localStorage.setItem('hj.ranges', showRanges ? '1' : '0'); } catch (_) {} if (!showRanges && popSpecies !== null) closePop(); };
@@ -778,10 +743,10 @@ function loadGray(src) {
     for (let i = 0; i < o.length; i++) o[i] = d[i * 4]; res(o); }; im.onerror = () => rej(new Error(src)); im.src = src; });
 }
 Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r => r.json()), fetch('data/events.json').then(r => r.json()),
-  fetch('data/ice_nh.json').then(r => r.json()), loadGray('data/ice_nh.png'), fetch('data/routes.json').then(r => r.json()),
-  fetch('data/species.json').then(r => r.json()), fetch('data/temperature.json').then(r => r.json())]).then(([r, sea, ev, im, ia, rt, spc, tp]) => {
+  fetch('data/ice_nh.json').then(r => r.json()), loadGray('data/ice_nh.png'), fetch('data/sites.json').then(r => r.json()),
+  fetch('data/species.json').then(r => r.json()), fetch('data/temperature.json').then(r => r.json())]).then(([r, sea, ev, im, ia, st, spc, tp]) => {
   TEMP = tp.gmst;
-  buildRoutes(rt.routes); buildSpecies(spc.species); buildSpread(spc.species.find(x => x.followsRoutes));
+  buildSpecies(spc.species, st);
   EV = ev.events; KINDS = ev.kinds; buildPins(); buildEvRow();
   RW = r.w; RH = r.h; relief = r.e; shade = shadeGrid(relief, RW, RH); SEA = sea; buildIce();
   const rows = im.grid.rows, per = rows * RW;
