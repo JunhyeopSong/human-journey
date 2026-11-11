@@ -14,7 +14,8 @@ Prototype · 프로토타입
 - ✅ 34 events and sites with dated ranges, disputed claims shown with both sides and sources · 연대 범위가 있는 사건·유적 34개, 논쟁은 양쪽 주장과 출처 함께
 - ✅ Ice sheets: published Northern Hemisphere reconstructions for 12 time slices, scaled with sea level in between · 빙상: 12개 시기의 북반구 복원 자료, 그 사이는 해수면으로 조절
 - ✅ 9 migration routes drawn as dotted “possible routes” that grow with time, with disputes and sources · 시간에 따라 자라는 점선 이동 경로 9개 (논쟁·출처 포함)
-- ⏳ Species ranges, 10 languages, product switcher · 종 분포, 10개 언어, 제품 전환 메뉴
+- ✅ Ranges of six archaic species as soft areas around sites dated to the time · 연대가 맞는 유적 주변을 흐린 영역으로 그린 고인류 6종의 분포
+- ⏳ 10 languages, product switcher, pausing at events · 10개 언어, 제품 전환 메뉴, 재생 중 사건에서 멈추기
 
 ## Data sources · 데이터 출처
 
@@ -22,6 +23,7 @@ Prototype · 프로토타입
 |---|---|---|
 | Sea level · 해수면 | Spratt & Lisiecki (2016), *Clim. Past* 12:1079 — [doi:10.5194/cp-12-1079-2016](https://doi.org/10.5194/cp-12-1079-2016), [NOAA study 19982](https://www.ncei.noaa.gov/access/paleo-search/study/19982). Short PC1 stack, 0–430 ka, shifted so today = 0 m | NOAA open data |
 | Relief · 지형 | ETOPO1 (NOAA NCEI) via [ERDDAP etopo180](https://coastwatch.pfeg.noaa.gov/erddap/griddap/etopo180.html), reduced to 0.25° | Free use and redistribution |
+| Species ranges · 종 분포 | Curated dated sites (`docs/data/species.json`), sources in each species popover; areas join sites within ~2,200 km — rough outlines, not population maps · 연대가 있는 유적 목록, 출처는 각 종 팝업에; 2,200 km 안의 유적을 이은 대략적 범위 | — |
 | Migration routes · 이동 경로 | Possible routes drawn between dated sites; sources in each route's popover and in `docs/data/routes.json` · 연대가 있는 유적을 잇는 가능한 경로, 출처는 각 경로 팝업과 `docs/data/routes.json` | — |
 | Ice sheets · 빙상 | Batchelor, C.L. et al. (2019) The configuration of Northern Hemisphere ice sheets through the Quaternary. *Nat. Commun.* 10, 3713 — [doi:10.1038/s41467-019-11601-2](https://doi.org/10.1038/s41467-019-11601-2); best-estimate reconstructions for LGM, 30, 35, 40, 45 ka, MIS 4, 5a–5d, 6 and 8 from [OSF 7jen3](https://osf.io/7jen3/), rasterised to 0.25° (`docs/data/ice_nh.png`). Between slices the nearest one is shrunk or grown with sea level. Present Greenland and Antarctic ice from the relief; Patagonia is a hand-drawn schematic · 12개 시기 최적 추정 복원을 0.25°로 변환, 그 사이는 해수면으로 조절. 그린란드·남극 현재 빙상은 지형에서, 파타고니아는 개략도 | CC BY 4.0 |
 | Events and sites · 사건·유적 | Published studies cited in each event's popover and in `docs/data/events.json` (dates and summaries still to be reviewed) · 각 사건 팝업과 `docs/data/events.json`에 출처 표기 (연대·요약 검토 예정) | — |
