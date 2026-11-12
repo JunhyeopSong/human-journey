@@ -522,7 +522,7 @@ function buildPins() {
   const box = $('pins'); box.querySelectorAll('.pin:not(.route)').forEach(n => n.remove()); pinEls = [];
   if (!EV) return;
   EV.forEach((e, i) => {
-    const b = document.createElement('button'); b.className = 'pin'; b.style.setProperty('--k', KINDS[e.kind].color);
+    const b = document.createElement('button'); b.className = 'pin'; b.style.setProperty('--k', evColor(e));
     b.innerHTML = '<i></i><span></span>'; b.lastChild.textContent = e[LANG][0];
     b.onclick = ev => { ev.stopPropagation(); openPop(i); };
     box.appendChild(b); pinEls[i] = b; e.pos = sphereXYZ(e.lon, e.lat).multiplyScalar(1.004);
@@ -573,6 +573,19 @@ const LANES = [
   { id: 'denisovan', sp: ['denisovan'], parent: 'heidelbergensis' },
   { id: 'sapiens', sp: ['sapiens'], parent: 'heidelbergensis' },
 ];
+// one colour per event everywhere (pin, popover, timeline): its lane's species colour; climate keeps its own
+function evLane(e) { const id = EV_LANE[e.id] || 'sapiens'; return LANES.find(L => L.id === id) || LANES[0]; }
+function evColor(e) {
+  const L = evLane(e), k = L.sp && SPC ? SPC.findIndex(x => x.id === (EV_SP[e.id] || L.sp[0])) : -1;
+  return L.color || (k >= 0 ? SPC[k].color : KINDS[e.kind].color);
+}
+function evKindName(e) {           // popover heading: the species (or the event type for climate)
+  const L = evLane(e);
+  if (!L.sp || !SPC) { const k = KINDS[e.kind]; return k[LANG] || k.en; }
+  const names = L.sp.map(id => { const sp = SPC.find(x => x.id === id); return sp ? sp[LANG][0].replace(/\s*\(.*\)$/, '') : id; });
+  return L.sp.length > 1 && EV_SP[e.id] ? names[L.sp.indexOf(EV_SP[e.id])] : names[0];
+}
+const EV_SP = { luzonensis: 'luzonensis' };   // events in a shared lane that belong to its second species
 let treeOpen = false;
 try { treeOpen = localStorage.getItem('hj.tree') === '1'; } catch (_) {}
 function spanOf(id) {                 // earliest and latest accepted dates of a species' sites
@@ -600,8 +613,6 @@ function buildEvRow() {
     while (r < 2 && I.rows[r] != null && (m.x - I.rows[r]) / 100 * W < DOT) r++;
     I.rows[r] = m.x; m.r = r; I.n = Math.max(I.n, r + 1);
   });
-  const laneColor = {};               // tree view: dots take their lane's (species') colour
-  lanes.forEach(L => { const id = L.sp && L.sp[0], k = id && SPC ? SPC.findIndex(x => x.id === id) : -1; laneColor[L.id] = L.color || (k >= 0 ? SPC[k].color : '#ccc'); });
   const LH = 12, SUB = 8;
   let y = 0;
   lanes.forEach(L => { info[L.id].y = y; y += LH + (info[L.id].n - 1) * SUB; });
@@ -636,7 +647,7 @@ function buildEvRow() {
   }
   marks.forEach(m => {
     const { e, i } = m, I = info[m.lane];
-    const d = document.createElement('button'); d.style.setProperty('--k', treeOpen ? laneColor[m.lane] : KINDS[e.kind].color); d.dataset.i = i;
+    const d = document.createElement('button'); d.style.setProperty('--k', evColor(e)); d.dataset.i = i;
     d.className = e.contested ? 'contested' : ''; d.style.left = m.x + '%';
     d.style.top = (I.y + (treeOpen ? 2 : 0) + m.r * SUB) + 'px';
     d.title = `${e[LANG][0]} · ${evAgeText(e)}`; d.setAttribute('aria-label', d.title);
@@ -684,9 +695,9 @@ function buildChips() {
 const chipEdges = TMUI.edgeFade($('presets'), { marker: $('pwrap'), zone: 28, observe: [$('presets')] });
 const pop = $('pop');
 function openPop(i) {
-  const e = EV[i], k = KINDS[e.kind]; popIdx = i; popRoute = null; popSpecies = null;
-  pop.style.setProperty('--k', k.color);
-  $('popKind').textContent = k[LANG] || k.en;
+  const e = EV[i]; popIdx = i; popRoute = null; popSpecies = null;
+  pop.style.setProperty('--k', evColor(e));
+  $('popKind').textContent = evKindName(e);
   if (e.dispute || e.contested) { const s = document.createElement('span'); s.className = 'badge'; s.textContent = t('disputed'); $('popKind').appendChild(s); }
   $('popTitle').textContent = e[LANG][0]; $('popAge').textContent = evAgeText(e); $('popText').textContent = e[LANG][1];
   const dsp = $('popDsp'); dsp.hidden = !e.dispute;
