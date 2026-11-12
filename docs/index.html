@@ -73,6 +73,12 @@
       <label class="item" for="lang"><span data-i18n="lang">언어</span><select id="lang"></select></label>
     </div>
     <div class="group">
+      <div class="item"><span data-i18n="view">보기</span>
+        <div class="seg" id="viewSeg" role="radiogroup" data-i18n-aria="view" aria-label="보기">
+          <button role="radio" data-v="globe" data-i18n="viewGlobe" aria-checked="true">지구본</button>
+          <button role="radio" data-v="map" data-i18n="viewMap" aria-checked="false">전체 지도</button>
+        </div>
+      </div>
       <div class="item"><span data-i18n="scale">타임라인 눈금</span>
         <div class="seg" id="scaleSeg" role="radiogroup" data-i18n-aria="scale" aria-label="타임라인 눈금">
           <button role="radio" data-s="linear" aria-checked="false" data-i18n="linear">선형</button>
@@ -148,7 +154,7 @@ const D2R = Math.PI / 180;
 // ---------- language (shared with the other time machines on this site) ----------
 const I18N = {
   ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', shortcuts: '주요 사건 바로 가기', treeOpen: '종별로 펼치기', treeClose: '접기', lang: '언어', scale: '타임라인 눈금',
-      linear: '선형', log: '로그', spin: '자동 회전', follow: '재생 중 따라가기', followSub: '사건이 일어나는 곳으로 이동', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
+      linear: '선형', log: '로그', spin: '자동 회전', view: '보기', viewGlobe: '지구본', viewMap: '전체 지도', follow: '재생 중 따라가기', followSub: '사건이 일어나는 곳으로 이동', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
       globeCtl: '지구본 조작', zoomIn: '확대', zoomOut: '축소', home: '지구 전체 보기', hint1: '드래그로 돌리기 · 휠·핀치로 확대',
       hint2: ' · Space 재생/정지 · 1·2·3 속도', timeCtl: '시간 조절', transport: '재생 조작', back: '과거로', fwd: '현재 쪽으로',
       play: '재생', pause: '정지', playTitle: '재생 / 정지 (Space)', speed: '재생 속도', slow: '느리게', normal: '보통', fast: '빠르게',
@@ -166,7 +172,7 @@ const I18N = {
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
       foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–80만 년 전, 오늘을 0 m로 맞춤; 80만~200만 년 전은 LR04 해저 산소동위원소 기록(Lisiecki & Raymo 2005)으로 추정(덜 확실). 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치; 80만 년 전보다 오래된 시기는 LR04로 추정. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 종 분포: 연대가 측정된 유적만으로 그림 — Timmermann 외 2022 (Nature, 보충표 1, CC BY 4.0) 3만–200만 년 전, ROAD 데이터베이스 (ROCEEH, CC BY-SA 4.0) 3만 년 전 이후 현생인류, 그리고 출처를 붙인 유적 목록; 5만 년 전 이후 현생인류는 인정된 유적에서 육지를 따라 천 년에 약 500 km씩 퍼짐(바다는 건너지 않음). 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
   en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', shortcuts: 'Shortcuts to key events', treeOpen: 'By species', treeClose: 'Fold', lang: 'Language', scale: 'Timeline scale',
-      linear: 'Linear', log: 'Log', spin: 'Auto-rotate', follow: 'Follow events while playing', followSub: 'Turn to where each event happens', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
+      linear: 'Linear', log: 'Log', spin: 'Auto-rotate', view: 'View', viewGlobe: 'Globe', viewMap: 'World map', follow: 'Follow events while playing', followSub: 'Turn to where each event happens', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
       hint2: ' · Space play/pause · 1·2·3 speed', timeCtl: 'Time controls', transport: 'Playback', back: 'Toward the past', fwd: 'Toward today',
       play: 'Play', pause: 'Pause', playTitle: 'Play / pause (Space)', speed: 'Playback speed', slow: 'Slow', normal: 'Normal', fast: 'Fast',
@@ -379,9 +385,9 @@ G = TMUI.globe({ stage: $('stage'), texture: tex,
     { n: 180, px: 2.8, color: 0xdde5f5, k: 0.0044 }] } });
 const { view, flyTo } = G;
 addEventListener('resize', G.resize); G.resize();
-$('zIn').onclick = () => { G.stopAuto(); flyTo(view.spin, view.tilt, 1 + (view.dist - 1) * 0.55, 350); };
-$('zOut').onclick = () => flyTo(view.spin, view.tilt, 1 + (view.dist - 1) / 0.55, 350);
-$('home').onclick = () => flyTo(view.spin, 0.3, G.homeDist, 700);
+$('zIn').onclick = () => { if (mapMode) return MV.zoomSmooth(1.6); G.stopAuto(); flyTo(view.spin, view.tilt, 1 + (view.dist - 1) * 0.55, 350); };
+$('zOut').onclick = () => { if (mapMode) return MV.zoomSmooth(1 / 1.6); flyTo(view.spin, view.tilt, 1 + (view.dist - 1) / 0.55, 350); };
+$('home').onclick = () => { if (mapMode) return MV.home(); flyTo(view.spin, 0.3, G.homeDist, 700); };
 $('spin').onchange = e => { G.autoSpin = e.target.checked; G.halt(); };
 G.canvas.addEventListener('pointerdown', () => $('hint').classList.add('gone'), { once: true });
 function sphereXYZ(lon, lat) {        // matches THREE.SphereGeometry UV layout (same as the continent app)
@@ -475,7 +481,7 @@ function followStep(now, a) {
   }
   if (!evQueue.length) return;
   const i = evQueue.shift(), e = EV[i];
-  G.stopAuto(); G.faceLocal(sphereXYZ(e.lon, e.lat)); openPop(i); markCurrent();
+  G.stopAuto(); focusLocal(sphereXYZ(e.lon, e.lat)); openPop(i); markCurrent();
   holdUntil = now + HOLD_MS;
 }
 TMUI.segmented($('speed'), b => { speedVal = +b.dataset.v; });
@@ -495,7 +501,7 @@ function step(dir) {                // dir +1 = toward the past
   else for (const o of (dir > 0 ? [...list].reverse() : list)) {
     if (dir > 0 ? o.b > age + 1e-6 && o.b <= target + 1e-9 : o.b < age - 1e-6 && o.b >= target - 1e-9) { next = o; break; }
   }
-  if (next) { setAge(next.b); G.stopAuto(); G.faceLocal(sphereXYZ(EV[next.i].lon, EV[next.i].lat)); openPop(next.i); markCurrent(); }
+  if (next) { setAge(next.b); G.stopAuto(); focusLocal(sphereXYZ(EV[next.i].lon, EV[next.i].lat)); openPop(next.i); markCurrent(); }
   else { setAge(target); if (popIdx !== null) closePop(); }
 }
 $('back').onclick = () => step(1); $('fwd').onclick = () => step(-1);
@@ -568,6 +574,14 @@ function buildPins() {
   });
 }
 const _v = new THREE.Vector3(), _c = new THREE.Vector3();
+// where a point of the globe frame lands on screen in the current view (globe or map), or null when hidden
+function project(local) {
+  if (mapMode) { const ll = MV.llOf(local); return MV.toScreen(ll.lon, ll.lat); }
+  G.camera.getWorldPosition(_c); _v.copy(local).applyMatrix4(G.earth.matrixWorld);
+  if (_v.dot(_c.clone().sub(_v)) <= 0) return null;
+  _v.project(G.camera); return { x: (_v.x + 1) / 2 * innerWidth, y: (1 - _v.y) / 2 * innerHeight };
+}
+function focusLocal(local) { if (mapMode) { const ll = MV.llOf(local); MV.focus(ll.lon, ll.lat); } else G.faceLocal(local); }
 function placePins() {
   if (!EV) return;
   const w = innerWidth, h = innerHeight; G.camera.getWorldPosition(_c);
@@ -575,11 +589,9 @@ function placePins() {
     const b = pinEls[i]; if (!b) return;
     const win = evWindow(e), on = evShown(e) && age <= win.from && age >= win.to;
     if (!on) { b.hidden = true; return; }
-    _v.copy(e.pos).applyMatrix4(G.earth.matrixWorld);
-    const facing = _v.dot(_c.clone().sub(_v)) > 0;
-    if (!facing) { b.hidden = true; return; }
-    _v.project(G.camera);
-    b.hidden = false; b.style.transform = `translate(${(_v.x + 1) / 2 * w - 7}px, ${(1 - _v.y) / 2 * h}px) translateY(-50%)`;
+    const sc = project(e.pos);
+    if (!sc) { b.hidden = true; return; }
+    b.hidden = false; b.style.transform = `translate(${sc.x - 7}px, ${sc.y}px) translateY(-50%)`;
     b.classList.toggle('dim', !evNow(e)); b.classList.toggle('on', popIdx === i);
   });
   if (popIdx !== null || popRoute !== null || popSpecies !== null) placePop();
@@ -753,7 +765,7 @@ function placePop() {
 }
 function goToEvent(i) {
   const e = EV[i]; stop(); setAge(evRange(e).max - (evRange(e).max - evRange(e).min) / 2);
-  G.stopAuto(); G.faceLocal(sphereXYZ(e.lon, e.lat)); openPop(i); markCurrent();
+  G.stopAuto(); focusLocal(sphereXYZ(e.lon, e.lat)); openPop(i); markCurrent();
 }
 $('popX').onclick = closePop;
 $('popGo').onclick = () => { if (popSpecies !== null) goToSpecies(popSpecies); else if (popIdx !== null) goToEvent(popIdx); };
@@ -897,10 +909,10 @@ function updateSpecies() {
     // the label sits at the dated site closest to the middle of the ones shown now
     const c = new THREE.Vector3(); on.forEach(st => c.add(sphereXYZ(st[1], st[2]))); c.normalize();
     let best = on[0], bd = -2; on.forEach(st => { const dd = sphereXYZ(st[1], st[2]).dot(c); if (dd > bd) { bd = dd; best = st; } });
-    _v.copy(sphereXYZ(best[1], best[2])).multiplyScalar(1.004).applyMatrix4(G.earth.matrixWorld);
-    if (_v.dot(_c.clone().sub(_v)) <= 0) { b.hidden = true; return; }
-    _v.project(G.camera); b.hidden = false;                      // a little above the site, so it does not cover an event pin
-    placed.push({ b, x: (_v.x + 1) / 2 * w - 7, y: (1 - _v.y) / 2 * h - 24, w: b.offsetWidth || 120 });
+    const sc = project(sphereXYZ(best[1], best[2]).multiplyScalar(1.004));
+    if (!sc) { b.hidden = true; return; }
+    b.hidden = false;                                            // a little above the site, so it does not cover an event pin
+    placed.push({ b, x: sc.x - 7, y: sc.y - 24, w: b.offsetWidth || 120 });
     b.classList.toggle('on', popSpecies === k);
   });
   // labels that would overlap move down one row at a time, so every species name stays readable
@@ -940,10 +952,29 @@ function goToSpecies(k) {          // the time when the most of its sites are da
   const mine = SITES.filter(st => st[0] === k && !st[5]); let best = age, bn = -1;
   for (let a = AGE_MAX; a >= 0; a -= 1) { const n = mine.filter(st => siteNow(st, a)).length; if (n > bn) { bn = n; best = a; } }
   const c = new THREE.Vector3(); mine.filter(st => siteNow(st, best)).forEach(st => c.add(sphereXYZ(st[1], st[2])));
-  stop(); setAge(best); G.stopAuto(); G.faceLocal(c.normalize()); openSpeciesPop(k);
+  stop(); setAge(best); G.stopAuto(); focusLocal(c.normalize()); openSpeciesPop(k);
 }
 $('rangesOn').onchange = e => { showRanges = e.target.checked; try { localStorage.setItem('hj.ranges', showRanges ? '1' : '0'); } catch (_) {} if (!showRanges && popSpecies !== null) closePop(); };
 
+// ---------- whole-world map (time-machine-ui mapView: Mollweide, same textures as the globe, ranges on top) ----------
+let mapMode = false;
+const MV = TMUI.mapView({ renderer: G.renderer, overGain: 1.7,
+  textures: () => [G.mesh.material.map, showRanges ? rangeTex : null],
+  frame: () => ({ top: 70, bottom: Math.min(innerHeight - 40, document.querySelector('.dock').getBoundingClientRect().top - 14) }) });
+MV.attach($('stage'), { active: () => mapMode, onGrab: () => { if (popIdx !== null || popSpecies !== null) closePop(); const hn = document.querySelector('.hint'); if (hn) hn.classList.add('gone'); } });
+function setMapMode(on) {
+  const was = mapMode; mapMode = on;
+  if (on && !was) {                // open the map centred on what the globe was showing; pause the hidden globe
+    const c = G.earth.worldToLocal(G.camera.position.clone()).normalize();
+    MV.open(MV.llOf(c).lon); G.autoSpin = false; G.halt();
+  } else if (!on && was) G.autoSpin = $('spin').checked;
+  document.body.classList.toggle('mapview', on);
+  $('viewSeg').querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String((b.dataset.v === 'map') === on)));
+  $('spin').disabled = on; $('spin').closest('.item').classList.toggle('off', on);   // globe-only setting
+  try { localStorage.setItem('hj.view', on ? 'map' : 'globe'); } catch (_) {}
+}
+TMUI.segmented($('viewSeg'), b => setMapMode(b.dataset.v === 'map'));
+try { if (localStorage.getItem('hj.view') === 'map') setMapMode(true); } catch (_) {}
 // ---------- phone layout (same as the Continental Time Machine) ----------
 (() => {
   const dock = document.querySelector('.dock'), mq = matchMedia('(max-width: 640px)');
@@ -974,7 +1005,7 @@ function loop(now) {
   }
   G.stepTween(now); G.stepInertia(dt); G.applyView(); G.drift(dt, age);
   updateSpecies();
-  G.renderer.render(G.scene, G.camera);
+  if (mapMode) { MV.step(now); G.renderer.render(MV.scene, MV.camera); } else G.renderer.render(G.scene, G.camera);
   placePins();
   requestAnimationFrame(loop);
 }

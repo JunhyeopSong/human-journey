@@ -9,7 +9,7 @@ A 3D globe that follows people across the world over the last 2 million years �
 ## Status · 진행 상황
 
 Prototype · 프로토타입
-- ✅ Globe, timeline (log scale by default, linear in settings), playback, Korean and English · 지구본, 타임라인(기본 로그, 설정에서 선형), 재생, 한국어·영어
+- ✅ Globe or whole-world map (Mollweide, from time-machine-ui `mapView`), timeline (log scale by default, linear in settings), playback, Korean and English · 지구본 또는 전체 지도(몰바이데), 타임라인(기본 로그, 설정에서 선형), 재생, 한국어·영어
 - ✅ Coastlines from sea level (land bridges such as Sunda, Sahul and Beringia appear in glacial times) · 해수면에 따른 해안선(빙기에 순다·사훌·베링 땅다리)
 - ✅ 44 events and sites with dated ranges, disputed claims shown with both sides and sources · 연대 범위가 있는 사건·유적 44개, 논쟁은 양쪽 주장과 출처 함께
 - ✅ Ice sheets: published Northern Hemisphere reconstructions for 12 time slices, scaled with sea level in between · 빙상: 12개 시기의 북반구 복원 자료, 그 사이는 해수면으로 조절
