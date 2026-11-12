@@ -112,7 +112,7 @@
       <span class="spacer"></span>
       <div class="tchip" id="seaChip"><span class="tv" id="seaVal">—</span><span class="tl" data-i18n="sea">해수면</span></div>
       <div class="tchip" id="temp"><span class="tv" id="tempVal">—</span><span class="tl" data-i18n="temp">평균 기온</span></div>
-      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span><button class="fold" id="fold" aria-expanded="false" aria-controls="evrow" data-i18n-aria="more" data-i18n-title="more" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button></div>
+      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span><button class="fold" id="fold" aria-expanded="false" aria-controls="evrow presets" data-i18n-aria="more" data-i18n-title="more" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button></div>
     </div>
     <div class="track" id="track">
       <div class="strata" id="strata"></div>
@@ -121,6 +121,7 @@
     </div>
     <div class="ticks" id="ticks"></div>
     <div class="evrow" id="evrow" data-i18n-aria="events" aria-label="사건"></div>
+    <div class="pwrap" id="pwrap"><div class="presets" id="presets" data-i18n-aria="shortcuts" aria-label="주요 사건 바로 가기"></div></div>
   </section>
 </div>
 
@@ -133,7 +134,7 @@ const D2R = Math.PI / 180;
 
 // ---------- language (shared with the other time machines on this site) ----------
 const I18N = {
-  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', lang: '언어', scale: '타임라인 눈금',
+  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', shortcuts: '주요 사건 바로 가기', lang: '언어', scale: '타임라인 눈금',
       linear: '선형', log: '로그', spin: '자동 회전', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
       globeCtl: '지구본 조작', zoomIn: '확대', zoomOut: '축소', home: '지구 전체 보기', hint1: '드래그로 돌리기 · 휠·핀치로 확대',
       hint2: ' · Space 재생/정지 · 1·2·3 속도', timeCtl: '시간 조절', transport: '재생 조작', back: '과거로', fwd: '현재 쪽으로',
@@ -151,7 +152,7 @@ const I18N = {
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
       foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–80만 년 전, 오늘을 0 m로 맞춤; 80만~200만 년 전은 LR04 해저 산소동위원소 기록(Lisiecki & Raymo 2005)으로 추정(덜 확실). 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치; 80만 년 전보다 오래된 시기는 LR04로 추정. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 종 분포: 연대가 측정된 유적만으로 그림 — Timmermann 외 2022 (Nature, 보충표 1, CC BY 4.0) 3만–200만 년 전, ROAD 데이터베이스 (ROCEEH, CC BY-SA 4.0) 3만 년 전 이후 현생인류, 그리고 출처를 붙인 유적 목록; 5만 년 전 이후 현생인류는 인정된 유적에서 육지를 따라 천 년에 약 500 km씩 퍼짐(바다는 건너지 않음). 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
-  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', lang: 'Language', scale: 'Timeline scale',
+  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', shortcuts: 'Shortcuts to key events', lang: 'Language', scale: 'Timeline scale',
       linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
       hint2: ' · Space play/pause · 1·2·3 speed', timeCtl: 'Time controls', transport: 'Playback', back: 'Toward the past', fwd: 'Toward today',
@@ -476,7 +477,7 @@ function applyLang() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
   document.querySelectorAll('[data-i18n-title]').forEach(el => el.title = t(el.dataset.i18nTitle));
-  $('foot').textContent = t('foot'); renderLegend(); tl.rebuild(); updateUI(); setPlayIcon(playing);
+  $('foot').textContent = t('foot'); renderLegend(); tl.rebuild(); updateUI(); setPlayIcon(playing); if (typeof buildChips === 'function') buildChips();
   if (EV) { buildPins(); if (popIdx !== null) openPop(popIdx); }
   if (SPC) { SPC.forEach((sp, k) => { speciesEls[k].lastChild.textContent = sp[LANG][0]; }); if (popSpecies !== null) openSpeciesPop(popSpecies); }
 }
@@ -554,7 +555,38 @@ function buildEvRow() {
     else { const r = evRange(e); mk(e.contested ? 'contested' : '', r.max, r.min); }
   });
 }
-function markCurrent() { $('evrow').querySelectorAll('button').forEach(b => b.classList.toggle('cur', EV && evNow(EV[+b.dataset.i]))); }
+function markCurrent() {
+  $('evrow').querySelectorAll('button').forEach(b => b.classList.toggle('cur', EV && evNow(EV[+b.dataset.i])));
+  const shown = popIdx !== null && EV ? EV[popIdx] : (typeof currentEvent === 'function' ? currentEvent() : null);   // one chip: the event on screen
+  $('presets').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.id ? !!shown && shown.id === b.dataset.id : age < 0.05));
+}
+// shortcut chips: key moments of the journey (each opens its event: time, place and story)
+const CHIPS = [
+  { id: 'dmanisi', ko: '아프리카 밖 첫 인류', en: 'First humans beyond Africa' },
+  { id: 'gby', ko: '불의 사용', en: 'Fire' },
+  { id: 'irhoud', ko: '현생인류의 등장', en: 'Homo sapiens appears' },
+  { id: 'ooa', ko: '출아프리카', en: 'Out of Africa' },
+  { id: 'sahul', ko: '오스트레일리아 도착', en: 'Reaching Australia' },
+  { id: 'neanderEnd', ko: '네안데르탈인의 사라짐', en: 'Neanderthals vanish' },
+  { id: 'lgm', ko: '빙하기 절정', en: 'Ice-age peak' },
+  { id: 'monteverde', ko: '아메리카 도착', en: 'Reaching the Americas' },
+  { id: 'farmFertile', ko: '농경의 시작', en: 'Farming begins' },
+  { id: 'aotearoa', ko: '마지막 땅, 뉴질랜드', en: 'Last land: New Zealand' },
+  { id: null, ko: '현재', en: 'Today' },
+];
+function buildChips() {
+  const pre = $('presets'); pre.innerHTML = '';
+  if (!EV) return;
+  CHIPS.forEach(c => {
+    const i = c.id ? EV.findIndex(e => e.id === c.id) : -1; if (c.id && i < 0) return;
+    const b = document.createElement('button'); b.textContent = c[LANG] || c.en; if (c.id) b.dataset.id = c.id;
+    b.onclick = () => { if (i >= 0) goToEvent(i); else { stop(); closePop(); setAge(0); } };
+    pre.appendChild(b);
+  });
+  markCurrent(); chipEdges();
+}
+// more chips off to a side: that edge fades and the chips cut off there soften (time-machine-ui edgeFade)
+const chipEdges = TMUI.edgeFade($('presets'), { marker: $('pwrap'), zone: 28, observe: [$('presets')] });
 const pop = $('pop');
 function openPop(i) {
   const e = EV[i], k = KINDS[e.kind]; popIdx = i; popRoute = null; popSpecies = null;
@@ -568,7 +600,7 @@ function openPop(i) {
   e.src.forEach(s => { const li = document.createElement('li'), a = document.createElement('a'); a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.label; li.appendChild(a); src.appendChild(li); });
   pop.hidden = false; placePins(); placePop();
 }
-function closePop() { popIdx = null; popRoute = null; popSpecies = null; pop.hidden = true; pinEls.forEach(b => b && b.classList.remove('on')); }
+function closePop() { popIdx = null; popRoute = null; popSpecies = null; pop.hidden = true; pinEls.forEach(b => b && b.classList.remove('on')); if (EV) markCurrent(); }
 function placePop() {
   const b = popRoute !== null ? routeEls[popRoute] : popSpecies !== null ? speciesEls[popSpecies] : pinEls[popIdx], pw = pop.offsetWidth, ph = pop.offsetHeight;
   let x, y;
@@ -578,7 +610,7 @@ function placePop() {
 }
 function goToEvent(i) {
   const e = EV[i]; stop(); setAge(evRange(e).max - (evRange(e).max - evRange(e).min) / 2);
-  G.stopAuto(); G.faceLocal(sphereXYZ(e.lon, e.lat)); openPop(i);
+  G.stopAuto(); G.faceLocal(sphereXYZ(e.lon, e.lat)); openPop(i); markCurrent();
 }
 $('popX').onclick = closePop;
 $('popGo').onclick = () => { if (popSpecies !== null) goToSpecies(popSpecies); else if (popIdx !== null) goToEvent(popIdx); };
@@ -830,7 +862,7 @@ Promise.all([loadRelief('data/relief.png'), fetch('data/sealevel.json').then(r =
   fetch('data/species.json').then(r => r.json()), fetch('data/temperature.json').then(r => r.json()), loadGray('data/arrival.png')]).then(([r, sea, ev, im, ia, st, spc, tp, arv]) => {
   TEMP = tp.gmst; ARRIVAL = arv;
   buildSpecies(spc.species, st);
-  EV = ev.events; KINDS = ev.kinds; buildPins(); buildEvRow();
+  EV = ev.events; KINDS = ev.kinds; buildPins(); buildEvRow(); buildChips();
   RW = r.w; RH = r.h; relief = r.e; shade = shadeGrid(relief, RW, RH); SEA = sea; buildIce();
   const rows = im.grid.rows, per = rows * RW;
   NH = { rows, slices: im.slices.map((s, i) => {
