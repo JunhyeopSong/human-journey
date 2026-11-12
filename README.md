@@ -18,7 +18,8 @@ An interactive 3D globe that follows people across the world over the last 3.3 m
 - **17 human species, from dated sites only** — each species' range is a light fill around sites dated to that time, with an outline, and stripes where species overlap. After 50,000 years ago Homo sapiens spreads on foot over the land of each moment from accepted dated sites, never across sea, so islands and continents reached by boat fill only from their own sites.
 - **51 events with their evidence** — fossils, tools, art, ancient DNA, farming origins and climate events, each with its date range and sources; disputed claims show both sides, and a setting hides them.
 - **Evolution tree** — unfold the event row into a lane per species, with its dated span, its events and the lanes it probably branched from.
-- **Globe or world map** — switch to an equal-area (Mollweide) map of the whole world; optional polar axis on the globe.
+- **Globe or world map** — switch to an equal-area (Mollweide) map of the whole world, with continent and ocean names and the land bridges (Beringia, Sundaland, Sahul, Doggerland) that appear when the sea is low; optional polar axis on the globe.
+- **Other time machines** — the grid button beside settings switches to the [Continental Time Machine](https://junhyeopsong.github.io/earth-time-machine/), keeping your language.
 - **Korean and English** — follows your device language.
 
 ### Controls
@@ -67,7 +68,8 @@ Then open http://localhost:8000.
 - **연대 유적만으로 그린 17종의 분포** — 종마다 그 시기 연대 유적 주변을 옅은 칠과 외곽선으로, 여러 종이 겹치면 줄무늬로 그립니다. 5만 년 전 이후 현생인류는 인정된 연대 유적에서 그 시기의 육지를 따라 걸어서 퍼지며 바다는 건너지 않으므로, 배로 건너간 섬과 대륙은 그곳의 유적이 있어야 칠해집니다.
 - **근거를 갖춘 사건 51개** — 화석·도구·예술·고대 DNA·농경의 기원·기후 사건마다 연대 범위와 출처가 있습니다. 논쟁 중인 주장은 양쪽을 함께 보여주며, 설정에서 숨길 수 있습니다.
 - **종별 계통도** — 사건 줄을 펼치면 종마다 칸이 생겨, 유적 연대 범위와 사건, 갈라져 나왔다고 보는 칸이 함께 보입니다.
-- **지구본 또는 전체 지도** — 면적이 정확한 몰바이데 세계지도로 바꿀 수 있고, 지구본에서는 자전축을 켤 수 있습니다.
+- **지구본 또는 전체 지도** — 면적이 정확한 몰바이데 세계지도로 바꿀 수 있습니다. 대륙·바다 이름과, 해수면이 낮을 때 드러나는 땅다리(베링기아·순다랜드·사훌·도거랜드) 이름이 보이고, 지구본에서는 자전축을 켤 수 있습니다.
+- **다른 타임머신** — 설정 옆 격자 버튼으로 [지구 대륙 타임머신](https://junhyeopsong.github.io/earth-time-machine/)으로 옮겨 갈 수 있고, 언어 설정은 그대로 이어집니다.
 - **한국어·영어** — 기기 언어를 따릅니다.
 
 ### 조작법
