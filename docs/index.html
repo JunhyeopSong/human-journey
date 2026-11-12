@@ -83,6 +83,7 @@
       <label class="item"><span><span data-i18n="ranges">종 분포</span><small data-i18n="rangesSub">옅은 영역 = 연대가 측정된 유적 주변</small></span><span class="sw"><input type="checkbox" role="switch" id="rangesOn" checked><span class="tr"></span></span></label>
       <label class="item"><span><span data-i18n="ice">빙상</span><small data-i18n="iceSub">개략도 · 해수면에 맞춰 커지고 줄어듦</small></span><span class="sw"><input type="checkbox" role="switch" id="iceOn" checked><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="spin">자동 회전</span><span class="sw"><input type="checkbox" role="switch" id="spin" checked><span class="tr"></span></span></label>
+      <label class="item"><span><span data-i18n="follow">재생 중 따라가기</span><small data-i18n="followSub">사건이 일어나는 곳으로 이동</small></span><span class="sw"><input type="checkbox" role="switch" id="follow" checked><span class="tr"></span></span></label>
     </div>
     <div class="group">
       <label class="item"><span data-i18n="temp">평균 기온</span><span class="sw"><input type="checkbox" role="switch" id="tempOn" checked><span class="tr"></span></span></label>
@@ -148,7 +149,7 @@ const D2R = Math.PI / 180;
 // ---------- language (shared with the other time machines on this site) ----------
 const I18N = {
   ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', shortcuts: '주요 사건 바로 가기', treeOpen: '종별로 펼치기', treeClose: '접기', lang: '언어', scale: '타임라인 눈금',
-      linear: '선형', log: '로그', spin: '자동 회전', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
+      linear: '선형', log: '로그', spin: '자동 회전', follow: '재생 중 따라가기', followSub: '사건이 일어나는 곳으로 이동', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
       globeCtl: '지구본 조작', zoomIn: '확대', zoomOut: '축소', home: '지구 전체 보기', hint1: '드래그로 돌리기 · 휠·핀치로 확대',
       hint2: ' · Space 재생/정지 · 1·2·3 속도', timeCtl: '시간 조절', transport: '재생 조작', back: '과거로', fwd: '현재 쪽으로',
       play: '재생', pause: '정지', playTitle: '재생 / 정지 (Space)', speed: '재생 속도', slow: '느리게', normal: '보통', fast: '빠르게',
@@ -166,7 +167,7 @@ const I18N = {
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
       foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–80만 년 전, 오늘을 0 m로 맞춤; 80만~200만 년 전은 LR04 해저 산소동위원소 기록(Lisiecki & Raymo 2005)으로 추정(덜 확실). 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치; 80만 년 전보다 오래된 시기는 LR04로 추정. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 종 분포: 연대가 측정된 유적만으로 그림 — Timmermann 외 2022 (Nature, 보충표 1, CC BY 4.0) 3만–200만 년 전, ROAD 데이터베이스 (ROCEEH, CC BY-SA 4.0) 3만 년 전 이후 현생인류, 그리고 출처를 붙인 유적 목록; 5만 년 전 이후 현생인류는 인정된 유적에서 육지를 따라 천 년에 약 500 km씩 퍼짐(바다는 건너지 않음). 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
   en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', shortcuts: 'Shortcuts to key events', treeOpen: 'By species', treeClose: 'Fold', lang: 'Language', scale: 'Timeline scale',
-      linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
+      linear: 'Linear', log: 'Log', spin: 'Auto-rotate', follow: 'Follow events while playing', followSub: 'Turn to where each event happens', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
       hint2: ' · Space play/pause · 1·2·3 speed', timeCtl: 'Time controls', transport: 'Playback', back: 'Toward the past', fwd: 'Toward today',
       play: 'Play', pause: 'Pause', playTitle: 'Play / pause (Space)', speed: 'Playback speed', slow: 'Slow', normal: 'Normal', fast: 'Fast',
@@ -456,13 +457,47 @@ function setAge(a, fromSlider) {
 // log → constant speed along the bar (the whole bar in 120 s at "normal")
 function setPlayIcon(on) { $('play').classList.toggle('on', on); $('play').setAttribute('aria-label', on ? t('pause') : t('play')); }
 function stop() { playing = false; playRate = 0; setPlayIcon(false); updateUI(true); }
-$('play').onclick = () => { if (playing) return stop(); if (age <= 0) setAge(AGE_MAX); playing = true; setPlayIcon(true); };
+$('play').onclick = () => { if (playing) return stop(); if (age <= 0) setAge(AGE_MAX); playing = true; playPrev = age + 1e-6; evQueue = []; holdUntil = 0; setPlayIcon(true); };
+// follow while playing (as in the Continental Time Machine): queue each event the playhead passes, then turn to it
+// and open it, at least HOLD_MS apart; playback keeps going
+let playPrev = 0, evQueue = [], holdUntil = 0;
+const HOLD_MS = 1600;
+try { if (localStorage.getItem('hj.follow') === '0') $('follow').checked = false; } catch (_) {}
+$('follow').onchange = e => { try { localStorage.setItem('hj.follow', e.target.checked ? '1' : '0'); } catch (_) {} evQueue = []; };
+function followStep(now, a) {
+  if (!$('follow').checked || !EV) { playPrev = a; return; }
+  EV.forEach((e, i) => { const b = evBest(e); if (evShown(e) && b < playPrev && b >= a) evQueue.push(i); });
+  playPrev = a;
+  if (!evQueue.length || now < holdUntil) return;
+  while (evQueue.length) {            // skip ones already left well behind
+    const e = EV[evQueue[0]], r = evRange(e);
+    if (age >= r.min - Math.max(1, (r.max - r.min) * 0.6)) break;
+    evQueue.shift();
+  }
+  if (!evQueue.length) return;
+  const i = evQueue.shift(), e = EV[i];
+  G.stopAuto(); G.faceLocal(sphereXYZ(e.lon, e.lat)); openPop(i); markCurrent();
+  holdUntil = now + HOLD_MS;
+}
 TMUI.segmented($('speed'), b => { speedVal = +b.dataset.v; });
-function step(dir) {                // dir +1 = toward the past; next tick of the current scale
+// step buttons and ← →: about 4% of the bar at a time, but stop at the next event on the way —
+// so a quiet stretch passes in a few presses and a crowded one goes event by event
+function evBest(e) { const r = evRange(e); return e.best != null && e.best <= r.max && e.best >= r.min ? e.best : (r.max + r.min) / 2; }
+function step(dir) {                // dir +1 = toward the past
   stop();
-  const marks = [...new Set([...TICKS[scaleKind], ...(scaleKind === 'linear' ? Array.from({ length: 21 }, (_, i) => i * 100) : [])])].sort((a, b) => a - b);
-  const next = dir > 0 ? marks.find(x => x > age + 1e-6) : [...marks].reverse().find(x => x < age - 1e-6);
-  if (next != null) setAge(next);
+  const p = tl.scale.pct(age) / 100, far = Math.max(0, Math.min(1, p - dir * 0.04));
+  if ((dir > 0 && p <= 0) || (dir < 0 && age <= 0)) return;
+  let target = tl.scale.age(far); if (target < 0.001) target = 0;   // the log scale only approaches 0
+  // events in time order (oldest first); events with the same date are visited one after another
+  const list = EV ? EV.map((e, i) => ({ i, b: evBest(e) })).filter(o => evShown(EV[o.i])).sort((x, y) => y.b - x.b || x.i - y.i) : [];
+  let pos = popIdx !== null && !pop.hidden ? list.findIndex(o => o.i === popIdx && Math.abs(o.b - age) < 1e-6) : -1;
+  let next = null;
+  if (pos >= 0) { const o = list[pos - dir]; if (o && (dir > 0 ? o.b <= target + 1e-9 : o.b >= target - 1e-9)) next = o; }
+  else for (const o of (dir > 0 ? [...list].reverse() : list)) {
+    if (dir > 0 ? o.b > age + 1e-6 && o.b <= target + 1e-9 : o.b < age - 1e-6 && o.b >= target - 1e-9) { next = o; break; }
+  }
+  if (next) { setAge(next.b); G.stopAuto(); G.faceLocal(sphereXYZ(EV[next.i].lon, EV[next.i].lat)); openPop(next.i); markCurrent(); }
+  else { setAge(target); if (popIdx !== null) closePop(); }
 }
 $('back').onclick = () => step(1); $('fwd').onclick = () => step(-1);
 addEventListener('keydown', e => {
@@ -936,6 +971,7 @@ function loop(now) {
     a = Math.max(a, age - MAX_KA_PER_S * speedVal * dt);   // never faster than people can follow (a 41-kyr ice-age cycle takes seconds)
     if (dt > 0) playRate = playRate ? playRate * 0.8 + (age - a) / dt * 0.2 : (age - a) / dt;
     if (a <= 0.001) { a = 0; stop(); }   // the log scale only approaches 0
+    followStep(now, a);
     setAge(a);
   }
   G.stepTween(now); G.stepInertia(dt); G.applyView(); G.drift(dt, age);
