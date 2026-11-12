@@ -31,6 +31,7 @@
 .evrow button.lname:hover { transform: none; background: rgba(255,255,255,.14); }
 .evrow button.lname:disabled { cursor: default; }
 .evrow { transition: height .2s; }
+.tvals { display: contents; }   /* wide screens: the two readouts sit in the row as before */
 /* species tree toggle: fixed at the right end of the chip row, outside the scrolling chips */
 .chiprow { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .chiprow .pwrap { flex: 1; }
@@ -47,7 +48,9 @@
 .pop .src a { color: var(--ink-2); }
 .pop .badge { font-size: 9.5px; padding: 1px 6px; border-radius: 999px; border: 0.5px solid #ffcf8a; color: #ffcf8a; margin-left: 6px; letter-spacing: 0; }
 @media (max-width: 640px) {
-  #seaChip { display: none; }
+  .row1 .tvals { display: grid; gap: 3px; margin-left: auto; }   /* sea level over temperature, right of the play controls */
+  .row1 .tvals .tchip { margin: 0; padding: 0; justify-content: end; }
+  .row1 .tvals .tchip .tv { font-size: 14px; }
   #treeBtn span { display: none; }   /* icon only; the label stays as aria-label */
   #treeBtn { padding: 5px 8px; }
   .era { box-sizing: border-box; width: calc(100vw - 32px - 100px); grid-template-columns: minmax(0, 1fr); }      /* clear of the switcher and settings buttons */
@@ -156,8 +159,10 @@
         </div>
       </div>
       <span class="spacer"></span>
-      <div class="tchip" id="seaChip"><span class="tv" id="seaVal">—</span><span class="tl" data-i18n="sea">해수면</span></div>
-      <div class="tchip" id="temp"><span class="tv" id="tempVal">—</span><span class="tl" data-i18n="temp">평균 기온</span></div>
+      <div class="tvals">
+        <div class="tchip" id="seaChip"><span class="tv" id="seaVal">—</span><span class="tl" data-i18n="sea">해수면</span></div>
+        <div class="tchip" id="temp"><span class="tv" id="tempVal">—</span><span class="tl" data-i18n="temp">평균 기온</span></div>
+      </div>
       <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span><button class="fold" id="fold" aria-expanded="false" aria-controls="evrow presets" data-i18n-aria="more" data-i18n-title="more" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button></div>
     </div>
     <div class="track" id="track">
