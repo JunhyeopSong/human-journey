@@ -79,15 +79,14 @@
           <button role="radio" data-s="log" aria-checked="true" data-i18n="log">로그</button>
         </div>
       </div>
-      <label class="item"><span><span data-i18n="contested">논쟁 중인 연대도 보기</span><small data-i18n="contestedSub">끄면 널리 인정된 연대만</small></span><span class="sw"><input type="checkbox" role="switch" id="contestedOn" checked><span class="tr"></span></span></label>
-      <label class="item"><span><span data-i18n="ranges">종 분포</span><small data-i18n="rangesSub">옅은 영역 = 연대가 측정된 유적 주변</small></span><span class="sw"><input type="checkbox" role="switch" id="rangesOn" checked><span class="tr"></span></span></label>
-      <label class="item"><span><span data-i18n="ice">빙상</span><small data-i18n="iceSub">개략도 · 해수면에 맞춰 커지고 줄어듦</small></span><span class="sw"><input type="checkbox" role="switch" id="iceOn" checked><span class="tr"></span></span></label>
+      <label class="item"><span data-i18n="contested">논쟁 중인 연대도 보기</span><span class="sw"><input type="checkbox" role="switch" id="contestedOn" checked><span class="tr"></span></span></label>
+      <label class="item"><span data-i18n="ranges">종 분포</span><span class="sw"><input type="checkbox" role="switch" id="rangesOn" checked><span class="tr"></span></span></label>
+      <label class="item"><span data-i18n="ice">빙상</span><span class="sw"><input type="checkbox" role="switch" id="iceOn" checked><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="spin">자동 회전</span><span class="sw"><input type="checkbox" role="switch" id="spin" checked><span class="tr"></span></span></label>
       <label class="item"><span><span data-i18n="follow">재생 중 따라가기</span><small data-i18n="followSub">사건이 일어나는 곳으로 이동</small></span><span class="sw"><input type="checkbox" role="switch" id="follow" checked><span class="tr"></span></span></label>
     </div>
     <div class="group">
-      <label class="item"><span data-i18n="temp">평균 기온</span><span class="sw"><input type="checkbox" role="switch" id="tempOn" checked><span class="tr"></span></span></label>
-      <div class="item"><span data-i18n="unit">단위</span>
+      <div class="item"><span data-i18n="temp">평균 기온</span>
         <div class="seg" id="unit" role="radiogroup" data-i18n-aria="unit" aria-label="온도 단위">
           <button role="radio" data-u="C" aria-checked="true">°C</button>
           <button role="radio" data-u="F" aria-checked="false">°F</button>
@@ -416,7 +415,7 @@ function tempAt(a) {
   return i + 1 < TEMP.length ? TEMP[i] * (1 - f) + TEMP[i + 1] * f : TEMP[i];
 }
 function updateTemp() {
-  const chip = $('temp'), on = $('tempOn').checked, c = tempAt(age);
+  const chip = $('temp'), on = true, c = tempAt(age);   // always shown; only the unit is a setting
   chip.hidden = !on; chip.title = t('tempTitle');
   $('tempVal').textContent = c == null ? '—' : tempUnit === 'F' ? `${(c * 9 / 5 + 32).toFixed(1)}°F` : `${c.toFixed(1)}°C`;
 }
@@ -760,7 +759,6 @@ $('popX').onclick = closePop;
 $('popGo').onclick = () => { if (popSpecies !== null) goToSpecies(popSpecies); else if (popIdx !== null) goToEvent(popIdx); };
 G.canvas.addEventListener('pointerdown', () => { if (popIdx !== null) closePop(); });
 addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
-$('tempOn').onchange = updateTemp;
 document.querySelectorAll('#unit button').forEach(b => b.setAttribute('aria-checked', b.dataset.u === tempUnit));
 TMUI.segmented($('unit'), b => { tempUnit = b.dataset.u; try { localStorage.setItem('tm.unit', tempUnit); } catch (_) {} updateTemp(); });
 $('iceOn').checked = showIce;
