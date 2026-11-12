@@ -23,7 +23,12 @@
 .pop .src { margin: 0; padding: 0 0 0 14px; font-size: 11px; line-height: 1.5; color: var(--ink-3); }
 .pop .src a { color: var(--ink-2); }
 .pop .badge { font-size: 9.5px; padding: 1px 6px; border-radius: 999px; border: 0.5px solid #ffcf8a; color: #ffcf8a; margin-left: 6px; letter-spacing: 0; }
-@media (max-width: 640px) { #seaChip { display: none; } }
+@media (max-width: 640px) {
+  #seaChip { display: none; }
+  .era { box-sizing: border-box; width: calc(100vw - 32px - 52px); grid-template-columns: minmax(0, 1fr); }      /* clear of the settings button */
+  .era > * { min-width: 0; }
+  #eraEyebrow { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }   /* one line */
+}
 .proto { white-space: nowrap; flex: none; font-size: 9.5px; padding: 1px 6px; border-radius: 999px; border: 0.5px solid var(--accent); color: var(--accent); letter-spacing: .02em; text-transform: none; }
 </style>
 </head>
@@ -107,7 +112,7 @@
       <span class="spacer"></span>
       <div class="tchip" id="seaChip"><span class="tv" id="seaVal">—</span><span class="tl" data-i18n="sea">해수면</span></div>
       <div class="tchip" id="temp"><span class="tv" id="tempVal">—</span><span class="tl" data-i18n="temp">평균 기온</span></div>
-      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span></div>
+      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span><button class="fold" id="fold" aria-expanded="false" aria-controls="evrow" data-i18n-aria="more" data-i18n-title="more" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button></div>
     </div>
     <div class="track" id="track">
       <div class="strata" id="strata"></div>
@@ -128,7 +133,7 @@ const D2R = Math.PI / 180;
 
 // ---------- language (shared with the other time machines on this site) ----------
 const I18N = {
-  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', lang: '언어', scale: '타임라인 눈금',
+  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', lang: '언어', scale: '타임라인 눈금',
       linear: '선형', log: '로그', spin: '자동 회전', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
       globeCtl: '지구본 조작', zoomIn: '확대', zoomOut: '축소', home: '지구 전체 보기', hint1: '드래그로 돌리기 · 휠·핀치로 확대',
       hint2: ' · Space 재생/정지 · 1·2·3 속도', timeCtl: '시간 조절', transport: '재생 조작', back: '과거로', fwd: '현재 쪽으로',
@@ -146,7 +151,7 @@ const I18N = {
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
       foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–80만 년 전, 오늘을 0 m로 맞춤; 80만~200만 년 전은 LR04 해저 산소동위원소 기록(Lisiecki & Raymo 2005)으로 추정(덜 확실). 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치; 80만 년 전보다 오래된 시기는 LR04로 추정. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 종 분포: 연대가 측정된 유적만으로 그림 — Timmermann 외 2022 (Nature, 보충표 1, CC BY 4.0) 3만–200만 년 전, ROAD 데이터베이스 (ROCEEH, CC BY-SA 4.0) 3만 년 전 이후 현생인류, 그리고 출처를 붙인 유적 목록; 5만 년 전 이후 현생인류는 인정된 유적에서 육지를 따라 천 년에 약 500 km씩 퍼짐(바다는 건너지 않음). 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
-  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', lang: 'Language', scale: 'Timeline scale',
+  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', lang: 'Language', scale: 'Timeline scale',
       linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
       hint2: ' · Space play/pause · 1·2·3 speed', timeCtl: 'Time controls', transport: 'Playback', back: 'Toward the past', fwd: 'Toward today',
@@ -711,7 +716,7 @@ function updateSpecies() {
   if (!SPC) return;
   const key = showRanges ? Math.round(age / Math.max(0.1, age * 0.004)) + ':' + paintedIce + ':' + (showContested ? 1 : 0) : '';
   if (key !== rangeKey && relief) { rangeKey = key; drawRanges(); }
-  const w = innerWidth, h = innerHeight; G.camera.getWorldPosition(_c);
+  const w = innerWidth, h = innerHeight, placed = []; G.camera.getWorldPosition(_c);
   SPC.forEach((sp, k) => {
     const b = speciesEls[k], on = showRanges ? SITES.filter(st => st[0] === k && siteNow(st, age)) : [];
     if (!on.length) { b.hidden = true; return; }
@@ -721,8 +726,20 @@ function updateSpecies() {
     _v.copy(sphereXYZ(best[1], best[2])).multiplyScalar(1.004).applyMatrix4(G.earth.matrixWorld);
     if (_v.dot(_c.clone().sub(_v)) <= 0) { b.hidden = true; return; }
     _v.project(G.camera); b.hidden = false;                      // a little above the site, so it does not cover an event pin
-    b.style.transform = `translate(${(_v.x + 1) / 2 * w - 7}px, ${(1 - _v.y) / 2 * h - 24}px) translateY(-50%)`;
+    placed.push({ b, x: (_v.x + 1) / 2 * w - 7, y: (1 - _v.y) / 2 * h - 24, w: b.offsetWidth || 120 });
     b.classList.toggle('on', popSpecies === k);
+  });
+  // labels that would overlap move down one row at a time, so every species name stays readable
+  placed.sort((a, b) => a.y - b.y);
+  const ROW = 24;
+  placed.forEach((p, i) => {
+    for (let tries = 0; tries < 6; tries++) {
+      const hit = placed.slice(0, i).some(q => Math.abs(q.y - p.y) < ROW && p.x < q.x + q.w + 6 && q.x < p.x + p.w + 6);
+      if (!hit) break;
+      p.y += ROW;
+    }
+    const x = Math.max(4, Math.min(w - p.w - 4, p.x));          // keep the whole name on screen
+    p.b.style.transform = `translate(${x}px, ${p.y}px) translateY(-50%)`;
   });
 }
 function openSpeciesPop(k) {
@@ -753,6 +770,19 @@ function goToSpecies(k) {          // the time when the most of its sites are da
 }
 $('rangesOn').onchange = e => { showRanges = e.target.checked; try { localStorage.setItem('hj.ranges', showRanges ? '1' : '0'); } catch (_) {} if (!showRanges && popSpecies !== null) closePop(); };
 
+// ---------- phone layout (same as the Continental Time Machine) ----------
+(() => {
+  const dock = document.querySelector('.dock'), mq = matchMedia('(max-width: 640px)');
+  const setH = () => document.documentElement.style.setProperty('--dock-h', dock.offsetHeight + 'px');   // globe buttons and hint sit above it
+  try { new ResizeObserver(setH).observe(dock); } catch (_) { addEventListener('resize', setH); }
+  setH();
+  const fold = $('fold');
+  const apply = open => { dock.classList.toggle('folded', mq.matches && !open); fold.setAttribute('aria-expanded', String(open)); setH(); };
+  let open = false; apply(open);
+  fold.onclick = () => { open = !open; apply(open); };
+  mq.addEventListener ? mq.addEventListener('change', () => apply(open)) : mq.addListener(() => apply(open));
+  $('era').addEventListener('click', () => { if (mq.matches) $('era').classList.toggle('open'); });   // two lines; tap to read the rest
+})();
 // ---------- loop ----------
 let lastFrame = performance.now();
 const MAX_KA_PER_S = 12;            // at "normal"; slow ×0.4, fast ×3
