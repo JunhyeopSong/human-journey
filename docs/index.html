@@ -13,8 +13,16 @@
 <style>
 /* shared look: time-machine-ui v1 · below: this product only */
 /* timeline marks for events: dots for single dates, bars for ranges; dashed = disputed claim; striped = disputed part */
-.evrow button.rng { transform: none; width: auto; height: 6px; top: 1px; border-radius: 3px; }
-.evrow button.rng:hover { transform: scaleY(1.5); }
+.evrow button { z-index: 1; }
+.evrow .lbar { position: absolute; height: 2px; border-radius: 1px; background: var(--k); opacity: .45; pointer-events: none; }
+.evrow .lconn { position: absolute; width: 0; border-left: 1px dashed var(--k); opacity: .4; pointer-events: none; }
+.evrow button.lname { width: auto; height: 11px; transform: none; font-size: 9.5px; line-height: 11px; color: var(--k); white-space: nowrap; padding: 0 3px; border-radius: 3px; background: rgba(14,16,22,.75); z-index: 2; }
+.evrow button.lname:hover { transform: none; background: rgba(255,255,255,.14); }
+.evrow button.lname:disabled { cursor: default; }
+.evrow { transition: height .2s; }
+.presets button.tree { display: inline-flex; align-items: center; gap: 5px; color: var(--ink); box-shadow: inset 0 0 0 0.5px rgba(255,255,255,.35); background: transparent; }
+.presets button.tree[aria-pressed="true"] { background: rgba(255,255,255,.14); }
+.presets button.tree svg { width: 13px; height: 13px; }
 .evrow button.contested { background: transparent; box-shadow: inset 0 0 0 1.2px var(--k); }
 .evrow button.claim { background: repeating-linear-gradient(135deg, var(--k) 0 2px, transparent 2px 4px); opacity: .8; }
 .evrow button.cur { box-shadow: 0 0 0 1.5px #fff; }
@@ -134,7 +142,7 @@ const D2R = Math.PI / 180;
 
 // ---------- language (shared with the other time machines on this site) ----------
 const I18N = {
-  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', shortcuts: '주요 사건 바로 가기', lang: '언어', scale: '타임라인 눈금',
+  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', shortcuts: '주요 사건 바로 가기', treeOpen: '종별로 펼치기', treeClose: '접기', lang: '언어', scale: '타임라인 눈금',
       linear: '선형', log: '로그', spin: '자동 회전', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
       globeCtl: '지구본 조작', zoomIn: '확대', zoomOut: '축소', home: '지구 전체 보기', hint1: '드래그로 돌리기 · 휠·핀치로 확대',
       hint2: ' · Space 재생/정지 · 1·2·3 속도', timeCtl: '시간 조절', transport: '재생 조작', back: '과거로', fwd: '현재 쪽으로',
@@ -152,7 +160,7 @@ const I18N = {
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
       foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–80만 년 전, 오늘을 0 m로 맞춤; 80만~200만 년 전은 LR04 해저 산소동위원소 기록(Lisiecki & Raymo 2005)으로 추정(덜 확실). 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치; 80만 년 전보다 오래된 시기는 LR04로 추정. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 종 분포: 연대가 측정된 유적만으로 그림 — Timmermann 외 2022 (Nature, 보충표 1, CC BY 4.0) 3만–200만 년 전, ROAD 데이터베이스 (ROCEEH, CC BY-SA 4.0) 3만 년 전 이후 현생인류, 그리고 출처를 붙인 유적 목록; 5만 년 전 이후 현생인류는 인정된 유적에서 육지를 따라 천 년에 약 500 km씩 퍼짐(바다는 건너지 않음). 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
-  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', shortcuts: 'Shortcuts to key events', lang: 'Language', scale: 'Timeline scale',
+  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', shortcuts: 'Shortcuts to key events', treeOpen: 'By species', treeClose: 'Fold', lang: 'Language', scale: 'Timeline scale',
       linear: 'Linear', log: 'Log', spin: 'Auto-rotate', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
       hint2: ' · Space play/pause · 1·2·3 speed', timeCtl: 'Time controls', transport: 'Playback', back: 'Toward the past', fwd: 'Toward today',
@@ -537,26 +545,108 @@ function placePins() {
   });
   if (popIdx !== null || popRoute !== null || popSpecies !== null) placePop();
 }
+// timeline marks for events. Folded: one line with the key events (the shortcut chips). Unfolded: a lane per species
+// like an evolution tree — a thin bar over the time its dated sites span, its events as dots, dashed lines to the lane
+// it probably branched from (relationships are debated; a rough picture), and a lane for climate. Dots that would touch
+// within a lane drop to a second row.
+const EV_LANE = {   // event → lane
+  dmanisi: 'erectus', acheulean: 'ergaster', turkanaboy: 'ergaster', java: 'erectus', mpt: 'env', happisburgh: 'antecessor',
+  antecessor: 'antecessor', gby: 'erectus', matamenge: 'floresiensis', sima: 'neanderthal', irhoud: 'sapiens', naledi: 'naledi',
+  omo: 'sapiens', apidima: 'sapiens', misliya: 'sapiens', baishiya: 'denisovan', harbin: 'denisovan', ngandong: 'erectus',
+  skhul: 'sapiens', denny: 'denisovan', floresiensis: 'floresiensis', blombos: 'sapiens', toba: 'env', luzonensis: 'floresiensis',
+  sahul: 'sapiens', mandrin: 'sapiens', sulawesi: 'sapiens', ooa: 'sapiens', admix: 'neanderthal', ranis: 'sapiens',
+  bachokiro: 'sapiens', ustishim: 'sapiens', neanderEnd: 'neanderthal', yana: 'sapiens', lgm: 'env', whitesands: 'sapiens',
+  monteverde: 'sapiens', farmFertile: 'sapiens', flooding: 'env', farmChina: 'sapiens', farmMexico: 'sapiens', farmKuk: 'sapiens',
+  lapita: 'sapiens', aotearoa: 'sapiens',
+};
+// top to bottom; a lane may hold more species (island humans); parent = the lane it branches from
+const LANES = [
+  { id: 'env', ko: '기후', en: 'Climate', color: '#9fe0c8' },
+  { id: 'habilis', sp: ['habilis'] },
+  { id: 'ergaster', sp: ['ergaster'], parent: 'habilis' },
+  { id: 'erectus', sp: ['erectus'], parent: 'ergaster' },
+  { id: 'floresiensis', sp: ['floresiensis', 'luzonensis'], parent: 'erectus' },
+  { id: 'naledi', sp: ['naledi'] },
+  { id: 'antecessor', sp: ['antecessor'], parent: 'ergaster' },
+  { id: 'heidelbergensis', sp: ['heidelbergensis'], parent: 'ergaster' },
+  { id: 'neanderthal', sp: ['neanderthal'], parent: 'heidelbergensis' },
+  { id: 'denisovan', sp: ['denisovan'], parent: 'heidelbergensis' },
+  { id: 'sapiens', sp: ['sapiens'], parent: 'heidelbergensis' },
+];
+let treeOpen = false;
+try { treeOpen = localStorage.getItem('hj.tree') === '1'; } catch (_) {}
+function spanOf(id) {                 // earliest and latest accepted dates of a species' sites
+  const k = SPC ? SPC.findIndex(s => s.id === id) : -1; if (k < 0) return null;
+  let a = -1, b = Infinity; for (const st of SITES) if (st[0] === k && !st[5]) { a = Math.max(a, st[4]); b = Math.min(b, st[3]); }
+  return a < 0 ? null : { k, from: Math.min(a, AGE_MAX), to: b };
+}
 function buildEvRow() {
   const row = $('evrow'); row.innerHTML = '';
   if (!EV) return;
-  const pc = a => tl.pct(Math.max(0, Math.min(AGE_MAX, a)));
+  const pc = a => tl.pct(Math.max(0, Math.min(AGE_MAX, a))), W = row.clientWidth || 600, DOT = 9;
+  const marks = [];
+  const keyIds = new Set(CHIPS.map(c => c.id).filter(Boolean));
   EV.forEach((e, i) => {
-    if (!evShown(e)) return;
-    const mk = (cls, a0, a1) => {
-      const d = document.createElement('button'); d.style.setProperty('--k', KINDS[e.kind].color); d.dataset.i = i;
-      d.title = `${e[LANG][0]} · ${evAgeText(e)}`; d.setAttribute('aria-label', d.title);
-      d.onclick = () => goToEvent(i);
-      if (a0 - a1 > 0 && pc(a1) - pc(a0) > 0.6) { d.className = 'rng ' + cls; d.style.left = pc(a0) + '%'; d.style.width = (pc(a1) - pc(a0)) + '%'; }
-      else { d.className = cls; d.style.left = pc((a0 + a1) / 2) + '%'; }
-      row.appendChild(d);
-    };
-    if (showContested && e.accepted) { mk('claim', e.max, e.accepted[0]); mk('', e.accepted[0], e.accepted[1]); }
-    else { const r = evRange(e); mk(e.contested ? 'contested' : '', r.max, r.min); }
+    if (!evShown(e) || (!treeOpen && !keyIds.has(e.id))) return;
+    const r = evRange(e), best = e.best != null && e.best <= r.max && e.best >= r.min ? e.best : (r.max + r.min) / 2;
+    marks.push({ e, i, x: pc(best), a0: r.max, a1: r.min, lane: treeOpen ? (EV_LANE[e.id] || 'sapiens') : 'one' });
   });
+  marks.sort((p, q) => p.x - q.x);
+  // lanes: their rows (for dots that would touch) and vertical position
+  const lanes = treeOpen ? LANES : [{ id: 'one' }], info = {};
+  lanes.forEach(L => { info[L.id] = { rows: [], n: 1 }; });
+  marks.forEach(m => {
+    const I = info[m.lane]; let r = 0;
+    while (r < 2 && I.rows[r] != null && (m.x - I.rows[r]) / 100 * W < DOT) r++;
+    I.rows[r] = m.x; m.r = r; I.n = Math.max(I.n, r + 1);
+  });
+  const laneColor = {};               // tree view: dots take their lane's (species') colour
+  lanes.forEach(L => { const id = L.sp && L.sp[0], k = id && SPC ? SPC.findIndex(x => x.id === id) : -1; laneColor[L.id] = L.color || (k >= 0 ? SPC[k].color : '#ccc'); });
+  const LH = 12, SUB = 8;
+  let y = 0;
+  lanes.forEach(L => { info[L.id].y = y; y += LH + (info[L.id].n - 1) * SUB; });
+  row.style.height = (treeOpen ? y : 8 + (info.one.n - 1) * SUB) + 'px';
+  if (treeOpen) {
+    const ys = id => info[id].y + 5;                 // the bar's line inside a lane
+    lanes.forEach(L => {
+      const spans = (L.sp || []).map(spanOf).filter(Boolean);
+      const color = L.color || (spans[0] ? SPC[spans[0].k].color : '#ccc');
+      spans.forEach(sp => {
+        const bar = document.createElement('i'); bar.className = 'lbar'; bar.style.setProperty('--k', SPC[sp.k].color);
+        bar.style.left = pc(sp.from) + '%'; bar.style.width = Math.max(0.4, pc(sp.to) - pc(sp.from)) + '%'; bar.style.top = ys(L.id) + 'px';
+        row.appendChild(bar);
+      });
+      // the name: after the bar's young end, or before its old end when the bar runs to the present
+      const nm = document.createElement('button'); nm.className = 'lname'; nm.style.setProperty('--k', color);
+      nm.textContent = L.sp ? L.sp.map(id => (SPC[SPC.findIndex(s => s.id === id)] || {})[LANG]?.[0]?.replace(/\s*\(.*\)$/, '') || id).join(' · ') : L[LANG] || L.en;
+      const first = spans.reduce((a, b) => (a && a.from > b.from ? a : b), null), last = spans.reduce((a, b) => (a && a.to < b.to ? a : b), null);
+      row.appendChild(nm);
+      const nw = nm.offsetWidth || 60, endX = last ? pc(last.to) / 100 * W : W, startX = first ? pc(first.from) / 100 * W : 0;
+      const x = endX + nw + 6 < W ? endX + 4 : Math.max(0, startX - nw - 4);
+      nm.style.left = x + 'px'; nm.style.top = (info[L.id].y) + 'px';
+      if (spans.length) { const k = spans[0].k; nm.onclick = () => goToSpecies(k); nm.title = nm.textContent; }
+      else nm.disabled = true;
+      if (L.parent && first) {                        // dashed line from the parent lane at this lane's first date
+        const c = document.createElement('i'); c.className = 'lconn'; c.style.setProperty('--k', color);
+        const y0 = ys(L.parent), y1 = ys(L.id);
+        c.style.left = pc(first.from) + '%'; c.style.top = Math.min(y0, y1) + 'px'; c.style.height = Math.abs(y1 - y0) + 'px';
+        row.appendChild(c);
+      }
+    });
+  }
+  marks.forEach(m => {
+    const { e, i } = m, I = info[m.lane];
+    const d = document.createElement('button'); d.style.setProperty('--k', treeOpen ? laneColor[m.lane] : KINDS[e.kind].color); d.dataset.i = i;
+    d.className = e.contested ? 'contested' : ''; d.style.left = m.x + '%';
+    d.style.top = (I.y + (treeOpen ? 2 : 0) + m.r * SUB) + 'px';
+    d.title = `${e[LANG][0]} · ${evAgeText(e)}`; d.setAttribute('aria-label', d.title);
+    d.onclick = () => goToEvent(i);
+    row.appendChild(d);
+  });
+  if (typeof markCurrent === 'function') markCurrent();
 }
 function markCurrent() {
-  $('evrow').querySelectorAll('button').forEach(b => b.classList.toggle('cur', EV && evNow(EV[+b.dataset.i])));
+  $('evrow').querySelectorAll('button[data-i]').forEach(b => b.classList.toggle('cur', EV && evNow(EV[+b.dataset.i])));
   const shown = popIdx !== null && EV ? EV[popIdx] : (typeof currentEvent === 'function' ? currentEvent() : null);   // one chip: the event on screen
   $('presets').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.id ? !!shown && shown.id === b.dataset.id : age < 0.05));
 }
@@ -577,6 +667,11 @@ const CHIPS = [
 function buildChips() {
   const pre = $('presets'); pre.innerHTML = '';
   if (!EV) return;
+  const tb = document.createElement('button'); tb.className = 'tree'; tb.setAttribute('aria-pressed', String(treeOpen));
+  tb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg><span></span>';
+  tb.lastChild.textContent = t(treeOpen ? 'treeClose' : 'treeOpen');
+  tb.onclick = () => { treeOpen = !treeOpen; try { localStorage.setItem('hj.tree', treeOpen ? '1' : '0'); } catch (_) {} buildEvRow(); buildChips(); };
+  pre.appendChild(tb);
   CHIPS.forEach(c => {
     const i = c.id ? EV.findIndex(e => e.id === c.id) : -1; if (c.id && i < 0) return;
     const b = document.createElement('button'); b.textContent = c[LANG] || c.en; if (c.id) b.dataset.id = c.id;
