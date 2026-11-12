@@ -647,7 +647,10 @@ function evKindName(e) {           // popover heading: the species (or the event
 }
 const EV_SP = { luzonensis: 'luzonensis' };   // events in a shared lane that belong to its second species
 let treeOpen = false;
-try { treeOpen = localStorage.getItem('hj.tree') === '1'; } catch (_) {}
+const PHONE = matchMedia('(max-width: 640px)');
+// the tree is remembered on wide screens; phones start folded with the tree off (see the phone layout below)
+try { treeOpen = !PHONE.matches && localStorage.getItem('hj.tree') === '1'; } catch (_) {}
+let dockCtl = { isOpen: () => true, set: () => {} }, treeOpenedDock = false;
 function spanOf(id) {                 // earliest and latest accepted dates of a species' sites
   const k = SPC ? SPC.findIndex(s => s.id === id) : -1; if (k < 0) return null;
   let a = -1, b = Infinity; for (const st of SITES) if (st[0] === k && !st[5]) { a = Math.max(a, st[4]); b = Math.min(b, st[3]); }
@@ -735,16 +738,22 @@ const CHIPS = [
   { id: 'aotearoa', ko: '마지막 땅, 뉴질랜드', en: 'Last land: New Zealand' },
   { id: null, ko: '현재', en: 'Today' },
 ];
+// the tree button and (on phones) the fold button share one state: the tree is only lit while the event row shows.
+// Opening the tree from a folded dock unfolds it; closing the tree folds it back.
+function setTree(on) {
+  treeOpen = on; if (!PHONE.matches) try { localStorage.setItem('hj.tree', on ? '1' : '0'); } catch (_) {}
+  if (PHONE.matches) {
+    if (on && !dockCtl.isOpen()) { treeOpenedDock = true; dockCtl.set(true); }
+    else if (!on && treeOpenedDock) { treeOpenedDock = false; dockCtl.set(false); }
+  }
+  buildEvRow(); buildChips();
+}
 function buildChips() {
   const pre = $('presets'); pre.innerHTML = '';
   if (!EV) return;
   const tb = $('treeBtn'), lbl = t(treeOpen ? 'treeClose' : 'treeOpen');
   tb.setAttribute('aria-pressed', String(treeOpen)); tb.title = lbl; tb.setAttribute('aria-label', lbl);
-  tb.onclick = () => {
-    treeOpen = !treeOpen; try { localStorage.setItem('hj.tree', treeOpen ? '1' : '0'); } catch (_) {}
-    if (treeOpen && document.querySelector('.dock').classList.contains('folded')) $('fold').click();   // phones: show the event row
-    buildEvRow(); buildChips();
-  };
+  tb.onclick = () => setTree(!treeOpen);
   CHIPS.forEach(c => {
     const i = c.id ? EV.findIndex(e => e.id === c.id) : -1; if (c.id && i < 0) return;
     const b = document.createElement('button'); b.textContent = c[LANG] || c.en; if (c.id) b.dataset.id = c.id;
@@ -1033,7 +1042,12 @@ try { if (localStorage.getItem('hj.view') === 'map') setMapMode(true); } catch (
   const fold = $('fold');
   const apply = open => { dock.classList.toggle('folded', mq.matches && !open); fold.setAttribute('aria-expanded', String(open)); setH(); };
   let open = false; apply(open);
-  fold.onclick = () => { open = !open; apply(open); };
+  dockCtl = { isOpen: () => open || !mq.matches, set: v => { open = v; apply(open); } };
+  fold.onclick = () => {                 // folding also closes the tree, so the tree button never stays lit over nothing
+    open = !open; treeOpenedDock = false;
+    if (!open && treeOpen) setTree(false);
+    apply(open);
+  };
   mq.addEventListener ? mq.addEventListener('change', () => apply(open)) : mq.addListener(() => apply(open));
   $('era').addEventListener('click', () => { if (mq.matches) $('era').classList.toggle('open'); });   // two lines; tap to read the rest
 })();
