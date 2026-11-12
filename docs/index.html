@@ -20,9 +20,14 @@
 .evrow button.lname:hover { transform: none; background: rgba(255,255,255,.14); }
 .evrow button.lname:disabled { cursor: default; }
 .evrow { transition: height .2s; }
-.presets button.tree { display: inline-flex; align-items: center; gap: 5px; color: var(--ink); box-shadow: inset 0 0 0 0.5px rgba(255,255,255,.35); background: transparent; }
-.presets button.tree[aria-pressed="true"] { background: rgba(255,255,255,.14); }
-.presets button.tree svg { width: 13px; height: 13px; }
+.chiprow { display: flex; align-items: center; gap: 6px; margin-left: 8px; padding-top: 2px; min-width: 0; }   /* the tree toggle stays put; only the chips scroll */
+.chiprow .pwrap { flex: 1 1 auto; margin-left: 0; }
+.chiprow .presets { padding-top: 0; }
+#treeBtn { flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+  color: var(--ink); box-shadow: inset 0 0 0 0.5px rgba(255,255,255,.35); background: transparent; }
+#treeBtn[aria-pressed="true"] { background: rgba(255,255,255,.14); }
+#treeBtn svg { width: 13px; height: 13px; }
+@media (max-width: 640px) { .dock.folded .chiprow { display: none; } }
 .evrow button.contested { background: transparent; box-shadow: inset 0 0 0 1.2px var(--k); }
 .evrow button.claim { background: repeating-linear-gradient(135deg, var(--k) 0 2px, transparent 2px 4px); opacity: .8; }
 .evrow button.cur { box-shadow: 0 0 0 1.5px #fff; }
@@ -120,7 +125,7 @@
       <span class="spacer"></span>
       <div class="tchip" id="seaChip"><span class="tv" id="seaVal">—</span><span class="tl" data-i18n="sea">해수면</span></div>
       <div class="tchip" id="temp"><span class="tv" id="tempVal">—</span><span class="tl" data-i18n="temp">평균 기온</span></div>
-      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span><button class="fold" id="fold" aria-expanded="false" aria-controls="evrow presets" data-i18n-aria="more" data-i18n-title="more" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button></div>
+      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span><button class="fold" id="fold" aria-expanded="false" aria-controls="evrow presets treeBtn" data-i18n-aria="more" data-i18n-title="more" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button></div>
     </div>
     <div class="track" id="track">
       <div class="strata" id="strata"></div>
@@ -129,7 +134,7 @@
     </div>
     <div class="ticks" id="ticks"></div>
     <div class="evrow" id="evrow" data-i18n-aria="events" aria-label="사건"></div>
-    <div class="pwrap" id="pwrap"><div class="presets" id="presets" data-i18n-aria="shortcuts" aria-label="주요 사건 바로 가기"></div></div>
+    <div class="chiprow"><button class="tree" id="treeBtn" aria-pressed="false" aria-controls="evrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg><span></span></button><div class="pwrap" id="pwrap"><div class="presets" id="presets" data-i18n-aria="shortcuts" aria-label="주요 사건 바로 가기"></div></div></div>
   </section>
 </div>
 
@@ -678,11 +683,9 @@ const CHIPS = [
 function buildChips() {
   const pre = $('presets'); pre.innerHTML = '';
   if (!EV) return;
-  const tb = document.createElement('button'); tb.className = 'tree'; tb.setAttribute('aria-pressed', String(treeOpen));
-  tb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg><span></span>';
+  const tb = $('treeBtn'); tb.setAttribute('aria-pressed', String(treeOpen));
   tb.lastChild.textContent = t(treeOpen ? 'treeClose' : 'treeOpen');
   tb.onclick = () => { treeOpen = !treeOpen; try { localStorage.setItem('hj.tree', treeOpen ? '1' : '0'); } catch (_) {} buildEvRow(); buildChips(); };
-  pre.appendChild(tb);
   CHIPS.forEach(c => {
     const i = c.id ? EV.findIndex(e => e.id === c.id) : -1; if (c.id && i < 0) return;
     const b = document.createElement('button'); b.textContent = c[LANG] || c.en; if (c.id) b.dataset.id = c.id;
