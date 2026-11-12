@@ -539,8 +539,9 @@ $('play').onclick = () => { if (playing) return stop(); if (age <= 0) setAge(AGE
 // and open it, at least HOLD_MS apart; playback keeps going
 let playPrev = 0, evQueue = [], holdUntil = 0;
 const HOLD_MS = 1600;
-try { if (localStorage.getItem('hj.follow') === '0') $('follow').checked = false; } catch (_) {}
-$('follow').onchange = e => { try { localStorage.setItem('hj.follow', e.target.checked ? '1' : '0'); } catch (_) {} evQueue = []; };
+// on at every visit, as in the Continental Time Machine (an earlier 'off' is no longer remembered)
+try { localStorage.removeItem('hj.follow'); } catch (_) {}
+$('follow').onchange = () => { evQueue = []; };
 function followStep(now, a) {
   if (!$('follow').checked || !EV) { playPrev = a; return; }
   EV.forEach((e, i) => { const b = evBest(e); if (evShown(e) && b < playPrev && b >= a) evQueue.push(i); });
