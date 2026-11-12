@@ -20,14 +20,7 @@
 .evrow button.lname:hover { transform: none; background: rgba(255,255,255,.14); }
 .evrow button.lname:disabled { cursor: default; }
 .evrow { transition: height .2s; }
-.chiprow { display: flex; align-items: center; gap: 6px; margin-left: 8px; padding-top: 2px; min-width: 0; }   /* the tree toggle stays put; only the chips scroll */
-.chiprow .pwrap { flex: 1 1 auto; margin-left: 0; }
-.chiprow .presets { padding-top: 0; }
-#treeBtn { flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; padding: 3px 10px; border-radius: 999px; white-space: nowrap;
-  color: var(--ink); box-shadow: inset 0 0 0 0.5px rgba(255,255,255,.35); background: transparent; }
-#treeBtn[aria-pressed="true"] { background: rgba(255,255,255,.14); }
-#treeBtn svg { width: 13px; height: 13px; }
-@media (max-width: 640px) { .dock.folded .chiprow { display: none; } }
+#treeBtn[aria-pressed="true"] { background: rgba(255,255,255,.18); }   /* species tree toggle in the globe controls */
 .evrow button.contested { background: transparent; box-shadow: inset 0 0 0 1.2px var(--k); }
 .evrow button.claim { background: repeating-linear-gradient(135deg, var(--k) 0 2px, transparent 2px 4px); opacity: .8; }
 .evrow button.cur { box-shadow: 0 0 0 1.5px #fff; }
@@ -114,6 +107,7 @@
     <button id="zIn" data-icon="plus" data-i18n-aria="zoomIn" data-i18n-title="zoomIn" aria-label="확대" title="확대"></button>
     <button id="zOut" data-icon="minus" data-i18n-aria="zoomOut" data-i18n-title="zoomOut" aria-label="축소" title="축소"></button>
     <button id="home" data-icon="globe" data-i18n-aria="home" data-i18n-title="home" aria-label="지구 전체 보기" title="지구 전체 보기"></button>
+    <button id="treeBtn" aria-pressed="false" aria-controls="evrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg></button>
   </nav>
 
   <div class="glass hint" id="hint"><span data-i18n="hint1">드래그로 돌리기 · 휠·핀치로 확대</span><span class="hide-sm" data-i18n="hint2"> · Space 재생/정지 · 1·2·3 속도</span></div>
@@ -137,7 +131,7 @@
       <span class="spacer"></span>
       <div class="tchip" id="seaChip"><span class="tv" id="seaVal">—</span><span class="tl" data-i18n="sea">해수면</span></div>
       <div class="tchip" id="temp"><span class="tv" id="tempVal">—</span><span class="tl" data-i18n="temp">평균 기온</span></div>
-      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span><button class="fold" id="fold" aria-expanded="false" aria-controls="evrow presets treeBtn" data-i18n-aria="more" data-i18n-title="more" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button></div>
+      <div class="when"><span class="big" id="when">—</span><span class="ma" id="ka">—</span><button class="fold" id="fold" aria-expanded="false" aria-controls="evrow presets" data-i18n-aria="more" data-i18n-title="more" aria-label="더 보기" title="더 보기"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button></div>
     </div>
     <div class="track" id="track">
       <div class="strata" id="strata"></div>
@@ -146,7 +140,7 @@
     </div>
     <div class="ticks" id="ticks"></div>
     <div class="evrow" id="evrow" data-i18n-aria="events" aria-label="사건"></div>
-    <div class="chiprow"><button class="tree" id="treeBtn" aria-pressed="false" aria-controls="evrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg><span></span></button><div class="pwrap" id="pwrap"><div class="presets" id="presets" data-i18n-aria="shortcuts" aria-label="주요 사건 바로 가기"></div></div></div>
+    <div class="pwrap" id="pwrap"><div class="presets" id="presets" data-i18n-aria="shortcuts" aria-label="주요 사건 바로 가기"></div></div>
   </section>
 </div>
 
@@ -159,7 +153,7 @@ const D2R = Math.PI / 180;
 
 // ---------- language (shared with the other time machines on this site) ----------
 const I18N = {
-  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', shortcuts: '주요 사건 바로 가기', treeOpen: '종별로 펼치기', treeClose: '접기', lang: '언어', scale: '타임라인 눈금',
+  ko: { name: '한국어', ui: { title: '인류의 여정', loading: '지형 데이터를 불러오는 중…', proto: '프로토타입', more: '더 보기', shortcuts: '주요 사건 바로 가기', treeOpen: '사건을 종별로 펼치기', treeClose: '종별 보기 접기', lang: '언어', scale: '타임라인 눈금',
       linear: '선형', log: '로그', spin: '자동 회전', axis: '자전축', northPole: '북극', southPole: '남극', view: '보기', viewGlobe: '지구본', viewMap: '전체 지도', follow: '재생 중 따라가기', followSub: '사건이 일어나는 곳으로 이동', feedback: '피드백·오류 제보', feedbackGithub: 'GitHub에 이슈 남기기', settings: '보기 설정',
       globeCtl: '지구본 조작', zoomIn: '확대', zoomOut: '축소', home: '지구 전체 보기', hint1: '드래그로 돌리기 · 휠·핀치로 확대',
       hint2: ' · Space 재생/정지 · 1·2·3 속도', timeCtl: '시간 조절', transport: '재생 조작', back: '과거로', fwd: '현재 쪽으로',
@@ -177,7 +171,7 @@ const I18N = {
       pins: '지도 위 사건', close: '닫기', goHere: '이 시점으로 이동', events: '사건', contested: '논쟁 중인 연대도 보기', contestedSub: '끄면 널리 인정된 연대만',
       disputed: '논쟁', about: '약 {a}', atLeast: '최소 {a}', range: '약 {a} ~ {b}', sources: '출처',
       foot: '출처 · 해수면: Spratt & Lisiecki 2016 (Clim. Past, NOAA 공개 자료) 0–80만 년 전, 오늘을 0 m로 맞춤; 80만~200만 년 전은 LR04 해저 산소동위원소 기록(Lisiecki & Raymo 2005)으로 추정(덜 확실). 지형: ETOPO1 (NOAA, 0.25°로 줄임). 평균 기온: EPICA Dome C 남극 기온(Jouzel 외 2007, NOAA)을 마지막 빙기 최성기가 지금보다 6.1 °C 낮도록(Tierney 외 2020) 비율을 맞춰 지구 평균으로 바꾼 근사치; 80만 년 전보다 오래된 시기는 LR04로 추정. 빙상: 북반구는 Batchelor 외 2019 (Nature Communications, CC BY 4.0)의 12개 시기 최적 추정 복원을 0.25°로 바꿔 쓰고, 그 사이 시기는 가장 가까운 복원을 해수면에 맞춰 가장자리부터 줄이거나 늘림. 그린란드·남극의 현재 빙상은 지형에서, 파타고니아는 직접 그린 개략도. 종 분포: 연대가 측정된 유적만으로 그림 — Timmermann 외 2022 (Nature, 보충표 1, CC BY 4.0) 3만–200만 년 전, ROAD 데이터베이스 (ROCEEH, CC BY-SA 4.0) 3만 년 전 이후 현생인류, 그리고 출처를 붙인 유적 목록; 5만 년 전 이후 현생인류는 인정된 유적에서 육지를 따라 천 년에 약 500 km씩 퍼짐(바다는 건너지 않음). 지각 변형은 아직 반영하지 않은 프로토타입입니다.' } },
-  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', shortcuts: 'Shortcuts to key events', treeOpen: 'By species', treeClose: 'Fold', lang: 'Language', scale: 'Timeline scale',
+  en: { name: 'English', ui: { title: 'Human Journey', loading: 'Loading terrain…', proto: 'prototype', more: 'More', shortcuts: 'Shortcuts to key events', treeOpen: 'Show events by species', treeClose: 'Fold the species view', lang: 'Language', scale: 'Timeline scale',
       linear: 'Linear', log: 'Log', spin: 'Auto-rotate', axis: 'Polar axis', northPole: 'North Pole', southPole: 'South Pole', view: 'View', viewGlobe: 'Globe', viewMap: 'World map', follow: 'Follow events while playing', followSub: 'Turn to where each event happens', feedback: 'Feedback & corrections', feedbackGithub: 'Open an issue on GitHub', settings: 'View settings',
       globeCtl: 'Globe controls', zoomIn: 'Zoom in', zoomOut: 'Zoom out', home: 'Whole Earth', hint1: 'Drag to rotate · scroll or pinch to zoom',
       hint2: ' · Space play/pause · 1·2·3 speed', timeCtl: 'Time controls', transport: 'Playback', back: 'Toward the past', fwd: 'Toward today',
@@ -735,9 +729,13 @@ const CHIPS = [
 function buildChips() {
   const pre = $('presets'); pre.innerHTML = '';
   if (!EV) return;
-  const tb = $('treeBtn'); tb.setAttribute('aria-pressed', String(treeOpen));
-  tb.lastChild.textContent = t(treeOpen ? 'treeClose' : 'treeOpen');
-  tb.onclick = () => { treeOpen = !treeOpen; try { localStorage.setItem('hj.tree', treeOpen ? '1' : '0'); } catch (_) {} buildEvRow(); buildChips(); };
+  const tb = $('treeBtn'), lbl = t(treeOpen ? 'treeClose' : 'treeOpen');
+  tb.setAttribute('aria-pressed', String(treeOpen)); tb.title = lbl; tb.setAttribute('aria-label', lbl);
+  tb.onclick = () => {
+    treeOpen = !treeOpen; try { localStorage.setItem('hj.tree', treeOpen ? '1' : '0'); } catch (_) {}
+    if (treeOpen && document.querySelector('.dock').classList.contains('folded')) $('fold').click();   // phones: show the event row
+    buildEvRow(); buildChips();
+  };
   CHIPS.forEach(c => {
     const i = c.id ? EV.findIndex(e => e.id === c.id) : -1; if (c.id && i < 0) return;
     const b = document.createElement('button'); b.textContent = c[LANG] || c.en; if (c.id) b.dataset.id = c.id;
