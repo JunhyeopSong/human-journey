@@ -20,7 +20,7 @@ An interactive 3D globe that follows people across the world over the last 3.3 m
 - **Evolution tree** — unfold the event row into a lane per species, with its dated span, its events and the lanes it probably branched from.
 - **Globe or world map** — switch to an equal-area (Mollweide) map of the whole world, with continent and ocean names and the land bridges (Beringia, Sundaland, Sahul, Doggerland) that appear when the sea is low; optional polar axis on the globe.
 - **Other time machines** — the grid button beside settings switches to the [Continental Time Machine](https://junhyeopsong.github.io/earth-time-machine/), keeping your language.
-- **Korean and English** — follows your device language.
+- **5 languages** — English, 한국어, 日本語, 繁體中文, Español, the same as the Continental Time Machine. Follows your device language, and the language you pick carries over between the two.
 
 ### Controls
 | Action | Mouse / touch | Keyboard |
@@ -45,7 +45,7 @@ An interactive 3D globe that follows people across the world over the last 3.3 m
 | Events | Published studies, cited in each event and in `docs/data/events.json` | Cited research results |
 | 3D rendering · icons | [three.js](https://threejs.org) r128 · [Lucide](https://lucide.dev) | MIT · ISC |
 
-**Notes.** This is a prototype; event dates and summaries are still being reviewed. Sea level and temperature older than 800,000 years are estimates from the LR04 stack, and show the Pliocene warm period (3.3–3.0 Ma) lower and cooler than it was. Ice sheets older than MIS 8 reuse the nearest reconstruction scaled with sea level, and Patagonia is a hand-drawn schematic. The land's rise and fall under the ice uses ICE-6G_C for the last 26,000 years; earlier glacials reuse its Last Glacial Maximum pattern scaled with sea level, so the slow rebound after them is not shown. Plate motion (up to about 200 km over 3.3 million years) is not modelled. The Homo sapiens spread after 50 ka is a model (about 500 km per thousand years from dated sites), and the evolution tree is a rough picture of relationships that are still debated. The data files are built by the scripts in `tools/` (`build_sites.py`, `build_arrival.py`, `build_climate.py`, `build_gia.py`). Corrections are welcome.
+**Notes.** This is a prototype; event dates and summaries are still being reviewed. Sea level and temperature older than 800,000 years are estimates from the LR04 stack, and show the Pliocene warm period (3.3–3.0 Ma) lower and cooler than it was. Ice sheets older than MIS 8 reuse the nearest reconstruction scaled with sea level, and Patagonia is a hand-drawn schematic. The land's rise and fall under the ice uses ICE-6G_C for the last 26,000 years; earlier glacials reuse its Last Glacial Maximum pattern scaled with sea level, so the slow rebound after them is not shown. Plate motion (up to about 200 km over 3.3 million years) is not modelled. The Homo sapiens spread after 50 ka is a model (about 500 km per thousand years from dated sites), and the evolution tree is a rough picture of relationships that are still debated. The data files are built by the scripts in `tools/` (`build_sites.py`, `build_arrival.py`, `build_climate.py`, `build_gia.py`). Japanese, Traditional Chinese and Spanish translations are new and have not been reviewed by native speakers yet. Corrections are welcome.
 
 ### Feedback
 Found a mistake, have an idea, or want an event added? Email **sapu0000@gmail.com** or [open an issue](https://github.com/JunhyeopSong/human-journey/issues).
@@ -70,7 +70,7 @@ Then open http://localhost:8000.
 - **종별 계통도** — 사건 줄을 펼치면 종마다 칸이 생겨, 유적 연대 범위와 사건, 갈라져 나왔다고 보는 칸이 함께 보입니다.
 - **지구본 또는 전체 지도** — 면적이 정확한 몰바이데 세계지도로 바꿀 수 있습니다. 대륙·바다 이름과, 해수면이 낮을 때 드러나는 땅다리(베링기아·순다랜드·사훌·도거랜드) 이름이 보이고, 지구본에서는 자전축을 켤 수 있습니다.
 - **다른 타임머신** — 설정 옆 격자 버튼으로 [지구 대륙 타임머신](https://junhyeopsong.github.io/earth-time-machine/)으로 옮겨 갈 수 있고, 언어 설정은 그대로 이어집니다.
-- **한국어·영어** — 기기 언어를 따릅니다.
+- **5개 언어** — 한국어, English, 日本語, 繁體中文, Español으로 지구 대륙 타임머신과 같습니다. 기기 언어를 따르며, 고른 언어는 두 앱 사이에 이어집니다.
 
 ### 조작법
 | 동작 | 마우스 / 터치 | 키보드 |
@@ -95,7 +95,7 @@ Then open http://localhost:8000.
 | 사건 | 공개된 연구, 각 사건과 `docs/data/events.json`에 출처 표기 | 논문 결과 인용 |
 | 3D 렌더링 · 아이콘 | [three.js](https://threejs.org) r128 · [Lucide](https://lucide.dev) | MIT · ISC |
 
-**참고.** 프로토타입이며, 사건의 연대와 요약은 검토 중입니다. 80만 년보다 오래된 해수면·기온은 LR04 기록으로 추정한 값이며, 플라이오세 온난기(330만~300만 년 전)는 실제보다 낮고 차갑게 나옵니다. MIS 8보다 오래된 빙상은 가장 가까운 복원을 해수면에 맞춰 쓰며, 파타고니아는 직접 그린 개략도입니다. 빙상 아래 땅의 오르내림은 최근 2만 6천 년은 ICE-6G_C를 쓰고, 그 이전 빙기는 최종 빙기 최성기의 모습을 해수면에 맞춰 줄여 쓰므로 빙기 뒤 천천히 솟아오르는 모습은 빠져 있습니다. 판 이동(330만 년 동안 최대 약 200 km)은 반영하지 않았습니다. 5만 년 전 이후 현생인류의 확산은 연대 유적에서 천 년에 약 500 km씩 퍼진다고 본 모델이고, 종별 계통도의 관계는 학계에서도 논쟁 중인 대략적인 모습입니다. 데이터 파일은 `tools/`의 스크립트(`build_sites.py`, `build_arrival.py`, `build_climate.py`, `build_gia.py`)로 만듭니다. 틀린 부분을 알려주시면 고치겠습니다.
+**참고.** 프로토타입이며, 사건의 연대와 요약은 검토 중입니다. 80만 년보다 오래된 해수면·기온은 LR04 기록으로 추정한 값이며, 플라이오세 온난기(330만~300만 년 전)는 실제보다 낮고 차갑게 나옵니다. MIS 8보다 오래된 빙상은 가장 가까운 복원을 해수면에 맞춰 쓰며, 파타고니아는 직접 그린 개략도입니다. 빙상 아래 땅의 오르내림은 최근 2만 6천 년은 ICE-6G_C를 쓰고, 그 이전 빙기는 최종 빙기 최성기의 모습을 해수면에 맞춰 줄여 쓰므로 빙기 뒤 천천히 솟아오르는 모습은 빠져 있습니다. 판 이동(330만 년 동안 최대 약 200 km)은 반영하지 않았습니다. 5만 년 전 이후 현생인류의 확산은 연대 유적에서 천 년에 약 500 km씩 퍼진다고 본 모델이고, 종별 계통도의 관계는 학계에서도 논쟁 중인 대략적인 모습입니다. 데이터 파일은 `tools/`의 스크립트(`build_sites.py`, `build_arrival.py`, `build_climate.py`, `build_gia.py`)로 만듭니다. 일본어·번체 중국어·스페인어 번역은 새로 만들어 아직 원어민 검토를 받지 않았습니다. 틀린 부분을 알려주시면 고치겠습니다.
 
 ### 피드백
 틀린 내용, 아이디어, 추가하고 싶은 사건이 있다면 **sapu0000@gmail.com** 으로 메일을 보내주시거나 [이슈](https://github.com/JunhyeopSong/human-journey/issues)를 남겨주세요.
