@@ -598,7 +598,7 @@ function applyLang() {
   const sel = $('lang');
   Object.keys(I18N).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = I18N[k].name; sel.appendChild(o); });
   sel.value = LANG;
-  sel.onchange = () => { LANG = sel.value; try { localStorage.setItem('tm.lang', LANG); } catch (_) {} applyLang(); };
+  sel.onchange = () => { LANG = sel.value; try { localStorage.setItem('tm.lang', LANG); localStorage.setItem('lang', LANG); } catch (_) {} applyLang(); };   // both keys, so the Continental Time Machine follows
 })();
 document.querySelectorAll('#scaleSeg button').forEach(b => b.setAttribute('aria-checked', b.dataset.s === scaleKind));
 TMUI.segmented($('scaleSeg'), b => {
