@@ -114,7 +114,7 @@
           <button role="radio" data-s="log" aria-checked="true" data-i18n="log">로그</button>
         </div>
       </div>
-      <label class="item"><span data-i18n="contested">논쟁 중인 연대도 보기</span><span class="sw"><input type="checkbox" role="switch" id="contestedOn" checked><span class="tr"></span></span></label>
+      <label class="item"><span data-i18n="contested">논쟁 중인 연대도 보기</span><span class="sw"><input type="checkbox" role="switch" id="contestedOn"><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="ranges">종 분포</span><span class="sw"><input type="checkbox" role="switch" id="rangesOn" checked><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="places">대륙·바다 이름</span><span class="sw"><input type="checkbox" role="switch" id="placesOn" checked><span class="tr"></span></span></label>
       <label class="item"><span data-i18n="grid">위경도선</span><span class="sw"><input type="checkbox" role="switch" id="grid" checked><span class="tr"></span></span></label>
@@ -645,8 +645,8 @@ TMUI.segmented($('scaleSeg'), b => {
 });
 
 // ---------- events and sites: pins on the globe, marks on the timeline, a popover with sources ----------
-let EV = null, KINDS = {}, showContested = true, popIdx = null;
-try { if (localStorage.getItem('hj.contested') === '0') showContested = false; } catch (_) {}
+let EV = null, KINDS = {}, showContested = false, popIdx = null;   // off by default: widely accepted dates only
+try { if (localStorage.getItem('hj.contested') === '1') showContested = true; } catch (_) {}
 $('contestedOn').checked = showContested;
 const yearsTxt = yearsN;     // "6만 5천 년" / "65,000 years"
 const evRange = e => (!showContested && e.accepted) ? { max: e.accepted[0], min: e.accepted[1] } : { max: e.max, min: e.min };
