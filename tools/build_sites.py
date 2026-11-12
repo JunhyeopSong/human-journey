@@ -19,8 +19,8 @@ import sys, re, csv, json, zipfile
 XLSX, ROAD, OUT = sys.argv[1:4]
 
 SPECIES = ['sapiens', 'neanderthal', 'denisovan', 'heidelbergensis', 'erectus', 'floresiensis', 'luzonensis', 'naledi',
-           'ergaster', 'habilis', 'antecessor', 'paranthropus', 'sediba']
-MAX_KA = 2100       # the app covers the last 2 million years
+           'ergaster', 'habilis', 'antecessor', 'paranthropus', 'sediba', 'afarensis', 'africanus', 'garhi', 'kenyanthropus']
+MAX_KA = 3400       # the app covers the last 3.3 million years
 SOURCES = [
     {'label': 'Timmermann et al. 2022, Nature — Suppl. Table 1 (CC BY 4.0)', 'url': 'https://doi.org/10.1038/s41586-022-04600-9'},
     {'label': 'ROAD, ROCEEH Out of Africa Database — Kandel et al. 2023 (CC BY-SA 4.0)', 'url': 'https://zenodo.org/records/7669784'},
@@ -157,6 +157,15 @@ CURATED = [
     ('paranthropus', 'Drimolen', 27.75, -25.97, 1950, 2040, False, 'Herries et al. 2020, Science', '10.1126/science.aaw7293'),
     ('paranthropus', 'Swartkrans', 27.72, -26.02, 1000, 2000, False, 'Herries et al. 2020, Science', '10.1126/science.aaw7293'),
     ('sediba', 'Malapa', 27.8, -25.89, 1970, 1980, False, 'Pickering et al. 2011, Science', '10.1126/science.1203697'),
+    # 3.3–2 million years ago (ages in ka)
+    ('afarensis', 'Hadar (Lucy, A.L. 288-1)', 40.57, 11.12, 2950, 3400, False, 'Kimbel & Delezene 2009, Yearb. Phys. Anthropol.', '10.1002/ajpa.21183'),
+    ('afarensis', 'Dikika (DIK-1-1)', 40.85, 11.08, 3290, 3350, False, 'Alemseged et al. 2006, Nature', '10.1038/nature05047'),
+    ('kenyanthropus', 'Lomekwi (KNM-WT 40000)', 35.78, 3.92, 3200, 3500, True, 'Leakey et al. 2001, Nature', '10.1038/35068500'),
+    ('garhi', 'Bouri', 40.43, 10.27, 2450, 2550, False, 'Asfaw et al. 1999, Science', '10.1126/science.284.5414.629'),
+    ('africanus', 'Sterkfontein Member 4', 27.73, -26.02, 2070, 2610, False, 'Pickering & Kramers 2010, J. Hum. Evol.', '10.1016/j.jhevol.2010.03.014'),
+    ('paranthropus', 'West Turkana (KNM-WT 17000)', 35.8, 3.95, 2450, 2550, False, 'Walker et al. 1986, Nature', '10.1038/322517a0'),
+    ('paranthropus', 'Nyayanga', 34.37, -0.42, 2580, 3000, False, 'Plummer et al. 2023, Science', '10.1126/science.abo7452'),
+    ('habilis', 'Ledi-Geraru (LD 350-1, early Homo)', 40.9, 11.45, 2750, 2800, True, 'Villmoare et al. 2015, Science', '10.1126/science.aaa1343'),
     ('denisovan', 'Denisova Cave', 84.68, 51.4, 50, 200, False, 'Slon et al. 2018, Nature', '10.1038/s41586-018-0455-x'),
     ('denisovan', 'Baishiya Karst Cave', 102.57, 35.45, 45, 190, False, 'Chen et al. 2019, Nature', '10.1038/s41586-019-1139-x'),
     ('denisovan', 'Harbin', 126.6, 45.8, 138, 170, True, 'Ji et al. 2021, The Innovation', '10.1016/j.xinn.2021.100132'),
