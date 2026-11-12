@@ -31,20 +31,6 @@
 .evrow button.lname:hover { transform: none; background: rgba(255,255,255,.14); }
 .evrow button.lname:disabled { cursor: default; }
 .evrow { transition: height .2s; }
-/* environment legend: under the era card, same left edge, width and padding; folds to its title */
-.biolegend { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); top: var(--legend-top, 120px); width: min(340px, calc(100vw - 140px));
-  border-radius: var(--r-panel); padding: 8px 14px; }
-.biolegend[hidden] { display: none; }
-.bl-head { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0; font-size: 10.5px; letter-spacing: .1em;
-  text-transform: uppercase; font-family: var(--f-data); color: var(--ink-3); }
-.bl-head:hover { color: var(--ink-2); }
-.bl-head svg { transition: transform .2s; }
-.biolegend.closed .bl-head svg { transform: rotate(-90deg); }
-.bl-body { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 12px; margin-top: 7px; font-size: 12px; color: var(--ink-2); }
-.biolegend.closed .bl-body { display: none; }
-.bl-body span { display: flex; align-items: center; gap: 7px; white-space: nowrap; min-width: 0; }
-.bl-body i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
-.bl-body small { grid-column: 1 / -1; font-size: 10.5px; color: var(--ink-3); line-height: 1.4; }
 .tvals { display: contents; }   /* wide screens: the two readouts sit in the row as before */
 /* species tree toggle: fixed at the right end of the chip row, outside the scrolling chips */
 .chiprow { display: flex; align-items: center; gap: 8px; min-width: 0; }
@@ -65,8 +51,6 @@
   .row1 .tvals { display: grid; gap: 3px; margin-left: auto; }   /* sea level over temperature, right of the play controls */
   .row1 .tvals .tchip { margin: 0; padding: 0; justify-content: end; }
   .row1 .tvals .tchip .tv { font-size: 14px; }
-  .biolegend { box-sizing: border-box; width: calc(100vw - 32px - 100px); padding: 8px 12px; }   /* same as the era card on phones */
-  .bl-body { font-size: 11.5px; gap: 4px 10px; }
   #treeBtn span { display: none; }   /* icon only; the label stays as aria-label */
   #treeBtn { padding: 5px 8px; }
   .era { box-sizing: border-box; width: calc(100vw - 32px - 100px); grid-template-columns: minmax(0, 1fr); }      /* clear of the switcher and settings buttons */
@@ -162,10 +146,6 @@
     <button id="home" data-icon="globe" data-i18n-aria="home" data-i18n-title="home" aria-label="지구 전체 보기" title="지구 전체 보기"></button>
   </nav>
 
-  <div class="glass biolegend" id="bioLegend" hidden>
-    <button class="bl-head" id="bioLegendBtn" aria-expanded="true" aria-controls="bioLegendBody"><span data-i18n="legend">범례</span><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <div class="bl-body" id="bioLegendBody"></div>
-  </div>
   <div class="glass hint" id="hint"><span data-i18n="hint1">드래그로 돌리기 · 휠·핀치로 확대</span><span class="hide-sm" data-i18n="hint2"> · Space 재생/정지 · 1·2·3 속도</span></div>
 
   <section class="glass dock" data-i18n-aria="timeCtl" aria-label="시간 조절">
@@ -462,24 +442,14 @@ function bioUpdate(a) {               // which slices and how much of each, for 
   bioPick = { d0: s0.data, o0: s0.off, d1: s1.data, o1: s1.off, w, note: isPlio ? 'bioPlio' : old ? 'bioOld' : '' };
   return s0.ka + ':' + s1.ka + ':' + w;
 }
+let bioLeg = null;                   // time-machine-ui TMUI.legend: under the era card, foldable
 function bioLegend() {
-  const el = $('bioLegend'); el.hidden = mapStyle !== 'biome'; bioLegend.note = bioPick ? bioPick.note : ''; if (el.hidden) return;
-  $('bioLegendBody').innerHTML = BIO_COL.slice(1).map((c, i) => `<span><i style="background:rgb(${c})"></i>${t('bio' + (i + 1))}</span>`).join('') +
-    (bioPick && bioPick.note ? `<small>${t(bioPick.note)}</small>` : '');
-  placeLegend();
+  if (!bioLeg) bioLeg = TMUI.legend({ key: 'hj.legend', title: () => t('legend'),
+    items: () => BIO_COL.slice(1).map((c, i) => ({ color: `rgb(${c})`, label: t('bio' + (i + 1)) })),
+    note: () => bioPick && bioPick.note ? t(bioPick.note) : '' });
+  bioLegend.note = bioPick ? bioPick.note : '';
+  bioLeg.show(mapStyle === 'biome');
 }
-function placeLegend() {             // just under the era card, whatever its height
-  const era = $('era'); document.documentElement.style.setProperty('--legend-top', (era.offsetTop + era.offsetHeight + 8) + 'px');
-}
-(() => {
-  const box = $('bioLegend'), btn = $('bioLegendBtn');
-  let open = !matchMedia('(max-width: 640px)').matches;          // phones start folded
-  try { const v = localStorage.getItem('hj.legend'); if (v) open = v === '1'; } catch (_) {}
-  const apply = () => { box.classList.toggle('closed', !open); btn.setAttribute('aria-expanded', String(open)); };
-  btn.onclick = () => { open = !open; apply(); try { localStorage.setItem('hj.legend', open ? '1' : '0'); } catch (_) {} };
-  apply();
-  try { new ResizeObserver(placeLegend).observe($('era')); } catch (_) { addEventListener('resize', placeLegend); }
-})();
 // ---------- land that moves: glacial isostatic adjustment (ICE-6G_C) and the Panama seaway ----------
 // data/gia.png (tools/build_gia.py): for every 1 kyr from 26 ka to today, how much higher or lower the ground stood than
 // today, beyond the global sea-level change — pressed down under the ice sheets, bulging around them, the ocean floor
